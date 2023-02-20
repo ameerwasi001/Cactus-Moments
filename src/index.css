@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-family: 'K2D', sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+* {
+  box-sizing: border-box;
+}
