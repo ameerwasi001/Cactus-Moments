@@ -1,0 +1,107 @@
+.cactus-search-main_container {
+    display: flex;
+    flex-direction: column;
+    background-color: #F0F0F0;
+    /* height: 130vh; */
+    overflow: hidden;
+}
+
+.cactus-search-container {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+}
+
+.cactus-search-banner_top_view {
+    display: flex;
+    height: 20rem;
+    background: #FAF6EE;
+}
+
+.cactus-search-banner_view {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    position: relative;
+}
+
+.cactus-search-search_view {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    top: -4.5rem;
+    padding-left: 3rem;
+    padding-right: 3.5rem;
+    align-items: center;
+    position: absolute;
+    height: 9rem;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+}
+
+.cactus-search-search_icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    object-fit: cover;
+    margin-right: 0.5rem;
+}
+
+.cactus-search-search_view input {
+    font-family: 'K2D';
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    color: #706E6B;
+    outline: none;
+    border: none;
+    flex: 1;
+    margin-right: 1rem;
+}
+
+::-webkit-input-placeholder {
+    font-family: 'K2D';
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    color: #706E6B;
+}
+
+.cactus-search-min_divider_view {
+    display: flex;
+    height: 3rem;
+    border-left: 2px solid #C7C7C7;
+}
+
+.cactus-search-search_view h3 {
+    font-family: 'K2D';
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+    color: #706E6B;
+}
+
+.cactus-search-arrow_down_icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.cactus-search-title_view {
+    display: flex;
+    padding-top: 13rem;
+    padding-bottom: 5rem;
+    justify-content: center;
+    background-color: white;
+}
+
+.cactus-search-title_view h2 {
+    font-family: 'K2D';
+    font-weight: 600;
+    font-size: 4rem;
+    line-height: 5.2rem;
+    color: #333333;
+}

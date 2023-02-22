@@ -5,6 +5,17 @@
     scroll-behavior: smooth;
 }
 
+body {
+    background-color: var(--color-white);
+}
+
+
+a {
+    color: unset;
+    text-decoration: none;
+
+}
+
 .navbar__bg {
     background-color: var(--color-theme);
 }

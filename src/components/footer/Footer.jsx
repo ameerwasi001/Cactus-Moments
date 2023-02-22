@@ -1,8 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { footerSend, facebook, instagram, linkedIn, } from '../../assets'
 import './footer.css'
 
 export default function Footer() {
+    const navigate = useNavigate()
     return (
         <div className='cactus-footerTopView'>
             <div className='cactus-footerContainer' >
@@ -18,15 +20,15 @@ export default function Footer() {
                 </div>
                 <div className='cactus-footerItemTopView margin100'>
                     <h1>Website</h1>
-                    <h2>Home</h2>
-                    <h2>About us</h2>
-                    <h2>Templates</h2>
-                    <h2>Privacy Policy</h2>
-                    <h2>Terms and Conditions</h2>
+                    <h2 onClick={() => navigate('/')}>Home</h2>
+                    <h2 onClick={() => navigate('/aboutus')}>About us</h2>
+                    <h2 onClick={() => navigate('/poster')}>Templates</h2>
+                    <h2 onClick={() => navigate('/privacypolicy')}>Privacy Policy</h2>
+                    <h2 onClick={() => navigate('/terms')}>Terms and Conditions</h2>
                 </div>
                 <div className='cactus-footerItemTopView'>
                     <h1 style={{ marginBottom: 5 }}>Support</h1>
-                    <h2>Contact us</h2>
+                    <h2 onClick={() => navigate('/contactus')}>Contact us</h2>
                     <div className='cactus-footer-input_text_view'>
                         <input placeholder='Email address' />
                         <img src={footerSend} alt={''} />

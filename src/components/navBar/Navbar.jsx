@@ -2,38 +2,39 @@ import React, { useState } from 'react'
 import './navbar.css'
 import close from '../../assets/close.png'
 import menu from '../../assets/menu.png'
-import { useNavigate } from "react-router-dom";
 import { logo, search } from '../../assets';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-    const [toggleMenu, setToggleMenu] = useState(false)
     const navigate = useNavigate()
+    const [toggleMenu, setToggleMenu] = useState(false)
     const Menu = () => (
         <>
             <div className='cactus__navbar-links_text_view'>
-                <h1 style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/' ? 'solid' : 'none' }} >Home</h1>
+                <h1 onClick={() => navigate('/')} style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/' ? 'solid' : 'none' }} >Home</h1>
             </div>
             <div className='cactus__navbar-links_text_view'>
-                <h1 style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/poster' ? 'solid' : 'none' }}>Poster</h1>
+                <h1 onClick={() => navigate('/poster')} style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/poster' ? 'solid' : 'none' }}>Poster</h1>
             </div>
             <div className='cactus__navbar-links_text_view'>
                 <h1 style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/mug' ? 'solid' : 'none' }}>Mug</h1>
             </div>
             <div className='cactus__navbar-links_text_view'>
-                <h1 style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/giftIdea' ? 'solid' : 'none' }}>Gift Idea</h1>
+                <h1 style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/giftidea' ? 'solid' : 'none' }}>Gift Idea</h1>
             </div>
             <div className='cactus__navbar-links_text_view'>
-                <h1 style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/aboutUs' ? 'solid' : 'none' }}>About us</h1>
+                <h1 onClick={() => navigate('/aboutus')} style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/aboutus' ? 'solid' : 'none' }}>About us</h1>
             </div>
             <div className='cactus__navbar-links_text_view'>
-                <h1 style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/contactUs' ? 'solid' : 'none' }}>Contact Us</h1>
+                <h1 onClick={() => navigate('/contactus')} style={{ borderBottomStyle: window.location.href === 'http://localhost:3000/contactus' ? 'solid' : 'none' }}>Contact Us</h1>
             </div>
-            <div className='cactus__navbar-links_input_view'>
-                <input placeholder='Search' />
-                <img src={search} />
+            <div onClick={() => navigate('/searchpage')} className='cactus__navbar-links_input_view'>
+                <input disabled placeholder='Search' />
+                <img alt='' src={search} />
             </div>
         </>
     )
+
     return (
         <div className='cactus__navbar'>
             <div className='cactus__navbar-links_logo'>
