@@ -1,0 +1,51 @@
+.cactus-choose_bg-model_top_view {
+  display: flex;
+  position: absolute;
+  overflow: scroll;
+  /* height: 100%; */
+  padding-top: 2rem;
+  width: 100vw;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.cactus-choose_bg_model_view {
+  display: flex;
+  margin-bottom: 3.7rem;
+  width: 90%;
+  flex-direction: column;
+  background: #FFFFFF;
+  border-radius: 4px;
+}
+
+.cactus-choose_bg_model-images_top_view {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-left: 9rem;
+  padding-right: 3rem;
+}
+
+.cactus-choose_bg_model-images_view {
+  width: 25rem;
+  height: 35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F5F5F5;
+  border-radius: 10px;
+  margin-bottom: 6rem;
+  cursor: pointer;
+  margin-right: 4rem;
+  border-color: #2B453E;
+  border-style: solid;
+}
+
+.cactus-choose_bg_model-images_view img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+}

@@ -86,7 +86,7 @@ export default function Dashboard() {
         <div className="cactus-dashboard-templete_top_view">
           {templeteArray.map((item) => {
             return (
-              <TempleteView item={item} />
+              <TempleteView onClick={() => navigate('/templetedetail')} item={item} />
             )
           })}
         </div>

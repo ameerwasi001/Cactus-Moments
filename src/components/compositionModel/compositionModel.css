@@ -1,0 +1,127 @@
+.cactus-composition-model_top_view {
+  display: flex;
+  position: absolute;
+  overflow: scroll;
+  height: 100%;
+  padding-top: 2rem;
+  width: 100vw;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.cactus-composition_model_view {
+  display: flex;
+  margin-bottom: 2rem;
+  width: 71rem;
+  flex-direction: column;
+  background: #FFFFFF;
+  border-radius: 4px;
+}
+
+.cactus-composition_model_header_view {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3.2rem 3rem;
+  background-color: #ECEBEA;
+  margin-bottom: 2rem;
+}
+
+.cactus-composition_model_header_view h1 {
+  font-family: 'K2D';
+  font-weight: 400;
+  font-size: 2.4rem;
+  line-height: 3.2rem;
+  color: #333333;
+  margin-left: 4rem;
+}
+
+.cactus-composition_model_header_view img {
+  width: 3.2rem;
+  height: 3.2rem;
+  cursor: pointer;
+  object-fit: contain;
+}
+
+.cactus-composition_model_main_image_view {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.cactus-composition_model_main_image_view img {
+  width: 16rem;
+  height: 20rem;
+  object-fit: contain;
+}
+
+.cactus-composition_model_selection_top_view {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0rem 3rem 2rem 3rem;
+}
+
+.cactus-composition_model_selection_top_view h2 {
+  font-family: 'K2D';
+  font-weight: 400;
+  font-size: 2.4rem;
+  line-height: 3.1rem;
+  color: #121212;
+}
+
+.cactus-composition_model_selection_top_view div {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+  width: 7rem;
+  height: 3.2rem;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border: 1px solid #DDDBDA;
+  border-radius: 5px;
+}
+
+.cactus-composition_model_selection_top_view img {
+  width: 1.6rem;
+  height: 1.6rem;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.cactus-composition_model_selection_top_view h3 {
+  font-family: 'K2D';
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 2rem;
+  color: #706E6B;
+}
+
+.cactus-composition_model_button_view {
+  display: flex;
+  width: 25rem;
+  height: 6rem;
+  align-items: center;
+  justify-content: center;
+  background: #2B453E;
+  border-radius: 12px;
+  align-self: center;
+  margin-bottom: 3rem;
+  cursor: pointer;
+}
+
+.cactus-composition_model_button_view h3 {
+  font-family: 'K2D';
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 2.6rem;
+  text-align: center;
+  color: #FFFFFF;
+}

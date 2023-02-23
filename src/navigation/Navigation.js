@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import * as Pages from "../pages";
 
-
 const Navigation = () => {
   return (
     <Routes>
@@ -13,6 +12,8 @@ const Navigation = () => {
       <Route path="/searchpage" element={<Pages.SearchPage />} />
       <Route path="/privacypolicy" element={<Pages.Privacypolicy />} />
       <Route path="/terms" element={<Pages.Terms />} />
+      <Route path="/templetedetail" element={<Pages.TempleteDetail />} />
+
     </Routes>
   );
 };

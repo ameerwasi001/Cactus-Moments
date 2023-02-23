@@ -6,4 +6,6 @@ export { default as Poster } from './poster/Poster'
 export { default as SearchPage } from './searchPage/SearchPage'
 export { default as Privacypolicy } from './privacypolicy/Privacypolicy'
 export { default as Terms } from './terms/Terms'
+export { default as TempleteDetail } from './templeteDetail/TempleteDetail'
+
 

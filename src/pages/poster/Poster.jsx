@@ -1,9 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { aboutUsBanner, aboutUsBorder, dummyOne, dummyThree, dummyTwo, posterBanner } from "../../assets";
 import { Footer, NavBar, TempleteSliderView, TempleteView, } from "../../components";
 import './poster.css'
 
 export default function Poster() {
+  const navigate = useNavigate()
+
   const templeteArray = [
     {
       id: 1,
@@ -64,7 +67,7 @@ export default function Poster() {
         <div className="cactus-dashboard-templete_top_view">
           {templeteArray.map((item) => {
             return (
-              <TempleteView item={item} />
+              <TempleteView onClick={() => navigate('/templetedetail')} item={item} />
             )
           })}
         </div>

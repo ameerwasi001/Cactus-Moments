@@ -1,9 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { arrowDown, dummyOne, dummyThree, dummyTwo, search } from "../../assets";
 import { Footer, NavBar, TempleteView, } from "../../components";
 import './searchPage.css'
 
 export default function SearchPage() {
+  const navigate = useNavigate()
   const templeteArray = [
     {
       id: 1,
@@ -68,7 +70,7 @@ export default function SearchPage() {
         <div className="cactus-dashboard-templete_top_view">
           {templeteArray.map((item) => {
             return (
-              <TempleteView item={item} />
+              <TempleteView onClick={() => navigate('/templetedetail')} item={item} />
             )
           })}
         </div>

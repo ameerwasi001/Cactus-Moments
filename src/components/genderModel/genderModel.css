@@ -1,0 +1,136 @@
+.cactus-gender-model_top_view {
+  display: flex;
+  position: absolute;
+  overflow: scroll;
+  padding-top: 2rem;
+  width: 100vw;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.cactus-gender_model_view {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 3.7rem;
+  width: 90%;
+  background: #FFFFFF;
+  border-radius: 4px;
+}
+
+.cactus-gender_model_side_top_view {
+  display: flex;
+  flex-direction: column;
+  padding: 5rem;
+}
+
+.cactus-gender_model_side_gender_view {
+  display: flex;
+  width: 25rem;
+  padding-right: 2.8rem;
+  height: 10rem;
+  background: #F5F5F5;
+  border-radius: 7.23148px;
+  margin-bottom: 2.5rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-style: solid;
+  border-color: #2B453E;
+}
+
+
+.cactus-gender_model_side_gender_view img {
+  width: 40%;
+  height: 90%;
+  object-fit: contain;
+  margin-right: 3rem;
+}
+
+.cactus-gender_model_side_gender_view h2 {
+  font-family: 'K2D';
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 2.6rem;
+  color: #000000;
+
+}
+
+.cactus-gender_model_divider {
+  display: flex;
+  border: 2px solid #C7C7C7;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.cactus-gender_model_detail_top_view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cactus-gender_model_detail_cross_image {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 3.2rem;
+  padding-right: 3rem;
+}
+
+.cactus-gender_model_detail_cross_image img {
+  width: 3.2rem;
+  height: 3.2rem;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.cactus-gender_model_detail_images_top_view {
+  display: flex;
+  flex: 1;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.cactus-gender_model_detail_images_top_view h1 {
+  display: flex;
+  font-family: 'K2D';
+  font-weight: 400;
+  font-size: 7rem;
+  line-height: 120%;
+  text-align: center;
+  color: #666666;
+  height: 60rem;
+  align-items: center;
+}
+
+.cactus-gender_model_detail_images_view {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-left: 5rem;
+  padding-right: 2rem;
+  width: 100%;
+}
+
+.cactus-gender_model_detail_images_view div {
+  width: 25rem;
+  height: 35rem;
+  margin-right: 4rem;
+  margin-bottom: 4rem;
+  background: #F5F5F5;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-color: #2B453E;
+  border-style: solid;
+}
+
+
+.cactus-gender_model_detail_images_view img {
+  width: 80%;
+  height: 90%;
+  object-fit: contain;
+}

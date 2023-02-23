@@ -5,7 +5,7 @@ import './templeteView.css'
 export default function TempleteView(props) {
     const { item } = props
     return (
-        <div key={item?.id} className="cactus-dashboard-templete_view">
+        <div onClick={props.onClick} key={item?.id} className="cactus-dashboard-templete_view">
             <div className="cactus-dashboard-templete_image_view">
                 <img alt='' src={item?.image} />
             </div>

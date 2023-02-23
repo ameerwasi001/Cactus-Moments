@@ -1,0 +1,62 @@
+.cactus-templete_detail-frame_dropdown_top_view {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    z-index: 1;
+}
+
+.cactus-templete_detail-frame_dropdown_view {
+    display: flex;
+    box-sizing: border-box;
+    background: #ffffff;
+    width: 22rem;
+    align-items: center;
+    border: 1px solid #DDDBDA;
+    border-radius: 5px;
+    padding: 0.6rem 1.2rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cactus-templete_detail-frame_dropdown_view h4 {
+    font-family: 'K2D';
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    color: #706E6B;
+    flex: 1;
+}
+
+.cactus-templete_detail-frame_dropdown_view img {
+    width: 1.6rem;
+    height: 1.6rem;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.cactus-templete_detail-frame_dropdown_main_view {
+    display: flex;
+    z-index: 999;
+    background-color: white;
+    width: 22rem;
+    max-height: 10rem;
+    overflow-x: scroll;
+    border: 1px solid #DDDBDA;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    position: absolute;
+    top: 3.5rem;
+    flex-direction: column;
+}
+
+.cactus-templete_detail-frame_dropdown_main_view h4 {
+    font-family: 'K2D';
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    color: #706E6B;
+    cursor: pointer;
+    padding-bottom: 0.2rem;
+}
