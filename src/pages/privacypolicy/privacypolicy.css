@@ -1,24 +1,39 @@
 .cactus-privacy_detail_top_view {
-    display: flex;
-    flex-direction: column;
-    padding: 13rem 5rem;
-    background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 13rem 5rem;
+  background-color: white;
 }
 
 .cactus-privacy_detail_top_view h1 {
-    font-family: 'K2D';
-    font-weight: 600;
-    font-size: 4rem;
-    line-height: 5.2rem;
-    color: #333333;
-    padding-bottom: 3rem;
+  font-family: "K2D";
+  font-weight: 600;
+  font-size: 4rem;
+  line-height: 5.2rem;
+  color: #333333;
+  padding-bottom: 3rem;
 }
 
 .cactus-privacy_detail_top_view h2 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 2.4rem;
-    line-height: 3.6rem;
-    letter-spacing: -0.639344px;
-    color: #666666;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 2.4rem;
+  line-height: 3.6rem;
+  letter-spacing: -0.639344px;
+  color: #666666;
+}
+
+@media screen and (max-width: 520px) {
+  .cactus-privacy_detail_top_view h1 {
+    font-size: 3rem;
+    line-height: 3.2rem;
+  }
+  .cactus-privacy_detail_top_view h2 {
+    font-size: 1.8rem;
+    line-height: 2.5rem;
+  }
+  .cactus-about_us-banner_title_view h1 {
+    font-size: 4.4rem;
+    line-height: 5.6rem;
+  }
 }

@@ -1,0 +1,84 @@
+.dropdown {
+  width: 44.5rem;
+  user-select: none;
+  /* display: flex;
+  flex-direction: row; */
+  position: relative;
+}
+.dropdown p {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 1.9rem;
+  line-height: 2.4rem;
+  color: #666666;
+  margin-bottom: 0.3rem;
+}
+.dropdown .dropdown-btn {
+  width: 44.4rem;
+  height: 6rem;
+  background: var(--color-primary-bg);
+
+  /* border: 1px solid #667080; */
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 15.0803px;
+  color: rgb(255, 255, 255);
+  display: flex;
+  /* align-items: center; */
+  cursor: pointer;
+  justify-content: space-between;
+  /* background-color: red; */
+  align-items: center;
+}
+
+.dropdown .dropdown-content {
+  position: absolute;
+  height: 20rem;
+  width: 44.4rem;
+  top: 110%;
+  left: 0 rem;
+  padding: 10px;
+  font-weight: 400;
+  font-size: 15.0803px;
+  color: #fff;
+  border: 1px solid #667080;
+  box-shadow: 3px 3px 10px 6px rgba(0, 0, 0, 0.06);
+  font-weight: 500;
+  /* color: #333; */
+  /* width: 100%; */
+  background-color: #fff;
+  z-index: 10;
+  overflow-y: scroll;
+}
+
+.dropdown .dropdown-content::-webkit-scrollbar {
+  width: 1px;
+}
+.dropdown .dropdown-content::-webkit-scrollbar-track {
+  /* background: #666666; */
+  border-radius: 2px;
+}
+.dropdown .dropdown-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 0, 0, 0);
+  border-radius: 10px;
+  /* width: 10px; */
+}
+.dropdown .dropdown-content::-webkit-scrollbar-thumb:hover {
+  background: #666666;
+  width: 10px;
+}
+.dropdown .dropdown-content .dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dropdown .dropdown-content .dropdown-item:hover {
+  color: gray;
+}
+
+.dropdown .dropdown-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* --------Media Query--------- */

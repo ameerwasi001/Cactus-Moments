@@ -3,8 +3,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0rem 5rem;
-  background: #FFFFFF;
-  box-shadow: inset -1px 1px 14px 1px rgb(0 0 0 / 10%)
+  background: #ffffff;
+  box-shadow: inset -1px 1px 14px 1px rgb(0 0 0 / 10%);
 }
 
 .cactus__navbar-links_logo img {
@@ -44,11 +44,11 @@
 
 .cactus__navbar-links_input_view {
   align-self: flex-start;
-  width: 22rem;
+  /* width: 22rem; */
   height: 3.2rem;
   border-radius: 5px;
   background-color: white;
-  border: 1px solid #DDDBDA;
+  border: 1px solid #dddbda;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -58,20 +58,20 @@
 .cactus__navbar-links_input_view input {
   border: none;
   outline: none;
-  font-family: 'K2D';
+  font-family: "K2D";
   font-weight: 400;
   font-size: 1.4rem;
   line-height: 2rem;
-  color: #706E6B;
+  color: #706e6b;
 }
 
 ::-webkit-input-placeholder {
   font-size: 14px;
-  font-family: 'K2D';
+  font-family: "K2D";
   font-weight: 400;
   font-size: 1.4rem;
   line-height: 2rem;
-  color: #706E6B;
+  color: #706e6b;
 }
 
 .cactus__navbar-links_input_view img {

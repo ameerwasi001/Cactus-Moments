@@ -1,0 +1,114 @@
+.billing-address-add-billing-main-container {
+  width: 90%;
+  /* height: 50rem; */
+  background-color: #fff;
+  margin-top: 10rem;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.billing-address-main-container {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.billing-address-add-billing-main-container {
+  font-family: "K2D";
+  font-weight: 600;
+  font-size: 2rem;
+  padding-top: 3rem;
+  color: #333333;
+  text-align: center;
+}
+.billing-address-select-mr-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5rem;
+}
+.billing-address-radio-btn-container {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+}
+
+.billing-address-select-mr-sub-container {
+  display: flex;
+  flex-direction: row;
+  width: 15rem;
+  justify-content: space-between;
+}
+.billing-address-radio-btn-container p {
+  font-size: 1.6rem;
+  color: #2b2826;
+  margin-left: 1.1rem;
+}
+
+.billing-address-add-billing-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5rem 2rem 5rem 3rem;
+  flex-wrap: wrap;
+}
+
+.billing-address-input-container1 {
+  width: 59rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.billing-address-input-container2 {
+  width: 59rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.billing-address-move-next-main-container {
+  width: 90%;
+  height: 10rem;
+  margin-top: 5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+}
+
+.billing-address-checkBox-container p {
+  font-weight: 400;
+  font-size: 1.6rem;
+
+  color: #333333;
+  font-family: "K2D";
+}
+
+.billing-address-move-next-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25rem;
+  height: 6rem;
+  background: #2b453e;
+  border-radius: 12px;
+}
+
+.billing-address-move-next-btn-container p {
+  color: #fff;
+  font-size: 2.4rem;
+}
+
+/* ------Media query */
+@media screen and (max-width: 1400px) {
+  .billing-address-add-billing-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}

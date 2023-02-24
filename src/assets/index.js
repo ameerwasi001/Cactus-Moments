@@ -40,3 +40,6 @@ export { default as male } from "./male.png";
 export { default as maleDummy } from "./maleDummy.png";
 export { default as onlyBg } from "./onlyBg.png";
 export { default as arrowUp } from "./arrowUp.png";
+export { default as radioFilled } from "./radio-fill.png";
+export { default as radio } from "./radio.png";
+export { default as creditCard } from "./credit-card.png";

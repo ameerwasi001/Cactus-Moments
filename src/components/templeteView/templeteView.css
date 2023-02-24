@@ -1,62 +1,60 @@
 .cactus-dashboard-templete_view {
-    display: flex;
-    flex-direction: column;
-    width: 30.3rem;
-    background: #FFFFFF;
-    margin-right: 4.3rem;
-    margin-bottom: 4.1rem;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.12);
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  width: 30.3rem;
+  background: #ffffff;
+  margin-right: 4.3rem;
+  margin-bottom: 4.1rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
 }
 
 .cactus-dashboard-templete_image_view img {
-    width: 30.3rem;
-    height: 37rem;
-    object-fit: cover;
+  width: 30.3rem;
+  height: 37rem;
+  object-fit: cover;
 }
 
-
 .cactus-dashboard-templete_title_view {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
 }
 
 .cactus-dashboard-templete_title_view h2 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 2rem;
-    line-height: 2.6rem;
-    text-align: center;
-    color: #333333;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 2.6rem;
+  text-align: center;
+  color: #333333;
 }
 
 .cactus-dashboard-templete_title_view img {
-    width: 2rem;
-    height: 2rem;
-    object-fit: cover;
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
 }
 
 .cactus-dashboard-templete_view h3 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 1.4rem;
-    line-height: 1.8rem;
-    text-align: center;
-    text-transform: capitalize;
-    color: #333333;
-    padding-bottom: 1rem;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+  text-align: center;
+  text-transform: capitalize;
+  color: #333333;
+  padding-bottom: 1rem;
 }
 
 .cactus-dashboard-templete_view h4 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 1.8rem;
-    line-height: 2.3rem;
-    text-align: center;
-    color: #333333;
-    padding-bottom: 1rem;
-
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  text-align: center;
+  color: #333333;
+  padding-bottom: 1rem;
 }

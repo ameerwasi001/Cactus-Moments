@@ -15,7 +15,7 @@
   flex-direction: row;
   margin-bottom: 3.7rem;
   width: 90%;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 4px;
 }
 
@@ -30,7 +30,7 @@
   width: 25rem;
   padding-right: 2.8rem;
   height: 10rem;
-  background: #F5F5F5;
+  background: #f5f5f5;
   border-radius: 7.23148px;
   margin-bottom: 2.5rem;
   flex-direction: row;
@@ -38,9 +38,8 @@
   justify-content: center;
   cursor: pointer;
   border-style: solid;
-  border-color: #2B453E;
+  border-color: #2b453e;
 }
-
 
 .cactus-gender_model_side_gender_view img {
   width: 40%;
@@ -50,17 +49,16 @@
 }
 
 .cactus-gender_model_side_gender_view h2 {
-  font-family: 'K2D';
+  font-family: "K2D";
   font-weight: 500;
   font-size: 2rem;
   line-height: 2.6rem;
   color: #000000;
-
 }
 
 .cactus-gender_model_divider {
   display: flex;
-  border: 2px solid #C7C7C7;
+  border: 2px solid #c7c7c7;
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
@@ -94,7 +92,7 @@
 
 .cactus-gender_model_detail_images_top_view h1 {
   display: flex;
-  font-family: 'K2D';
+  font-family: "K2D";
   font-weight: 400;
   font-size: 7rem;
   line-height: 120%;
@@ -118,19 +116,36 @@
   height: 35rem;
   margin-right: 4rem;
   margin-bottom: 4rem;
-  background: #F5F5F5;
+  background: #f5f5f5;
   border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-color: #2B453E;
+  border-color: #2b453e;
   border-style: solid;
 }
-
 
 .cactus-gender_model_detail_images_view img {
   width: 80%;
   height: 90%;
   object-fit: contain;
+}
+
+/* ------------Media Query------------- */
+
+@media screen and (max-width: 820px) {
+  .cactus-gender_model_detail_images_top_view h1 {
+    font-size: 4rem;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .cactus-gender_model_view {
+    display: flex;
+    flex-direction: column;
+  }
+  .cactus-gender_model_side_top_view {
+    align-items: center;
+  }
 }

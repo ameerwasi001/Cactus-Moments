@@ -1,168 +1,222 @@
 .cactus-about_us-banner_top_view {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #FAF6EE;
-    padding: 2.3rem 13rem 2.3rem 15rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #faf6ee;
+  padding: 2.3rem 13rem 2.3rem 15rem;
 }
 
 .cactus-about_us-banner_title_view {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .cactus-about_us-banner_title_view h1 {
-    font-family: 'K2D';
-    font-weight: 700;
-    font-size: 6.4rem;
-    line-height: 8.3rem;
-    color: #121212;
-    position: relative;
+  font-family: "K2D";
+  font-weight: 700;
+  font-size: 6.4rem;
+  line-height: 8.3rem;
+  color: #121212;
+  position: relative;
 }
 
 .cactus-about_us-banner_title_view img {
-    width: 27rem;
+  width: 27rem;
 }
 
 .cactus-about_us-banner_title_view h2 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 3.2rem;
-    line-height: 4.2rem;
-    padding-top: 1.5rem;
-    color: #333333;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 3.2rem;
+  line-height: 4.2rem;
+  padding-top: 1.5rem;
+  color: #333333;
 }
 
 .cactus-about_us-banner_image_view {
-    display: flex;
-    width: 50%;
-    height: 45rem
+  display: flex;
+  width: 50%;
+  height: 45rem;
 }
 
 .cactus-about_us-banner_image_view img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .cactus-about_us-story_top_view {
-    display: flex;
-    flex-direction: row;
-    background-color: white;
-    justify-content: space-between;
-    padding: 8rem 9.4rem 10rem 7.7rem;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  justify-content: space-between;
+  padding: 8rem 9.4rem 10rem 7.7rem;
 }
 
 .cactus-about_us-mission_top_view {
-    display: flex;
-    flex-direction: row;
-    background-color: white;
-    justify-content: space-between;
-    padding: 8rem 7.7rem 10rem 7.7rem;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  justify-content: space-between;
+  padding: 8rem 7.7rem 10rem 7.7rem;
 }
 
 .cactus-about_us-story_detail_view {
-    display: flex;
-    width: 50%;
-    flex-direction: column;
+  display: flex;
+  width: 50%;
+  flex-direction: column;
 }
 
 .cactus-about_us-story_detail_view h1 {
-    font-family: 'K2D';
-    font-weight: 500;
-    font-size: 4rem;
-    line-height: 6rem;
-    text-transform: capitalize;
-    color: #333333;
-    padding-bottom: 2.4rem;
+  font-family: "K2D";
+  font-weight: 500;
+  font-size: 4rem;
+  line-height: 6rem;
+  text-transform: capitalize;
+  color: #333333;
+  padding-bottom: 2.4rem;
 }
 
 .cactus-about_us-story_detail_view h2 {
-    font-family: 'K2D';
-    font-weight: 500;
-    font-size: 2rem;
-    line-height: 3.4rem;
-    padding-bottom: 4.8rem;
-    color: #333333;
+  font-family: "K2D";
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 3.4rem;
+  padding-bottom: 4.8rem;
+  color: #333333;
 }
 
 .cactus-about_us-story_detail_view h3 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 2.2rem;
-    color: #666666;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 2.2rem;
+  color: #666666;
 }
 
 .cactus-about_us-story_image_view {
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .cactus-about_us-mission_image_view {
-    display: flex;
-    flex: 1;
-    justify-content: flex-start;
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
 }
 
 .cactus-about_us-mission_image_view img {
-    width: 90%;
-    height: 100%;
-    object-fit: contain;
+  width: 90%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .cactus-about_us-story_image_view img {
-    width: 90%;
-    height: 100%;
-    object-fit: contain;
+  width: 90%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .cactus-about_us-value_top_view {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0rem 7.7rem 5rem 7.7rem;
-    background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0rem 7.7rem 5rem 7.7rem;
+  background-color: white;
 }
 
 .cactus-about_us-value_view {
-    width: 40.1rem;
-    display: flex;
-    flex-direction: column;
-    padding: 3.4rem 4.6rem 4.3rem 5.3rem;
-    background: #FAF6EE;
-    border-radius: 5px;
-    margin-right: 3.2rem;
+  width: 40.1rem;
+  display: flex;
+  flex-direction: column;
+  padding: 3.4rem 4.6rem 4.3rem 5.3rem;
+  background: #faf6ee;
+  border-radius: 5px;
+  margin-right: 3.2rem;
 }
 
 .cactus-about_us-value_view div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 2.4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 2.4rem;
 }
 
 .cactus-about_us-value_view img {
-    width: 2.4rem;
-    height: 2.4rem;
-    object-fit: cover;
-    margin-right: 1.6rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  object-fit: cover;
+  margin-right: 1.6rem;
 }
 
 .cactus-about_us-value_view h2 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 2.2rem;
-    line-height: 2.9rem;
-    color: #121212;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 2.2rem;
+  line-height: 2.9rem;
+  color: #121212;
 }
 
 .cactus-about_us-value_view h3 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 2.2rem;
-    color: #666666;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 2.2rem;
+  color: #666666;
+}
+
+@media screen and (max-width: 750px) {
+  .cactus-about_us-banner_top_view {
+    padding: 2.3rem 3rem 2.3rem 3rem;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .cactus-about_us-story_top_view {
+    padding: 3rem 3.4rem 6rem 2.7rem;
+  }
+  .cactus-about_us-value_top_view {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cactus-about_us-value_view {
+    margin-top: 2rem;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .cactus-about_us-banner_top_view {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cactus-about_us-banner_image_view img {
+    width: 33rem;
+    height: 33rem;
+  }
+  .cactus-about_us-banner_image_view {
+    width: 100%;
+    justify-content: center;
+  }
+  .cactus-about_us-story_top_view {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cactus-about_us-story_image_view img {
+    width: 32rem;
+    height: 32rem;
+  }
+  .cactus-about_us-story_image_view {
+    justify-content: center;
+  }
+  .cactus-about_us-story_detail_view {
+    width: 100%;
+  }
+  .cactus-about_us-value_top_view {
+    padding: 0 2rem 2rem 2rem;
+  }
+  .cactus-about_us-mission_top_view {
+    padding: 2rem 2rem;
+  }
 }

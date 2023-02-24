@@ -1,216 +1,352 @@
 .cactus-dashboard-main_container {
-    display: flex;
-    flex-direction: column;
-    background-color: #F0F0F0;
-    height: 100vh;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .cactus-dashboard-container {
-    display: flex;
-    flex-direction: column;
-    overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
 }
 
 .cactus-dashboard-banner_top_view {
-    padding: 7.6rem 15rem 13rem 5rem;
-    background: #FAF6EE;
-    flex-direction: row;
-    display: flex;
-    justify-content: space-between;
-    /* alig/n-items: ; */
+  padding: 7.6rem 15rem 13rem 5rem;
+  background: #faf6ee;
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+  /* alig/n-items: ; */
 }
 
 .cactus-dashboard-banner_text_view {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
 }
 
 .cactus-dashboard-banner_text_view h5 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 1.8rem;
-    line-height: 2.3rem;
-    color: #333333;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  color: #333333;
 }
 
 .cactus-dashboard-banner_text_view h1 {
-    font-family: 'K2D';
-    font-weight: 700;
-    font-size: 6.4rem;
-    line-height: 8.3rem;
-    padding-bottom: 3rem;
-    color: #333333;
+  font-family: "K2D";
+  font-weight: 700;
+  font-size: 6.4rem;
+  line-height: 8.3rem;
+  padding-bottom: 3rem;
+  color: #333333;
 }
 
 .cactus-dashboard-banner_buttons_view {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 6rem;
-    margin-bottom: 5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 6rem;
+  margin-bottom: 5rem;
 }
 
 .cactus-dashboard-banner_see_more_view {
-    display: flex;
-    width: 17rem;
-    height: 5.4rem;
-    align-items: center;
-    justify-content: center;
-    background: #333333;
-    border-radius: 0.4rem;
-    margin-right: 5rem;
-    cursor: pointer;
+  display: flex;
+  width: 17rem;
+  height: 5.4rem;
+  align-items: center;
+  justify-content: center;
+  background: #333333;
+  border-radius: 0.4rem;
+  margin-right: 5rem;
+  cursor: pointer;
 }
 
 .cactus-dashboard-banner_see_more_view h2 {
-    font-family: 'K2D';
-    font-weight: 500;
-    font-size: 1.8rem;
-    line-height: 2.3rem;
-    color: #FFFFFF;
+  font-family: "K2D";
+  font-weight: 500;
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  color: #ffffff;
 }
 
 .cactus-dashboard-banner_contact_button {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 17rem;
-    height: 5.4rem;
-    border: 0.84px solid #2B453E;
-    border-radius: 4.2px;
-    cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 17rem;
+  height: 5.4rem;
+  border: 0.84px solid #2b453e;
+  border-radius: 4.2px;
+  cursor: pointer;
 }
 
 .cactus-dashboard-banner_contact_button h3 {
-    font-family: 'K2D';
-    font-weight: 500;
-    font-size: 1.8rem;
-    line-height: 2.3rem;
-    text-align: center;
-    text-transform: capitalize;
-    color: #2B453E;
+  font-family: "K2D";
+  font-weight: 500;
+  font-size: 1.8rem;
+  line-height: 2.3rem;
+  text-align: center;
+  text-transform: capitalize;
+  color: #2b453e;
 }
 
 .cactus-dashboard-banner_counter_top_view {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .cactus-dasboard-banner_counter_view {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 5rem;
 }
 
 .cactus-dasboard-banner_counter_view h4 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 3.2rem;
-    line-height: 4.2rem;
-    color: #2B453E;
-    padding-bottom: 1rem;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 3.2rem;
+  line-height: 4.2rem;
+  color: #2b453e;
+  padding-bottom: 1rem;
 }
 
 .cactus-dasboard-banner_counter_view h6 {
-    font-family: 'K2D';
-    font-weight: 300;
-    font-size: 2.4rem;
-    line-height: 3.1rem;
-    color: #333333;
+  font-family: "K2D";
+  font-weight: 300;
+  font-size: 2.4rem;
+  line-height: 3.1rem;
+  color: #333333;
 }
 
 .cactus-dashboard-banner_image_view {
-    display: flex;
-    flex: 1;
-    align-items: flex-end;
-    justify-content: flex-end;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .cactus-dashboard-banner_image_view img {
-    width: 92%;
-    height: 92%;
-    object-fit: contain;
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
 }
 
 .cactus-dashboard-templete_top_view {
-    display: flex;
-    background-color: white;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding-right: 0.6rem;
-    padding-bottom: 9rem;
-    padding-left: 5rem;
+  display: flex;
+  background-color: white;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding-right: 0.6rem;
+  padding-bottom: 9rem;
+  padding-left: 5rem;
+  justify-content: center;
 }
 
 .cactus-dashboard-about_us_top_view {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 13rem 8.6rem;
-    background-color: #FFFFFF;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 13rem 8.6rem;
+  background-color: #ffffff;
 }
 
 .cactus-dashboard-about_us_main_image {
-    display: flex;
-    width: 50%;
-    height: 100%;
-    margin-right: 5rem;
+  display: flex;
+  width: 50%;
+  height: 100%;
+  margin-right: 5rem;
 }
 
 .cactus-dashboard-about_us_main_image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .cactus-dashboard-about_us_detail_view {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 .cactus-dashboard-about_us_detail_view h2 {
-    font-family: 'K2D';
-    font-weight: 500;
-    font-size: 1.4rem;
-    line-height: 1.8rem;
-    color: #2B453E;
-    padding-bottom: 1.3rem;
+  font-family: "K2D";
+  font-weight: 500;
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+  color: #2b453e;
+  padding-bottom: 1.3rem;
 }
 
 .cactus-dashboard-about_us_detail_view h1 {
-    font-family: 'K2D';
-    font-weight: 600;
-    font-size: 4rem;
-    line-height: 6rem;
-    padding-bottom: 2.4rem;
-    color: #333333;
+  font-family: "K2D";
+  font-weight: 600;
+  font-size: 4rem;
+  line-height: 6rem;
+  padding-bottom: 2.4rem;
+  color: #333333;
 }
 
 .cactus-dashboard-about_us_detail_view h3 {
-    font-family: 'K2D';
-    font-weight: 500;
-    font-size: 2rem;
-    line-height: 3.4rem;
-    color: #333333;
-    padding-bottom: 4.8rem;
+  font-family: "K2D";
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 3.4rem;
+  color: #333333;
+  padding-bottom: 4.8rem;
 }
 
 .cactus-dashboard-about_us_detail_view h4 {
-    font-family: 'K2D';
-    font-weight: 400;
-    font-size: 2rem;
-    line-height: 3.4rem;
-    color: #666666;
-    padding-bottom: 6rem;
+  font-family: "K2D";
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 3.4rem;
+  color: #666666;
+  padding-bottom: 6rem;
 }
 
 .alignSelf {
-    align-self: flex-start;
+  align-self: flex-start;
+}
+
+@media screen and (max-width: 950px) {
+  .cactus-dashboard-banner_top_view {
+    padding: 7.6rem 5rem 13rem 5rem;
+  }
+  .cactus-dashboard-banner_text_view h1 {
+    line-height: 6.3rem;
+  }
+  .cactus-dashboard-contact_us_form_view {
+    margin-left: 0rem;
+    margin-top: 3rem;
+  }
+  .cactus-dashboard-about_us_detail_view h1 {
+    font-size: 3rem;
+    padding-bottom: 0;
+    line-height: 4rem;
+  }
+  .cactus-dashboard-about_us_detail_view h4 {
+    line-height: 2.6rem;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .cactus-dashboard-banner_text_view h5 {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+  }
+  .cactus-dashboard-banner_text_view h1 {
+    font-size: 2.2rem;
+    line-height: 2.5rem;
+    padding-bottom: 1rem;
+  }
+  .cactus-dashboard-banner_top_view {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cactus-dashboard-banner_image_view img {
+    width: 33rem;
+    height: 33rem;
+  }
+  .cactus-dashboard-banner_image_view {
+    justify-content: center;
+    margin-top: 3rem;
+  }
+}
+
+@media screen and (max-width: 690px) {
+  .cactus-dashboard-banner_text_view {
+    width: 100%;
+  }
+  .cactus-dashboard-banner_see_more_view {
+    width: 10rem;
+    height: 3.6rem;
+  }
+  .cactus-dashboard-banner_see_more_view h2 {
+    font-size: 1.2rem;
+  }
+  .cactus-dashboard-banner_contact_button {
+    width: 10rem;
+    height: 3.6rem;
+  }
+  .cactus-dashboard-banner_contact_button h3 {
+    font-size: 1.2rem;
+  }
+  .cactus-dasboard-banner_counter_view h4 {
+    font-size: 2.2rem;
+    line-height: 2.6rem;
+  }
+  .cactus-dasboard-banner_counter_view h6 {
+    font-size: 1.8rem;
+  }
+  .cactus-dashboard-slider_title_view h1 {
+    font-size: 2rem;
+    line-height: 2.4rem;
+  }
+  .cactus-dashboard-slider_title_view h2 {
+    font-size: 1.6rem;
+    line-height: 2rem;
+  }
+  .cactus-dashboard-slider_arrow_image img {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-left: 3.4rem;
+  }
+  .cactus-dashboard-slider_templete_view img {
+    width: 6rem;
+    height: 6rem;
+  }
+  .cactus-dashboard-slider_templete_view h2 {
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+  }
+  .cactus-dashboard-about_us_top_view {
+    padding: 2rem;
+  }
+  .cactus-dashboard-about_us_top_view h2 {
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+  }
+  .cactus-dashboard-about_us_detail_view h1 {
+    font-size: 2rem;
+    line-height: 2.2rem;
+  }
+  .cactus-dashboard-about_us_detail_view h3 {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+    padding-bottom: 2.2rem;
+  }
+  .cactus-dashboard-about_us_detail_view h4 {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+    padding-bottom: 2.2rem;
+  }
+  .cactus-dashboard-about_us_detail_view {
+    width: 50%;
+  }
+  .cactus-dashboard-contact_us_form_button_view {
+    width: 12rem;
+    height: 4rem;
+  }
+  .cactus-dashboard-contact_us_form_button_view h6 {
+    font-size: 1.4rem;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .cactus-dashboard-slider_top_view {
+    padding: 2rem 1rem 2rem 1rem;
+  }
+  .cactus-dashboard-slider_arrow_image img {
+    margin-left: 2.2rem;
+  }
+  .cactus-dashboard-slider_templete_view {
+    margin-left: 1.6rem;
+  }
 }
