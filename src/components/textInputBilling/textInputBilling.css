@@ -8,6 +8,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 3rem;
+  border-radius: 5px;
 }
 
 .text-input-billing-main-container h3 {
@@ -16,6 +17,7 @@
   line-height: 16px;
   color: #0e191e;
   margin-left: 2.8rem;
+  font-family: "K2D";
 }
 .text-input-billing-main-container input {
   min-width: 60%;
@@ -29,6 +31,17 @@
   line-height: 2rem;
   color: #000000;
   font-family: "K2D";
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+::placeholder {
+  color: #c7c7c7;
+  opacity: 1; /* Firefox */
 }
 
 .text-input-billing-main-container img {
@@ -46,4 +59,30 @@
   height: 4.7rem;
   border-right: 2px solid #c7c7c7;
   margin-left: 1.5rem;
+}
+
+@media screen and (max-width: 720px) {
+  .text-input-billing-main-container {
+    width: 43rem !important;
+  }
+  .text-input-billing-main-container h3 {
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+  }
+  .text-input-billing-main-container {
+    justify-content: space-evenly;
+  }
+  .text-input-billing-main-container img {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .text-input-billing-main-container h3 {
+    margin-left: 1rem;
+    font-size: 1rem;
+  }
+  .text-input-billing-main-container {
+    width: 27rem !important;
+  }
 }

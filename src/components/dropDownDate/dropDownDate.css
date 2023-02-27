@@ -33,7 +33,7 @@
 
 .dropdown .dropdown-content {
   position: absolute;
-  height: 20rem;
+  height: 44rem;
   width: 44.4rem;
   top: 110%;
   left: 0 rem;
@@ -82,3 +82,34 @@
 }
 
 /* --------Media Query--------- */
+
+@media screen and (max-width: 720px) {
+  .dropdown p {
+    font-size: 1.2rem;
+  }
+  .dropdown .dropdown-btn img {
+    width: 1rem;
+    height: 1rem;
+  }
+  .dropdown .dropdown-btn {
+    width: 7rem !important;
+  }
+  .dropdown {
+    width: 7rem !important;
+  }
+  .dropdown .dropdown-content {
+    width: 13rem !important;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .dropdown .dropdown-btn {
+    width: 6rem !important;
+  }
+  .dropdown {
+    width: 6em !important;
+  }
+  .dropdown .dropdown-content {
+    width: 8rem !important;
+  }
+}

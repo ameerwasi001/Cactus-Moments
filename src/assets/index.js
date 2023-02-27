@@ -43,3 +43,5 @@ export { default as arrowUp } from "./arrowUp.png";
 export { default as radioFilled } from "./radio-fill.png";
 export { default as radio } from "./radio.png";
 export { default as creditCard } from "./credit-card.png";
+export { default as creditCardBlack } from "./credit-card-black.png";
+export { default as successGif } from "./success-gif.gif";

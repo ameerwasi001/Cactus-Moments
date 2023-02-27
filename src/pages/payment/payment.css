@@ -1,0 +1,173 @@
+.payment-method-price-main-container {
+  height: 13.8rem;
+  width: 50%;
+  background: #eaf6ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  border-radius: 1rem;
+  margin-top: 10rem;
+}
+
+.payment-method-price-main-container h2 {
+  color: #333333;
+  font-size: 3.2rem;
+  font-weight: 600;
+  font-family: "K2D";
+}
+
+.payment-method-credit-card-main-container {
+  margin-bottom: 13rem;
+  width: 50%;
+  background: #fff;
+  display: flex;
+  box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 5rem;
+}
+
+.payment-method-credit-card-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 5rem;
+  margin-top: 5.3rem;
+}
+.paymwnt-methood-credit-card-img-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.paymwnt-methood-credit-card-img-container img {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.payment-method-credit-card-img img {
+  width: 4.8rem;
+  height: 4.8rem;
+  margin-left: 2.3rem;
+}
+
+.paymwnt-methood-credit-card-img-container h2 {
+  font-family: "K2D";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 42px;
+  color: #2b2826;
+  margin-left: 1.4rem;
+}
+
+.payment-text-input-main-container {
+  padding: 0 5rem;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.payment-input-value-card-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.payment-btn-main-container {
+  width: 100%;
+  height: 6rem;
+  border-radius: 12px;
+  background: #2b453e;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5rem;
+  cursor: pointer;
+}
+
+.payment-btn-main-container p {
+  font-family: "K2D";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 2.4rem;
+  color: #fff;
+}
+/* -----------------Next Move--------------- */
+.after-payment-main-container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.after-payment-main-container {
+  margin-top: 13rem;
+}
+
+.after-payment-main-container img {
+  width: 25rem;
+  height: 25rem;
+}
+
+.after-payment-main-container h2 {
+  font-family: "K2D";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 3.2rem;
+  color: #263238;
+}
+
+.after-payment-main-container p {
+  font-family: "K2D";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 2.4rem;
+  color: #666666;
+  width: 54rem;
+  margin-bottom: 13rem;
+}
+
+/* -----------Media Query------------ */
+
+@media screen and (max-width: 720px) {
+  .payment-method-credit-card-main-container {
+    width: 90%;
+  }
+  .payment-method-price-main-container {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .payment-text-input-main-container {
+    align-items: center;
+  }
+  .payment-input-value-card-info-container {
+    justify-content: center;
+    align-items: center;
+  }
+  .paymwnt-methood-credit-card-img-container h2 {
+    font-size: 2rem;
+  }
+  .payment-method-credit-card-img img {
+    width: 4rem;
+    height: 4rem;
+  }
+  .payment-method-price-main-container h2 {
+    font-size: 2rem;
+  }
+  .after-payment-main-container h2 {
+    font-size: 2rem;
+  }
+  .after-payment-main-container p {
+    width: 100%;
+    font-size: 1.8rem;
+  }
+}

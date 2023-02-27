@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { radio, radioFilled } from "../../assets";
 import { Footer, TextInput } from "../../components";
 import DropDownDate from "../../components/dropDownDate/dropDownDate";
@@ -17,45 +18,9 @@ const mrArr = [
   },
 ];
 
-const yearArr = [
-  {
-    label: "1995",
-    value: 1995,
-  },
-  {
-    label: "1996",
-    value: 1996,
-  },
-  {
-    label: "1997",
-    value: 1997,
-  },
-  {
-    label: "1998",
-    value: 1998,
-  },
-  {
-    label: "1999",
-    value: 1999,
-  },
-  {
-    label: "2000",
-    value: 2000,
-  },
-  {
-    label: "2001",
-    value: 2001,
-  },
-];
+const yearArr = [];
 
-const dayArr = [
-  { label: 1, value: 1 },
-  { label: 2, value: 2 },
-  { label: 3, value: 3 },
-  { label: 4, value: 4 },
-  { label: 5, value: 5 },
-  { label: 6, value: 6 },
-];
+const dayArr = [];
 
 const monthArr = [
   { label: "january", value: "january" },
@@ -64,6 +29,11 @@ const monthArr = [
   { label: "May", value: "May" },
   { label: "Jun", value: "Jun" },
   { label: "July", value: "July" },
+  { label: "August", value: "August" },
+  { label: "September", value: "September" },
+  { label: "October", value: "october" },
+  { label: "November", value: "november" },
+  { label: "December", value: "december" },
 ];
 
 const countryArr = [
@@ -76,6 +46,7 @@ const countryArr = [
 ];
 
 const BillingAdress = () => {
+  const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
   const [dayselect, setDaySelected] = useState({ label: "Day", value: "Day" });
@@ -91,6 +62,17 @@ const BillingAdress = () => {
     label: "Year",
     value: "Year",
   });
+
+  useEffect(() => {
+    for (let i = 0; i < 32; i++) {
+      dayArr.push({ label: i, value: i });
+    }
+
+    for (let i = 1946; i <= 2023; i++) {
+      yearArr.push({ label: i, value: i });
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -154,7 +136,7 @@ const BillingAdress = () => {
                   options={monthArr}
                   selected={monthSelect}
                   setSelected={setMonthSelected}
-                  bg={{ width: "10rem" }}
+                  bg={{ width: "15rem" }}
                 />
                 <div className="text-input-billing-input-divider"></div>
                 <DropDownDate
@@ -218,7 +200,10 @@ const BillingAdress = () => {
               </span>
             </p>
           </div>
-          <div className="billing-address-move-next-btn-container">
+          <div
+            onClick={() => navigate("/payment")}
+            className="billing-address-move-next-btn-container"
+          >
             <p>Next</p>
           </div>
         </div>

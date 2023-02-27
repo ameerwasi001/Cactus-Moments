@@ -9,9 +9,10 @@ const TextInputBilling = ({
   flag,
   placeholder,
   inputStyle,
+  mainWidth,
 }) => {
   return (
-    <div className="text-input-billing-main-container">
+    <div style={mainWidth} className="text-input-billing-main-container">
       <div className="text-input-billing-divider-container">
         <h3>{title}</h3>
         <div className="text-input-billing-input-divider"></div>

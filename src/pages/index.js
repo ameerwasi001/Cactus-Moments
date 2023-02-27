@@ -7,3 +7,4 @@ export { default as Privacypolicy } from "./privacypolicy/Privacypolicy";
 export { default as Terms } from "./terms/Terms";
 export { default as TempleteDetail } from "./templeteDetail/TempleteDetail";
 export { default as BillingAddress } from "./billingAddress/billingAdress";
+export { default as Payment } from "./payment/payment";

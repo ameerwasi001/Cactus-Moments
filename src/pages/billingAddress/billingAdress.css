@@ -112,6 +112,7 @@
   height: 6rem;
   background: #2b453e;
   border-radius: 12px;
+  cursor: pointer;
 }
 
 .billing-address-move-next-btn-container p {
@@ -125,5 +126,22 @@
   .billing-address-add-billing-container {
     flex-direction: column;
     align-items: center;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .billing-address-checkBox-container p {
+    font-size: 1rem;
+  }
+  .billing-address-move-next-main-container {
+    flex-direction: column;
+  }
+  .billing-address-move-next-btn-container {
+    width: 16rem;
+    height: 5.5rem;
+    margin-bottom: 2rem;
+  }
+  .billing-address-move-next-btn-container p {
+    font-size: 1.8rem;
   }
 }

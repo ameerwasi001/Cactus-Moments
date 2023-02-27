@@ -5,14 +5,30 @@
   padding: 0rem 5rem;
   background: #ffffff;
   box-shadow: inset -1px 1px 14px 1px rgb(0 0 0 / 10%);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
-
+.cactus__navbar-links_logo {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
 .cactus__navbar-links_logo img {
   width: 9rem;
   height: 9rem;
   object-fit: cover;
 }
 
+.cactus__navbar-links_logo p {
+  font-family: "K2D";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 26px;
+  color: #2b453e;
+  margin-left: 1.5rem;
+}
 .cactus__navbar-links {
   flex: 1;
   display: flex;
