@@ -76,6 +76,7 @@ const countryArr = [
 ];
 
 const BillingAdress = () => {
+  const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
   const [dayselect, setDaySelected] = useState({ label: "Day", value: "Day" });
   const [countryselect, setCountrySelected] = useState({
@@ -117,10 +118,26 @@ const BillingAdress = () => {
           </div>
           <div className="billing-address-add-billing-container">
             <div className="billing-address-input-container1">
-              <TextInputBilling title={"First Name*"} type={"text"} />
-              <TextInputBilling title={"Last Name*"} type={"text"} />
-              <TextInputBilling title={"Email Address*"} type={"email"} />
-              <TextInputBilling title={"Mobile*"} type={"number"} />
+              <TextInputBilling
+                inputStyle={{ width: "70%" }}
+                title={"First Name*"}
+                type={"text"}
+              />
+              <TextInputBilling
+                inputStyle={{ width: "70%" }}
+                title={"Last Name*"}
+                type={"text"}
+              />
+              <TextInputBilling
+                inputStyle={{ width: "65%" }}
+                title={"Email Address*"}
+                type={"email"}
+              />
+              <TextInputBilling
+                inputStyle={{ width: "75%" }}
+                title={"Mobile*"}
+                type={"number"}
+              />
               <div className="text-input-billing-main-container">
                 <div className="text-input-billing-divider-container">
                   <h3>Date of Birth*</h3>
@@ -164,15 +181,36 @@ const BillingAdress = () => {
                   bg={{ width: "40rem" }}
                 />
               </div>
-              <TextInputBilling title={"City*"} type={"text"} />
-              <TextInputBilling title={"Post Code*"} type={"number"} />
-              <TextInputBilling title={"Address*"} type={"text"} />
-              <TextInputBilling title={"Address line 2*"} type={"text"} />
+              <TextInputBilling
+                inputStyle={{ width: "80%" }}
+                title={"City*"}
+                type={"text"}
+              />
+              <TextInputBilling
+                inputStyle={{ width: "75%" }}
+                title={"Post Code*"}
+                type={"number"}
+              />
+              <TextInputBilling
+                inputStyle={{ width: "75%" }}
+                title={"Address*"}
+                type={"text"}
+              />
+              <TextInputBilling
+                inputStyle={{ width: "65%" }}
+                title={"Address line 2*"}
+                type={"text"}
+              />
             </div>
           </div>
         </div>
         <div className="billing-address-move-next-main-container">
           <div className="billing-address-checkBox-container">
+            <input
+              checked={ischecked}
+              onChange={() => setIschecked(!ischecked)}
+              type="checkbox"
+            />
             <p>
               I Agree with all{" "}
               <span style={{ textDecoration: "underline" }}>
