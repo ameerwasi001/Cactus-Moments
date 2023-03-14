@@ -1,52 +1,67 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { aboutUsImage, banner, dummyOne, dummyThree, dummyTwo } from "../../assets";
-import { ContactUsView, Footer, NavBar, TempleteSliderView, TempleteView, } from "../../components";
-import './dashboard.css'
+import {
+  aboutUsImage,
+  banner,
+  dummyOne,
+  dummyThree,
+  dummyTwo,
+  shape,
+} from "../../assets";
+import {
+  ContactUsView,
+  Footer,
+  NavBar,
+  TempleteSliderView,
+  TempleteView,
+} from "../../components";
+import "./dashboard.css";
 
 export default function Dashboard() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const templeteArray = [
     {
       id: 1,
-      image: dummyOne
+      image: dummyOne,
+      price: "$35",
     },
     {
       id: 2,
-      image: dummyTwo
-
+      image: dummyTwo,
+      price: "$35",
     },
     {
       id: 3,
-      image: dummyThree
-
+      image: dummyThree,
+      price: "$35",
     },
     {
       id: 4,
-      image: dummyOne
-
+      image: dummyOne,
+      price: "$35",
     },
+
     {
       id: 5,
-      image: dummyThree
-
+      image: dummyThree,
+      price: "$35",
     },
     {
       id: 6,
-      image: dummyOne
-
+      image: dummyOne,
+      price: "$35",
     },
     {
       id: 7,
-      image: dummyThree
-
+      image: dummyThree,
+      price: "$35",
     },
     {
       id: 8,
-      image: dummyTwo
-
-    }
-  ]
+      image: dummyTwo,
+      price: "$35",
+    },
+  ];
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -56,9 +71,15 @@ export default function Dashboard() {
           <div className="cactus-dashboard-banner_text_view">
             <h5>Welcome to Cactus Moments</h5>
             <h1>
-              Get your favorite Illustration template
+              Get your favorite{" "}
+              <span style={{ color: "#2B453E" }}>Illustration</span> template
             </h1>
-            <h5>Lorem ipsum dolor sit amet consectetur. A diam elit pulvinar nunc condimentum donec. Ultricies dolor lacus gravida congue quam ultrices id lectus. Tempus luctus aenean massa velit duis phasellus .</h5>
+            <h5>
+              Lorem ipsum dolor sit amet consectetur. A diam elit pulvinar nunc
+              condimentum donec. Ultricies dolor lacus gravida congue quam
+              ultrices id lectus. Tempus luctus aenean massa velit duis
+              phasellus .
+            </h5>
             <div className="cactus-dashboard-banner_buttons_view">
               <div className="cactus-dashboard-banner_see_more_view">
                 <h2>See More</h2>
@@ -79,15 +100,18 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="cactus-dashboard-banner_image_view">
-            <img alt='' src={banner} />
+            <img alt="" src={banner} />
           </div>
         </div>
-        <TempleteSliderView title={'Popular Templates'} viewAll />
+        <TempleteSliderView title={"Popular Templates"} viewAll />
         <div className="cactus-dashboard-templete_top_view">
           {templeteArray.map((item) => {
             return (
-              <TempleteView onClick={() => navigate('/templetedetail')} item={item} />
-            )
+              <TempleteView
+                onClick={() => navigate("/templetedetail")}
+                item={item}
+              />
+            );
           })}
         </div>
         <ContactUsView />
@@ -99,13 +123,28 @@ export default function Dashboard() {
           <div className="cactus-dashboard-about_us_detail_view">
             <h2>ABOUT US</h2>
             <h1>Cactus Moments</h1>
-            <h3>Cactus moment is a Customize able illustration providesof family trips, outing, couple trips etc</h3>
-            <h4>Lorem ipsum dolor sit amet consectetur. Convallis nunc turpis consectetur purus felis et non. Blandit a sed cursus massa feugiat ut consectetur ornare diam. </h4>
-            <div className="cactus-dashboard-contact_us_form_button_view" style={{ alignSelf: 'flex-start' }}>
-              <h6 onClick={() => navigate('/aboutus')}>See More</h6>
+            <h3>
+              Cactus moment is a Customize able illustration providesof family
+              trips, outing, couple trips etc
+            </h3>
+            <h4>
+              Lorem ipsum dolor sit amet consectetur. Convallis nunc turpis
+              consectetur purus felis et non. Blandit a sed cursus massa feugiat
+              ut consectetur ornare diam.{" "}
+            </h4>
+            <div className="cactus-dashboard-contact_us_form_button_view-container">
+              <div
+                className="cactus-dashboard-contact_us_form_button_view"
+                style={{ alignSelf: "flex-start" }}
+              >
+                <h6 onClick={() => navigate("/aboutus")}>See More</h6>
+              </div>
+              <div className="cactus-dashboard-contact_us_form_button_view-shape">
+                <img src={shape} alt="shape.png" />
+              </div>
             </div>
-            <div>
-            </div>
+
+            <div></div>
           </div>
         </div>
         <Footer />

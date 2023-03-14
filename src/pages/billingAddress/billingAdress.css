@@ -1,5 +1,5 @@
 .billing-address-add-billing-main-container {
-  width: 90%;
+  width: 84%;
   /* height: 50rem; */
   background-color: #fff;
   margin-top: 10rem;
@@ -41,7 +41,7 @@
 .billing-address-select-mr-sub-container {
   display: flex;
   flex-direction: row;
-  width: 15rem;
+  width: 17rem;
   justify-content: space-between;
 }
 .billing-address-radio-btn-container p {
@@ -60,19 +60,19 @@
 }
 
 .billing-address-input-container1 {
-  width: 59rem;
+  width: 50rem;
   display: flex;
   flex-direction: column;
 }
 
 .billing-address-input-container2 {
-  width: 59rem;
+  width: 50rem;
   display: flex;
   flex-direction: column;
 }
 
 .billing-address-move-next-main-container {
-  width: 90%;
+  width: 84%;
   height: 10rem;
   margin-top: 5rem;
   display: flex;
@@ -91,13 +91,14 @@
   cursor: pointer;
   width: 1.6rem;
   height: 1.6rem;
-  border-radius: none;
+  /* border-radius: none; */
+  border: 1.66667px solid #666666 !important;
 }
 
 .billing-address-checkBox-container p {
   font-weight: 400;
   font-size: 1.6rem;
-  margin-left: 2rem;
+  margin-left: 1.2rem;
   color: #2b2826;
   font-family: "K2D";
   cursor: pointer;

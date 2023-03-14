@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.6);
+  margin-top: 8rem;
 }
 
 .cactus-choose_bg_model_view {
@@ -16,7 +17,7 @@
   margin-bottom: 3.7rem;
   width: 90%;
   flex-direction: column;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 4px;
 }
 
@@ -35,12 +36,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #F5F5F5;
+  background: #f5f5f5;
   border-radius: 10px;
   margin-bottom: 6rem;
   cursor: pointer;
   margin-right: 4rem;
-  border-color: #2B453E;
+  border-color: #2b453e;
   border-style: solid;
 }
 

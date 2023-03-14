@@ -57,7 +57,7 @@ input::-webkit-inner-spin-button {
 
 .text-input-billing-input-divider {
   height: 4.7rem;
-  border-right: 2px solid #c7c7c7;
+  border-right: 1.5px solid #c7c7c7;
   margin-left: 1.5rem;
 }
 

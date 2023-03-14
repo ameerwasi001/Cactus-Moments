@@ -98,34 +98,42 @@ export default function TempleteDetail() {
     {
       id: 1,
       image: dummyOne,
+      price: "$35",
     },
     {
       id: 2,
       image: dummyTwo,
+      price: "$35",
     },
     {
       id: 3,
       image: dummyThree,
+      price: "$35",
     },
     {
       id: 4,
       image: dummyOne,
+      price: "$35",
     },
     {
       id: 5,
       image: dummyThree,
+      price: "$35",
     },
     {
       id: 6,
       image: dummyOne,
+      price: "$35",
     },
     {
       id: 7,
       image: dummyThree,
+      price: "$35",
     },
     {
       id: 8,
       image: dummyTwo,
+      price: "$35",
     },
   ];
 
@@ -200,7 +208,7 @@ export default function TempleteDetail() {
             <div className="cactus-templete_detail-form_top_view">
               <div className="cactus-templete_detail-form_title">
                 <h4>Personalize</h4>
-                <h5>Composition of the family</h5>
+                <h5>COMPOSITION OF THE FAMILY</h5>
               </div>
               <CustomInputWithDropdown
                 type={"name"}

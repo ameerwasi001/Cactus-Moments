@@ -19,32 +19,32 @@
 }
 
 .cactus-footerItemTopView h1 {
-  font-family: 'K2D';
-  font-weight: 300;
+  font-family: "K2D";
+  font-weight: 400;
   font-size: 3.2rem;
   line-height: 5rem;
   letter-spacing: -0.5px;
-  padding-bottom: 2.4rem;
-  color: #FFFFFF;
+  padding-bottom: 2rem;
+  color: #ffffff;
 }
 
 .cactus-footerItemTopView h4 {
-  font-family: 'K2D';
-  font-weight: 400;
+  font-family: "K2D";
+  font-weight: 500;
   font-size: 3rem;
   line-height: 2.6rem;
   padding-bottom: 1.6rem;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .cactus-footerItemTopView h2 {
-  font-family: 'K2D';
-  font-weight: 300;
+  font-family: "K2D";
+  font-weight: 400;
   font-size: 2rem;
   line-height: 3.2rem;
   letter-spacing: -0.5px;
   padding-bottom: 1.8rem;
-  color: #FFFFFF;
+  color: #ffffff;
   cursor: pointer;
 }
 
@@ -55,16 +55,17 @@
   line-height: 1.8rem;
   text-align: center;
   color: #b9b9b9;
+  margin-top: 5.5rem;
 }
 
 .cactus-footerItemTopView p {
   margin-bottom: 2.3rem;
-  max-width: 32rem;
-  font-family: 'K2D';
+  max-width: 32.9rem;
+  font-family: "K2D";
   font-weight: 300;
   font-size: 1.6rem;
   line-height: 2.4rem;
-  color: #C7C7C7;
+  color: #c7c7c7;
 }
 
 .cactus-footer-input_text_view {
@@ -84,14 +85,13 @@
   border: none;
   outline: none;
   background-color: transparent;
-  font-family: 'K2D';
+  font-family: "K2D";
   font-weight: 400;
   font-size: 1.4rem;
   line-height: 3.4rem;
   width: 80%;
-  color: #C7C7C7;
+  color: #c7c7c7;
 }
-
 
 .cactus-footer-input_text_view img {
   width: 2.4rem;
@@ -103,7 +103,7 @@
 .cactus-footerSocialView img {
   width: 2.2rem;
   height: 2.2rem;
-  margin-right: 1.6rem;
+  margin-right: 2.4rem;
   cursor: pointer;
 }
 
@@ -114,7 +114,6 @@
 }
 
 @media screen and (max-width: 1077px) {
-
   .cactus-footerTopView {
     background-color: #121212;
     padding: 1.9rem 10rem 1rem 10rem;
@@ -137,7 +136,7 @@
 @media screen and (max-width: 650px) {
   .cactus-footerItemTopView h1 {
     font-size: 2.8rem;
-    line-height: 4.6re, ;
+    line-height: 4.6re;
     padding-bottom: 2.4rem;
   }
 

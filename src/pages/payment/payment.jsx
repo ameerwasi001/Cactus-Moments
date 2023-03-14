@@ -70,13 +70,15 @@ const Payment = () => {
           ) : (
             <div className="after-payment-main-container">
               <img src={successGif} alt="gif" />
-              <h2>Your Order placed Succesfully</h2>
-              <p>
-                Your order Number is{" "}
-                <span style={{ color: "#333333" }}>#545734</span> .We send an
-                email to you and You will received your Order with in 5 to 7
-                working days thanks.
-              </p>
+              <div className="after-payment-text-main-container">
+                <h2>Your Order placed Succesfully</h2>
+                <p>
+                  Your order Number is{" "}
+                  <span style={{ color: "#333333" }}>#545734</span> .We send an
+                  email to you and You will received your Order with in 5 to 7
+                  working days thanks.
+                </p>
+              </div>
             </div>
           )}
         </div>
