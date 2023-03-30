@@ -6,6 +6,7 @@ import {
   dummyOne,
   dummyThree,
   dummyTwo,
+  homeImage2,
   shape,
 } from "../../assets";
 import {
@@ -42,7 +43,7 @@ export default function Dashboard() {
       <div className="cactus-dashboard-container">
         <div className="cactus-dashboard-banner_top_view">
           <div className="cactus-dashboard-banner_text_view">
-            <h5>Welcome to Cactus Moments</h5>
+            {/* <h5>Welcome to Cactus Moments</h5> */}
             <h1>
               Get your favorite{" "}
               <span style={{ color: "#2B453E" }}>Illustration</span> template
@@ -73,7 +74,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="cactus-dashboard-banner_image_view">
-            <img alt="" src={banner} />
+            <img alt="" src={homeImage2} />
           </div>
         </div>
         <TempleteSliderView title={"Popular Templates"} viewAll />

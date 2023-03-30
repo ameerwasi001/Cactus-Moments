@@ -45,3 +45,4 @@ export { default as radio } from "./radio.png";
 export { default as creditCard } from "./credit-card.png";
 export { default as creditCardBlack } from "./credit-card-black.png";
 export { default as successGif } from "./success-gif.gif";
+export { default as homeImage2 } from "./home-image2.png";

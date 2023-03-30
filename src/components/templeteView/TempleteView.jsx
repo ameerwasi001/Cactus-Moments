@@ -1,5 +1,5 @@
 import React from "react";
-import { colorPicker } from "../../assets";
+import { colorPicker, logo } from "../../assets";
 import "./templeteView.css";
 
 export default function TempleteView(props) {
@@ -16,7 +16,7 @@ export default function TempleteView(props) {
       <div>
         <div className="cactus-dashboard-templete_title_view">
           <h2>{item?.name}</h2>
-          <img alt="" src={colorPicker} />
+          <img alt="" src={logo} />
         </div>
         <h3>{item?.desc}</h3>
         <h4>{item?.price}</h4>
