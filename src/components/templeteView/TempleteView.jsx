@@ -15,10 +15,10 @@ export default function TempleteView(props) {
       </div>
       <div>
         <div className="cactus-dashboard-templete_title_view">
-          <h2>Personalize me</h2>
+          <h2>{item?.name}</h2>
           <img alt="" src={colorPicker} />
         </div>
-        <h3>Personalized Ski family</h3>
+        <h3>{item?.desc}</h3>
         <h4>{item?.price}</h4>
       </div>
     </div>

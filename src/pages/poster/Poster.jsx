@@ -1,53 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { aboutUsBanner, aboutUsBorder, dummyOne, dummyThree, dummyTwo, posterBanner } from "../../assets";
 import { Footer, NavBar, TempleteSliderView, TempleteView, } from "../../components";
+import { req } from "../../requests";
+import { setParam } from "../../urlParams";
 import './poster.css'
 
 export default function Poster() {
   const navigate = useNavigate()
 
-  const templeteArray = [
-    {
-      id: 1,
-      image: dummyOne
-    },
-    {
-      id: 2,
-      image: dummyTwo
+  const [templeteArray, setTemplateArray] = useState([])
+  const [loading, setLoading] = useState(true)
 
-    },
-    {
-      id: 3,
-      image: dummyThree
+  useEffect(() => {
+    req('GET', '/user/product')
+      .then(({products}) => {
+        console.log(products)
+        setTemplateArray(products?.map((p, id) => { return {...p, id, image: p.defaultBackground} }))
+      })
+  }, [])
 
-    },
-    {
-      id: 4,
-      image: dummyOne
-
-    },
-    {
-      id: 5,
-      image: dummyThree
-
-    },
-    {
-      id: 6,
-      image: dummyOne
-
-    },
-    {
-      id: 7,
-      image: dummyThree
-
-    },
-    {
-      id: 8,
-      image: dummyTwo
-
-    }
-  ]
+  useEffect(() => {
+    setLoading(false)
+  }, [templeteArray])
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -65,10 +40,13 @@ export default function Poster() {
         </div>
         <TempleteSliderView style={{ justifyContent: 'center' }} title={'what we sell'} />
         <div className="cactus-dashboard-templete_top_view">
-          {templeteArray.map((item) => {
+        {loading ? <small>Loading...</small> : templeteArray.map((item) => {
             return (
-              <TempleteView onClick={() => navigate('/templetedetail')} item={item} />
-            )
+              <TempleteView
+                onClick={() => navigate(`/templetedetail?${setParam({"product": JSON.stringify(item)})}`)}
+                item={item}
+              />
+            );
           })}
         </div>
         <Footer />

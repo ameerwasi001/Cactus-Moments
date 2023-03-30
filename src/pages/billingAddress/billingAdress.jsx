@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { radio, radioFilled } from "../../assets";
 import { Footer, TextInput } from "../../components";
+import { getAllParams, setParam } from "../../urlParams";
 import DropDownDate from "../../components/dropDownDate/dropDownDate";
 import Navbar from "../../components/navBar/Navbar";
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
@@ -46,6 +47,7 @@ const countryArr = [
 ];
 
 const BillingAdress = () => {
+  const { product } = getAllParams()
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
@@ -62,6 +64,14 @@ const BillingAdress = () => {
     label: "Year",
     value: "Year",
   });
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [email, setEmail] = useState("")
+  const [number, setNumber] = useState("")
+  const [city, setCity] = useState("")
+  const [postCode, setPostCode] = useState("")
+  const [address1, setAddres1] = useState("")
+  const [address2, setAddres2] = useState("")
 
   useEffect(() => {
     for (let i = 0; i < 32; i++) {
@@ -103,22 +113,30 @@ const BillingAdress = () => {
               <TextInputBilling
                 inputStyle={{ width: "70%" }}
                 title={"First Name*"}
+                value={firstName}
+                onChange={ev => setFirstName(ev.target.value)}
                 type={"text"}
               />
               <TextInputBilling
                 inputStyle={{ width: "70%" }}
                 title={"Last Name*"}
+                value={lastName}
+                onChange={ev => setLastName(ev.target.value)}
                 type={"text"}
               />
               <TextInputBilling
                 inputStyle={{ width: "65%" }}
                 title={"Email Address*"}
                 type={"email"}
+                value={email}
+                onChange={ev => setEmail(ev.target.value)}
               />
               <TextInputBilling
                 inputStyle={{ width: "75%" }}
                 title={"Mobile*"}
                 type={"number"}
+                value={number}
+                onChange={ev => setNumber(ev.target.value)}
               />
               <div className="text-input-billing-main-container">
                 <div className="text-input-billing-divider-container">
@@ -167,21 +185,29 @@ const BillingAdress = () => {
                 inputStyle={{ width: "80%" }}
                 title={"City*"}
                 type={"text"}
+                value={city}
+                onChange={ev => setCity(ev.target.value)}
               />
               <TextInputBilling
                 inputStyle={{ width: "75%" }}
                 title={"Post Code*"}
                 type={"number"}
+                value={postCode}
+                onChange={ev => setPostCode(ev.target.value)}
               />
               <TextInputBilling
                 inputStyle={{ width: "75%" }}
                 title={"Address*"}
                 type={"text"}
+                value={address1}
+                onChange={ev => setAddres1(ev.target.value)}
               />
               <TextInputBilling
                 inputStyle={{ width: "65%" }}
                 title={"Address line 2*"}
                 type={"text"}
+                value={address2}
+                onChange={ev => setAddres2(ev.target.value)}
               />
             </div>
           </div>
@@ -201,7 +227,22 @@ const BillingAdress = () => {
             </p>
           </div>
           <div
-            onClick={() => navigate("/payment")}
+            onClick={() => navigate(`/payment?${setParam({
+              product: product,
+              courtesyTitle: selectMr.value,
+              day: dayselect.value,
+              country: countryselect.value,
+              month: monthSelect.value,
+              year: yearSelect.value,
+              firstName,
+              lastName,
+              email,
+              number,
+              city,
+              postCode,
+              addressLine1: address1,
+              addressLine2: address2,
+            })}`)}
             className="billing-address-move-next-btn-container"
           >
             <p>Next</p>

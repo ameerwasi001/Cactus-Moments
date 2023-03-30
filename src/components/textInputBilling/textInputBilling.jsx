@@ -8,6 +8,8 @@ const TextInputBilling = ({
   name,
   flag,
   placeholder,
+  value,
+  onChange,
   inputStyle,
   mainWidth,
 }) => {
@@ -23,6 +25,8 @@ const TextInputBilling = ({
         type={type}
         name={name}
         id=""
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
       />
       {flag ? <img src={creditCard} alt="input" /> : <div />}

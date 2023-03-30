@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { creditCardBlack, radioFilled, successGif } from "../../assets";
 import { NavBar, Footer } from "../../components";
+import { req } from "../../requests";
+import { getAllParams, setParam } from "../../urlParams";
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
 import "./payment.css";
 
 const Payment = () => {
   const [next, setNext] = useState(true);
+  const [cardNumber, setCardNumber] = useState("")
+  const [cvv, setCvv] = useState("")
+  const [expiry, setExpiry] = useState("")
+  const [lastExpiryLength, setLastExpiryLength] = useState(0)
+  const { product, ...params } = getAllParams()
   return (
-    console.log(next),
+    null,
     (
       <>
         <NavBar />
@@ -19,7 +26,7 @@ const Payment = () => {
                 <h2>
                   Total <span style={{ color: "#666666" }}>Incl .Tax</span>
                 </h2>
-                <h2>$ 44.80</h2>
+                <h2>${JSON.parse(product).price ?? 10}</h2>
               </div>
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
@@ -36,7 +43,15 @@ const Payment = () => {
                   <div style={{ marginTop: "5rem" }}>
                     <TextInputBilling
                       flag={true}
-                      type={"number"}
+                      value={cardNumber?.split(" ")?.join("").split("")?.map((x, i) => (i+1)%4 == 0 ? `${x} ` : `${x}`)?.join('')?.trim()}
+                      onChange={ev => {
+                        let n = 0
+                        for(const ch of ev.target.value)
+                          if([1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => `${x}`).includes(ch)) n += 1
+                        if(n > 16) return
+                        setCardNumber(ev.target.value)
+                      }}
+                      type={"text"}
                       title={"Card Number"}
                       placeholder={"4358 5495 3262 4637"}
                     />
@@ -45,7 +60,17 @@ const Payment = () => {
                     <TextInputBilling
                       mainWidth={{ width: "47%" }}
                       inputStyle={{ mainWidth: "40%" }}
-                      type={"number"}
+                      type={"text"}
+                      value={expiry}
+                      onChange={ev => {
+                        const erasing = expiry.split('/').join('').length > ev.target.value.split('/').join('').length
+                        if(ev.target.value.length > 5) return
+                        setExpiry(ev.target.value?.split("/")?.join("")?.split("")?.map((x, i) => {
+                          if(erasing && ev.target.value.length == 3) return `${x}`
+                          if(i !== 2) return `${x}`
+                          return `/${x}`
+                        })?.join(''))
+                      }}
                       title={"Expiry"}
                       placeholder={"MM/YY"}
                     />
@@ -53,16 +78,28 @@ const Payment = () => {
                       mainWidth={{ width: "47%" }}
                       inputStyle={{ mainWidth: "40%", marginLeft: "0.5rem" }}
                       flag={true}
+                      value={cvv}
+                      onChange={ev => ev.target.value.length < 4 && setCvv(ev.target.value)}
                       type={"number"}
                       title={"CCV"}
                       placeholder={"3 digit"}
                     />
                   </div>
                   <div
-                    onClick={() => setNext(false)}
+                    onClick={() => {
+                      req('POST', '/user/order', {
+                        product: JSON.parse(product)._id,
+                        ...params,
+                        cardNumber,
+                        cvv,
+                        expiry,
+                        product: JSON.parse(product)._id,
+                      }).then(_ => _)
+                      setNext(false)
+                    }}
                     className="payment-btn-main-container"
                   >
-                    <p>$44.80 Pay</p>
+                    <p>Pay ${JSON.parse(product).price ?? 10}</p>
                   </div>
                 </div>
               </div>

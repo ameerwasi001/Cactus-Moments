@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   aboutUsImage,
@@ -15,53 +15,26 @@ import {
   TempleteSliderView,
   TempleteView,
 } from "../../components";
+import { req } from '../../requests'
+import { setParam } from '../../urlParams'
 import "./dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const templeteArray = [
-    {
-      id: 1,
-      image: dummyOne,
-      price: "$35",
-    },
-    {
-      id: 2,
-      image: dummyTwo,
-      price: "$35",
-    },
-    {
-      id: 3,
-      image: dummyThree,
-      price: "$35",
-    },
-    {
-      id: 4,
-      image: dummyOne,
-      price: "$35",
-    },
+  const [loading, setLoading] = useState(true)
+  const [templeteArray, setTemplateArray] = useState([]);
 
-    {
-      id: 5,
-      image: dummyThree,
-      price: "$35",
-    },
-    {
-      id: 6,
-      image: dummyOne,
-      price: "$35",
-    },
-    {
-      id: 7,
-      image: dummyThree,
-      price: "$35",
-    },
-    {
-      id: 8,
-      image: dummyTwo,
-      price: "$35",
-    },
-  ];
+  useEffect(() => {
+    req('GET', '/user/product')
+      .then(({products}) => {
+        console.log(products)
+        setTemplateArray(products?.map((p, id) => { return {...p, id, image: p.defaultBackground} }))
+      })
+  }, [])
+
+  useEffect(() => {
+    setLoading(false)
+  }, [templeteArray])
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -105,10 +78,10 @@ export default function Dashboard() {
         </div>
         <TempleteSliderView title={"Popular Templates"} viewAll />
         <div className="cactus-dashboard-templete_top_view">
-          {templeteArray.map((item) => {
+        {loading ? <small>Loading...</small> : templeteArray.map((item) => {
             return (
               <TempleteView
-                onClick={() => navigate("/templetedetail")}
+                onClick={() => navigate(`/templetedetail?${setParam({"product": JSON.stringify(item)})}`)}
                 item={item}
               />
             );

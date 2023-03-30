@@ -4,33 +4,8 @@ import './chooseBackgroundModel.css'
 
 export default function ChooseBackgroundModel(props) {
     const [selectedBg, setSelectedBg] = useState({ id: 0 })
-    const dataArray = [
-        {
-            id: 1,
-        },
-        {
-            id: 2
-        },
-        {
-            id: 3,
-        },
-        {
-            id: 4,
-        },
-        {
-            id: 5,
-        },
-        {
-            id: 6
-        },
-        {
-            id: 7,
-        },
-        {
-            id: 8,
-        },
-
-    ]
+    const dataArray = props.backgrounds.map((x, id) => { return {image: x, id: id+1} })
+    console.log("Data Array =>", dataArray)
 
     return (
         <div className="cactus-choose_bg-model_top_view">
@@ -44,12 +19,12 @@ export default function ChooseBackgroundModel(props) {
                     {dataArray.map((item) => {
                         return (
                             <div style={{ borderWidth: selectedBg.id === item.id ? 2 : 0, }} className='cactus-choose_bg_model-images_view' onClick={() => setSelectedBg(item)} key={item.id}>
-                                <img src={onlyBg} />
+                                <img src={item.image} />
                             </div>
                         )
                     })}
                 </div>
-                <div onClick={props.onClick} className='cactus-composition_model_button_view'>
+                <div onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
                     <h3>Select</h3>
                 </div>
             </div>

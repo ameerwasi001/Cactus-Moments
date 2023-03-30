@@ -1,44 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { closeBox, female, male, maleDummy } from '../../assets'
 import './genderModel.css'
 
 export default function GenderModel(props) {
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
     const [selectedData, setSelectedData] = useState({ id: 0 })
-    const genderArray = [
+    const [genderArray, setGenderArray] = useState([
         {
             id: 1,
             title: 'Female',
+            array: props.femaleVariations.map((x, id) => { return { image: x, id: id+1 } }),
             icon: female
         },
         {
             id: 2,
             title: 'Male',
+            array: props.maleVariations.map((x, id) => { return { image: x, id: id+1 } }),
             icon: male
         },
+    ])
 
-    ]
-    const dataArray = [
-        {
-            id: 1,
-        },
-        {
-            id: 2
-        },
-        {
-            id: 3,
-        },
-        {
-            id: 4,
-        },
-        {
-            id: 5,
-        },
-        {
-            id: 6
-        },
-
-    ]
+    useEffect(() => console.log(selectedGender), selectedGender)
 
     return (
         <div className="cactus-gender-model_top_view">
@@ -63,17 +45,17 @@ export default function GenderModel(props) {
                             <h1>Select a theme to Display Design</h1>
                             :
                             <div className='cactus-gender_model_detail_images_view'>
-                                {dataArray.map((item) => {
+                                {selectedGender.array.map((item) => {
                                     return (
                                         <div onClick={() => setSelectedData(item)} style={{ borderWidth: selectedData.id === item.id ? 2 : 0 }} key={item.id}>
-                                            <img src={maleDummy} />
+                                            <img src={item.image} />
                                         </div>
                                     )
                                 })}
                             </div>
                         }
                     </div>
-                    <div onClick={props.onClick} className='cactus-composition_model_button_view' style={{ marginTop: -50 }}>
+                    <div onClick={() => props.onClick(selectedData)} className='cactus-composition_model_button_view' style={{ marginTop: -50 }}>
                         <h3>Select</h3>
                     </div>
                 </div>
