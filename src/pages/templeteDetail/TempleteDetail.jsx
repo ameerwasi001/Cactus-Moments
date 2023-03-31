@@ -23,14 +23,6 @@ import {
 import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
 
-function shuffleArray(n, array) {
-  for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-  }
-  array.forEach((x, i) => array[i] = x ? x : array[Math.floor(Math.random()*array.length)])
-}
-
 function random(seed) {
   var x = Math.sin(seed++) * 10000;
   return x - Math.floor(x);
@@ -47,6 +39,15 @@ const sdbm = str => {
         hashCode),
     0
   );
+}
+
+const shuffleSeed = (seed) => (n, array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(random(sdbm(seed)) * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  }
+  array.forEach((x, i) => array[i] = x ? x : array[Math.floor(Math.random()*array.length)])
+  return array
 }
 
 const srandom = (str, i=0) => random(sdbm(str)+i)
@@ -139,7 +140,6 @@ const Arr = patternVar => new WholeArrayRewriter(patternVar)
 const Tup = arr => new TupleRewriter(arr)
 const Cond = (c, t, e) => new RewriterFunction(x => c.match(x) ? t.rewrite(x) : e.rewrite(x))
 
-
 class Tags {
   constructor(){
       this.tags = {
@@ -147,6 +147,7 @@ class Tags {
           fillStyle: '#22cccc',
           strokeStyle: '#009999',
           selectedFill: '#88aaaa',
+          sprite: '',
           text: {
               text: "",
               textBaseline: "middle",
@@ -244,20 +245,30 @@ class GraphDrawer {
     })
 
     this.graph.nodes.map(node => {
-        context.beginPath()
-        context.fillStyle = node.selected ? node.selectedFill : node.fillStyle
-        context.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true)
-        context.strokeStyle = node.strokeStyle
-        context.fill()
-        if ("text" in node) {
-            context.beginPath()
-            context.fillStyle = node.text.fillStyle
-            context.font = node.text.font
-            context.textBaseline = node.text.textBaseline
-            context.textAlign = node.text.textAlign
-            context.fillText(node.text.text, node.x, node.y)
-            context.fill()
-        }
+
+      var img = new Image();
+      img.onload = function() {
+        var ratioX = document.getElementById('canvas').width / 200;
+        var ratioY = document.getElementById('canvas').height / 200;
+        var ratio = Math.min(ratioX, ratioY);
+        
+        context.drawImage(img, node.x, node.y, 100 * ratio, 100 * ratio);
+      };
+      img.src = node.sprite;
+        // context.beginPath()
+        // context.fillStyle = node.selected ? node.selectedFill : node.fillStyle
+        // context.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true)
+        // context.strokeStyle = node.strokeStyle
+        // context.fill()
+        // if ("text" in node) {
+        //     context.beginPath()
+        //     context.fillStyle = node.text.fillStyle
+        //     context.font = node.text.font
+        //     context.textBaseline = node.text.textBaseline
+        //     context.textAlign = node.text.textAlign
+        //     context.fillText(node.text.text, node.x, node.y)
+        //     context.fill()
+        // }
         context.stroke()
     })
   }
@@ -309,11 +320,14 @@ export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct } = getAllParams()
   const product = JSON.parse(JSONProduct)
-  shuffleArray(product.maxAdults, product.adultFemaleVariations)
-  shuffleArray(product.maxAdults, product.adultMaleVariations)
-  shuffleArray(product.maxChildren, product.childMaleVariations)
-  shuffleArray(product.maxChildren, product.childMaleVariations)
-  const [background, setBackground] = useState(product.defaultBackground)
+  console.log("Products =>", product)
+  shuffleSeed(product._id)(product.maxAdults, product.adultFemaleVariations)
+  shuffleSeed(product._id)(product.maxAdults, product.adultMaleVariations)
+  shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
+  shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
+  const [background, setBackground] = useState(product.backgrounds[product.defaultBackground])
+  const [title, setTitle] = useState(product.name)
+  const [subtitle, setSubtitle] = useState(product.subtitle)
   const [showFrameModel, setShowFrameModel] = useState(false);
   const [showDimensionModel, setShowDimensionModel] = useState(false);
   const [showEditNameDropdown, setShowEditNameDropdown] = useState(false);
@@ -326,8 +340,8 @@ export default function TempleteDetail() {
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
-  const [adults, setAdults] = useState([...product.adultMaleVariations, ...product.adultFemaleVariations].slice(0, product.maxAdults))
-  const [children, setChildren] = useState([...product.childMaleVariations, ...product.childFemaleVariations].slice(0, product.maxAdults))
+  const [adults, setAdults] = useState(shuffleSeed(product._id)(product.maxAdults, [...product.adultMaleVariations, ...product.adultFemaleVariations]).slice(0, product.maxAdults))
+  const [children, setChildren] = useState(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxAdults))
 
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
@@ -385,19 +399,17 @@ export default function TempleteDetail() {
     const graph = initializeGraph([], [], context);
 
     console.log(srandom(product._id))
-    // const distribution = distributeGraph(product.maxAdults, 120, 50, () => 50, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*10))
-    const distribution = distributeGraph(product.maxAdults+product.maxChildren, product.coordinateVariation.x, product.coordinateVariation.y, () => product.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*product.coordinateVariation.yVariation))
+    const sprites = shuffleSeed(product._id)(product.maxAdults + product.maxChildren, [...adults, ...children])
+    const distribution = distributeGraph(product.maxAdults+product.maxChildren, background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
     console.log(distribution)
-    distribution.forEach(({x, y}) => {
-      const a1 = graph.addNode(null, null, new Tags().override(fromObject({x, y})));
-    })
+    distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
 
     // graph.addEdge(a1, a2);
     // graph.addEdge(a1, a3);
     // graph.addEdge(a2, a3);
     // graph.addEdge(a3, a2);
     // graph.addEdge(a3, a4);
-  }, [])
+  }, [adults, children, background])
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -409,7 +421,7 @@ export default function TempleteDetail() {
         <ChooseBackgroundModel
           backgrounds={product.backgrounds}
           onClick={data => {
-            setBackground(data.image)
+            if(data.image) setBackground(data.image)
             setChooseBackgroundModel(undefined)
           }}
         />
@@ -430,10 +442,13 @@ export default function TempleteDetail() {
               className="cactus-templete_detail_side__view_arrow_up"
             />
             {sideTempleArray.map((item) => {
+              console.log(item)
               return (
                 <img
                   key={item.id}
-                  src={item.image}
+                  src={item.image.url}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setBackground(item.image)}
                   className="cactus-templete_detail_side__view_image_style"
                 />
               );
@@ -445,14 +460,14 @@ export default function TempleteDetail() {
           </div>
           <div className="cactus-templete_detail-main_image_view">
             <div className="cactus-templete_detail-main_image_button_view">
-              <h5>Family Outing</h5>
+              <h5>{subtitle}</h5>
             </div>
             <div className="cactus-templete_detail-main_image">
-              <canvas id="canvas" style={{ backgroundImage: `url("${background}")`, width: '100%', backgroundRepeat: 'no-repeat' }}></canvas>
+              <canvas id="canvas" style={{ backgroundImage: `url("${background.url}")`, width: '100%', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}></canvas>
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
-            <h1>{product.name}</h1>
+            <h1>{title}</h1>
             <h2>{product.desc}</h2>
             <h3>${product.price}</h3>
             <DropdownModel
@@ -483,6 +498,10 @@ export default function TempleteDetail() {
               <CustomInputWithDropdown
                 type={"name"}
                 value={"Edit Name"}
+                subtitle={subtitle}
+                onChangeSubtitle={setSubtitle}
+                title={title}
+                onChangeTitle={setTitle}
                 dropdownValue={showEditNameDropdown}
                 onClickEditNameDropdown={() =>
                   setShowEditNameDropdown(!showEditNameDropdown)
@@ -493,7 +512,7 @@ export default function TempleteDetail() {
                 type={"background"}
                 value={"Edit Background"}
                 dropdownValue={showEditBackgroundDropdown}
-                dropdownData={{image: product.defaultBackground}}
+                dropdownData={{image: product.backgrounds[product.defaultBackground]}}
                 onClickEditNameDropdown={() =>
                   setShowEditBackgroundDropdown(!showEditBackgroundDropdown)
                 }
@@ -523,7 +542,7 @@ export default function TempleteDetail() {
               />)}
             </div>
             <div
-              onClick={() => navigate(`/billingAddress?${setParam({ product: JSON.stringify(product) })}`)}
+              onClick={() => navigate(`/billingAddress?${setParam({ product: JSON.stringify(product), adults, children })}`)}
               className="cactus-templete_detail-order_button"
             >
               <h5>Order Now</h5>

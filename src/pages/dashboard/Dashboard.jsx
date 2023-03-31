@@ -29,7 +29,7 @@ export default function Dashboard() {
     req('GET', '/user/product')
       .then(({products}) => {
         console.log(products)
-        setTemplateArray(products?.map((p, id) => { return {...p, id, image: p.defaultBackground} }))
+        setTemplateArray(products?.map((p, id) => { return {...p, id, image: p.backgrounds[p.defaultBackground]} }))
       })
   }, [])
 

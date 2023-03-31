@@ -47,7 +47,7 @@ const countryArr = [
 ];
 
 const BillingAdress = () => {
-  const { product } = getAllParams()
+  const { product, adults, children } = getAllParams()
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
@@ -241,6 +241,8 @@ const BillingAdress = () => {
               city,
               postCode,
               addressLine1: address1,
+              adults: adults,
+              children: children,
               addressLine2: address2,
             })}`)}
             className="billing-address-move-next-btn-container"

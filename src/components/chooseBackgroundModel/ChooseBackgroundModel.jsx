@@ -19,7 +19,7 @@ export default function ChooseBackgroundModel(props) {
                     {dataArray.map((item) => {
                         return (
                             <div style={{ borderWidth: selectedBg.id === item.id ? 2 : 0, }} className='cactus-choose_bg_model-images_view' onClick={() => setSelectedBg(item)} key={item.id}>
-                                <img src={item.image} />
+                                <img src={item.image.url} />
                             </div>
                         )
                     })}
