@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/static/css/main.880df9da.css",
+    "main.js": "/static/js/main.94270ecf.js",
+    "static/media/dummyFive.png": "/static/media/dummyFive.e3e4442b304b843ed59f.png",
+    "static/media/home-image2.png": "/static/media/home-image2.847dcd225ea4a6e018bd.png",
+    "static/media/dummyFour.png": "/static/media/dummyFour.2680424b7f8983a6bbbe.png",
+    "static/media/dummyWithBg.png": "/static/media/dummyWithBg.fc9b3258068b66c05d14.png",
+    "static/media/onlyBg.png": "/static/media/onlyBg.94ff99cb8d2e7360a786.png",
+    "static/media/dummyThree.png": "/static/media/dummyThree.3571a6f7c1ba48f6078a.png",
+    "static/media/aboutUsBanner.png": "/static/media/aboutUsBanner.8a186145d0f9d1dfb26f.png",
+    "static/media/dummyOne.jpg": "/static/media/dummyOne.114686c7e92260cdf787.jpg",
+    "static/media/posterBanner.png": "/static/media/posterBanner.fcf06a0a72663d534e7d.png",
+    "static/media/contactUsBanner.png": "/static/media/contactUsBanner.f24413c5b126acda88d4.png",
+    "static/media/aboutUsImage.png": "/static/media/aboutUsImage.b111460bd591898b6e20.png",
+    "static/media/privacy.png": "/static/media/privacy.0003f4876af829253495.png",
+    "static/media/dummyTwo.png": "/static/media/dummyTwo.c4e12f522fb00e0617fb.png",
+    "static/media/terms.png": "/static/media/terms.ca37ae7badc20a9840cc.png",
+    "static/media/banner.png": "/static/media/banner.d6de2610eb28329950c7.png",
+    "static/media/dummyRoundOne.png": "/static/media/dummyRoundOne.23a6587a6f1278c72f95.png",
+    "static/media/dummyRoundThree.png": "/static/media/dummyRoundThree.2dd2aa8ef6b5f95f0404.png",
+    "static/media/dummyRoundTwo.png": "/static/media/dummyRoundTwo.c0563daf009b3fbe9b68.png",
+    "static/media/success-gif.gif": "/static/media/success-gif.d5db6c1e7b8d02187a8c.gif",
+    "static/media/maleDummy.png": "/static/media/maleDummy.96909af874923ba4d358.png",
+    "static/media/female.png": "/static/media/female.158a76c5703bc85b6711.png",
+    "static/media/logo.png": "/static/media/logo.39e178a24ac4f9c0ca3a.png",
+    "static/media/male.png": "/static/media/male.8efe1ac46adf8ba26d83.png",
+    "index.html": "/index.html",
+    "main.880df9da.css.map": "/static/css/main.880df9da.css.map",
+    "main.94270ecf.js.map": "/static/js/main.94270ecf.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.880df9da.css",
+    "static/js/main.94270ecf.js"
+  ]
+}
