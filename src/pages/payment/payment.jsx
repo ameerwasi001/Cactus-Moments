@@ -12,6 +12,7 @@ const Payment = () => {
   const [cvv, setCvv] = useState("")
   const [expiry, setExpiry] = useState("")
   const [lastExpiryLength, setLastExpiryLength] = useState(0)
+  const [error, setError] = useState("")
   const { product, ...params } = getAllParams()
   return (
     null,
@@ -20,6 +21,7 @@ const Payment = () => {
         <NavBar />
 
         <div className="billing-address-main-container">
+          {error && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>}
           {next ? (
             <>
               <div className="payment-method-price-main-container">
@@ -87,6 +89,12 @@ const Payment = () => {
                   </div>
                   <div
                     onClick={() => {
+                      let n = 0
+                      for(const ch of cardNumber)
+                        if([1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => `${x}`).includes(ch)) n += 1
+                      if(n != 16) return setError("The card must have the format XXXX XXXX XXXX XXXX")
+                      if(expiry.length != 5) return setError("The expiry formst must be MM/YY")
+                      if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
                       req('POST', '/user/order', {
                         product: JSON.parse(product)._id,
                         ...params,

@@ -199,7 +199,6 @@ class VisualizationGraph {
       tags.y = y
       const node = this.createNode(x, y, tags)
       this.nodes.push(node)
-      console.log(node)
       if(shouldDraw) this.drawer.draw()
       return node
   }
@@ -320,7 +319,6 @@ export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct } = getAllParams()
   const product = JSON.parse(JSONProduct)
-  console.log("Products =>", product)
   shuffleSeed(product._id)(product.maxAdults, product.adultFemaleVariations)
   shuffleSeed(product._id)(product.maxAdults, product.adultMaleVariations)
   shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
@@ -398,10 +396,8 @@ export default function TempleteDetail() {
 
     const graph = initializeGraph([], [], context);
 
-    console.log(srandom(product._id))
-    const sprites = shuffleSeed(product._id)(product.maxAdults + product.maxChildren, [...adults, ...children])
+    const sprites = shuffleSeed(product._id)(product.maxAdults + product.maxChildren, [...adults, ...children].filter(x => !!x))
     const distribution = distributeGraph(product.maxAdults+product.maxChildren, background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
-    console.log(distribution)
     distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
 
     // graph.addEdge(a1, a2);
@@ -427,9 +423,12 @@ export default function TempleteDetail() {
         />
       )}
       {chooseGenderModel && (
-        <GenderModel maleVariations={chooseGenderModel.maleArray} femaleVariations={chooseGenderModel.femaleArray} onClick={data => {
+        <GenderModel maleVariations={chooseGenderModel.maleArray} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
+          console.log(data)
+          if(data.type) return setChooseGenderModel(undefined)
+          if(!data.image) data.image = undefined
           if(chooseGenderModel.type == "adult") setAdults(adults.map((adult, i) => i == chooseGenderModel.index ? data.image : adult))
-          else setChildren(children.map((child, i) => i == chooseGenderModel.index ? data.image : child))
+          else setChildren(children.map((child, i) => [[console.log("Child", data.image, child, i)], i == chooseGenderModel.index ? data.image : child][1]))
           setChooseGenderModel(undefined)
         }} />
       )}
@@ -442,7 +441,6 @@ export default function TempleteDetail() {
               className="cactus-templete_detail_side__view_arrow_up"
             />
             {sideTempleArray.map((item) => {
-              console.log(item)
               return (
                 <img
                   key={item.id}

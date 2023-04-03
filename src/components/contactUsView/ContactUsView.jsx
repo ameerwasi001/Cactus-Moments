@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { emailIcon, locationIcon, phoneIcon } from "../../assets";
 import "./contactUsView.css";
 
+const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
 export default function ContactUsView(props) {
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState("")
   const queryArray = [
     {
       id: 1,
@@ -44,20 +54,33 @@ export default function ContactUsView(props) {
             );
           })}
         </div>
-        <div className="cactus-dashboard-contact_us_form_view">
+        {submitted ? <div className="cactus-dashboard-contact_us_form_view" >
+        <div style={{ display: 'flex', justifyContent: 'center', width: '500px', fontSize: '20px', minHeight: '200px', alignItems: 'center', minHeight: '20px', background: 'lightgreen', border: '1px darkgreen solid', borderRadius: '5px', margin: '5px' }}>
+          Thanks for contacting us
+        </div>
+        </div> : <div className="cactus-dashboard-contact_us_form_view">
+          {error && <div className="cactus-dashboard-contact_us_form_view">
+            <div style={{ display: 'flex', justifyContent: 'center', width: '300px', fontSize: '20px', minHeight: '50px', alignItems: 'center', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>
+          </div>}
           <div className="cactus-dashboard-contact_us_form_input_view">
-            <input placeholder="Full Name" />
+            <input placeholder="Full Name" onChange={ev => props.setFullName(ev.target.value)} value={props.fullName} />
           </div>
           <div className="cactus-dashboard-contact_us_form_input_view">
-            <input placeholder="Email address" />
+            <input placeholder="Email address" onChange={ev => props.setEmail(ev.target.value)} value={props.email} />
           </div>
           <div className="cactus-dashboard-contact_us_form_input_view">
-            <textarea placeholder="Email address" />
+            <textarea placeholder="Message" onChange={ev => props.setMessage(ev.target.value)} value={props.message} />
           </div>
-          <div className="cactus-dashboard-contact_us_form_button_view">
+          <div onClick={() => {
+            if(!props.message) setError('Messgae is required')
+            else if(!props.email) setError('Email is required')
+            else if(!props.fullName) setError('Name is required')
+            else if(!validateEmail(props.email)) setError('Invalid Email')
+            else setSubmitted(true)
+          }} style={{ cursor: 'pointer' }} className="cactus-dashboard-contact_us_form_button_view">
             <h6>Send</h6>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

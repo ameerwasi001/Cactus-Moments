@@ -4,7 +4,8 @@ import './genderModel.css'
 
 export default function GenderModel(props) {
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
-    const [selectedData, setSelectedData] = useState({ id: 0 })
+    const [everSelects, setEverSelects] = useState(false)
+    const [selectedData, setSelectedData] = useState({ id: -1 })
     const [genderArray, setGenderArray] = useState([
         {
             id: 1,
@@ -28,7 +29,10 @@ export default function GenderModel(props) {
                 <div className='cactus-gender_model_side_top_view'>
                     {genderArray.map((item) => {
                         return (
-                            <div key={item.id} onClick={() => setSelectedGender(item)} style={{ borderWidth: item.id === selectedGender.id ? 2 : 0 }} className='cactus-gender_model_side_gender_view'>
+                            <div key={item.id} onClick={() => {
+                                setSelectedGender(item)
+                                setEverSelects(true)
+                            }} style={{ borderWidth: item.id === selectedGender.id ? 2 : 0 }} className='cactus-gender_model_side_gender_view'>
                                 <img src={item.icon} />
                                 <h2>{item.title}</h2>
                             </div>
@@ -55,7 +59,7 @@ export default function GenderModel(props) {
                             </div>
                         }
                     </div>
-                    <div onClick={() => props.onClick(selectedData)} className='cactus-composition_model_button_view' style={{ marginTop: -50 }}>
+                    <div onClick={() => props.onClick(selectedData, everSelects)} className='cactus-composition_model_button_view' style={{ marginTop: -50 }}>
                         <h3>Select</h3>
                     </div>
                 </div>

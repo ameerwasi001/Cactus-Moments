@@ -24,6 +24,10 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
   const [templeteArray, setTemplateArray] = useState([]);
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [message, setMessage] = useState("")
+  const [error, setError] = useState("")
 
   useEffect(() => {
     req('GET', '/user/product')
@@ -88,7 +92,7 @@ export default function Dashboard() {
             );
           })}
         </div>
-        <ContactUsView />
+        <ContactUsView fullName={name} setFullName={setName} setEmail={setEmail} email={email} message={message} setMessage={setMessage} onClick={() => alert("Hi!")}/>
         <div className="cactus-dashboard-about_us_top_view">
           <div className="cactus-dashboard-about_us_main_image">
             <img src={aboutUsImage} />

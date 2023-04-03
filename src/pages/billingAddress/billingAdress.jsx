@@ -72,6 +72,7 @@ const BillingAdress = () => {
   const [postCode, setPostCode] = useState("")
   const [address1, setAddres1] = useState("")
   const [address2, setAddres2] = useState("")
+  const [error, setError] = useState("")
 
   useEffect(() => {
     for (let i = 0; i < 32; i++) {
@@ -86,10 +87,11 @@ const BillingAdress = () => {
   return (
     <>
       <Navbar />
-
       <div className="billing-address-main-container">
         <div className="billing-address-add-billing-main-container">
           <h1>Billing Address</h1>
+
+          {error && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>}
 
           <div className="billing-address-select-mr-container">
             <div className="billing-address-select-mr-sub-container">
@@ -227,24 +229,34 @@ const BillingAdress = () => {
             </p>
           </div>
           <div
-            onClick={() => navigate(`/payment?${setParam({
-              product: product,
-              courtesyTitle: selectMr.value,
-              day: dayselect.value,
-              country: countryselect.value,
-              month: monthSelect.value,
-              year: yearSelect.value,
-              firstName,
-              lastName,
-              email,
-              number,
-              city,
-              postCode,
-              addressLine1: address1,
-              adults: adults,
-              children: children,
-              addressLine2: address2,
-            })}`)}
+            onClick={() => {
+              if(!ischecked) return setError("Agreement with the terms and conditions is requred")
+              let error = ""
+              const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1, addressLine2: address2}
+              Object.entries(notEmpty).forEach(([f, x]) => {
+                if(!x) error = `${f} is required`
+                window.scrollTo(0, 0);
+              })
+              if(error) return setError(error)
+              navigate(`/payment?${setParam({
+                product: product,
+                courtesyTitle: selectMr.value,
+                day: dayselect.value,
+                country: countryselect.value,
+                month: monthSelect.value,
+                year: yearSelect.value,
+                firstName,
+                lastName,
+                email,
+                number,
+                city,
+                postCode,
+                addressLine1: address1,
+                adults: adults,
+                children: children,
+                addressLine2: address2,
+              })}`)
+            }}
             className="billing-address-move-next-btn-container"
           >
             <p>Next</p>
