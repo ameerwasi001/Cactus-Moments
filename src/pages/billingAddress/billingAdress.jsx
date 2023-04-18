@@ -24,9 +24,10 @@ const yearArr = [];
 const dayArr = [];
 
 const monthArr = [
-  { label: "january", value: "january" },
+  { label: "January", value: "january" },
   { label: "February", value: "February" },
   { label: "March", value: "March" },
+  { label: "April", value: "april" },
   { label: "May", value: "May" },
   { label: "Jun", value: "Jun" },
   { label: "July", value: "July" },
@@ -75,7 +76,7 @@ const BillingAdress = () => {
   const [error, setError] = useState("")
 
   useEffect(() => {
-    for (let i = 0; i < 32; i++) {
+    for (let i = 1; i < 32; i++) {
       dayArr.push({ label: i, value: i });
     }
 
@@ -91,8 +92,7 @@ const BillingAdress = () => {
         <div className="billing-address-add-billing-main-container">
           <h1>Billing Address</h1>
 
-          {error && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>}
-
+          <div id="err" style={{ display: error ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>
           <div className="billing-address-select-mr-container">
             <div className="billing-address-select-mr-sub-container">
               {mrArr.map((item) => (
@@ -173,7 +173,7 @@ const BillingAdress = () => {
                 className="text-input-billing-main-container"
               >
                 <div className="text-input-billing-divider-container">
-                  <h3>Date of Birth*</h3>
+                  <h3>Country*</h3>
                   <div className="text-input-billing-input-divider"></div>
                 </div>
                 <DropDownDate
@@ -232,12 +232,15 @@ const BillingAdress = () => {
             onClick={() => {
               if(!ischecked) return setError("Agreement with the terms and conditions is requred")
               let error = ""
-              const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1, addressLine2: address2}
+              const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
               Object.entries(notEmpty).forEach(([f, x]) => {
                 if(!x) error = `${f} is required`
-                window.scrollTo(0, 0);
+                window.scrollTo(0, 0)
               })
-              if(error) return setError(error)
+              if(error) {
+                window.scrollTo(0, 0)
+                return setError(error)
+              }
               navigate(`/payment?${setParam({
                 product: product,
                 courtesyTitle: selectMr.value,
