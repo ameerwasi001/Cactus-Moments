@@ -199,7 +199,7 @@ const BillingAdress = () => {
               />
               <TextInputBilling
                 inputStyle={{ width: "75%" }}
-                title={"Address*"}
+                title={"Address"}
                 type={"text"}
                 value={address1}
                 onChange={ev => setAddres1(ev.target.value)}

@@ -461,7 +461,7 @@ export default function TempleteDetail() {
               <h5>{subtitle}</h5>
             </div>
             <div className="cactus-templete_detail-main_image">
-              <canvas id="canvas" style={{ backgroundImage: `url("${background.url}")`, width: '100%', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}></canvas>
+              <canvas id="canvas" style={{ backgroundImage: `url("${background.url}")`, width: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
