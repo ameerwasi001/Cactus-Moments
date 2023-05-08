@@ -22,6 +22,7 @@ import {
 } from "../../components";
 import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
+import { getImageSize } from "react-image-size";
 
 function random(seed) {
   var x = Math.sin(seed++) * 10000;
@@ -350,7 +351,7 @@ export default function TempleteDetail() {
     name: "A3 - (29,7 x 42 cm",
   });
 
-  const sideTempleArray = product.backgrounds.map((x, id) => { return { id, image: x } });
+  const [sideTempleArray, setSideTempleArray] = useState(product.backgrounds.map((x, id) => { return { id, image: x } }));
   const frameArray = [
     {
       id: 1,
@@ -377,7 +378,22 @@ export default function TempleteDetail() {
   ];
   const [templeteArray, setTemplateArray] = useState([]);
 
-  useEffect(() => {
+  const [ratios, setRatios] = useState(new Set())
+  const editData = async () => {
+    const ratios = new Set()
+    for(const background of product.backgrounds) {
+      const {height, width} = await getImageSize(background.url)
+      console.log({height, width})
+      const ratio = height/width
+      if(ratio >= 1.1 && ratio <= 1.5) ratios.add(background.url)
+    }
+    console.log(product.backgrounds)
+    setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
+    setRatios(ratios)
+  }
+
+  useEffect(async () => {
+    await editData()
     let cactusRecents = localStorage.getItem("cactus_recents") ?? "[]"
     if(cactusRecents.length == 0) localStorage.setItem("cactus_recents", "")
     const parsedRecents = JSON.parse(cactusRecents)
@@ -460,8 +476,9 @@ export default function TempleteDetail() {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{subtitle}</h5>
             </div>
-            <div className="cactus-templete_detail-main_image">
-              <canvas id="canvas" style={{ backgroundImage: `url("${background.url}")`, width: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+            {console.log(ratios, background.url)}
+            <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined }))} className="cactus-templete_detail-main_image">
+              <canvas id="canvas" style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
