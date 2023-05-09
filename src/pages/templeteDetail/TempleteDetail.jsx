@@ -319,7 +319,7 @@ const distributeGraph = (n, x, y, getXVariation, getYVariation) => {
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct } = getAllParams()
-  const product = JSON.parse(JSONProduct)
+  const [product, setProduct] = useState(JSON.parse(JSONProduct))
   shuffleSeed(product._id)(product.maxAdults, product.adultFemaleVariations)
   shuffleSeed(product._id)(product.maxAdults, product.adultMaleVariations)
   shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
@@ -405,8 +405,15 @@ export default function TempleteDetail() {
         setTemplateArray(newRecents)
         if(!parsedRecents.find(p => p._id == product._id)) newRecents.push(product)
         localStorage.setItem("cactus_recents", JSON.stringify(newRecents))
+
+        // Setting the required states
+        setBackground(product.backgrounds[product.defaultBackground])
+        setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
+        setAdults(shuffleSeed(product._id)(product.maxAdults, [...product.adultMaleVariations, ...product.adultFemaleVariations]).slice(0, product.maxAdults))
+        setChildren(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxAdults))
+
       })
-  }, [])
+  }, [product])
 
   useEffect(() => {
     const canvas = document.getElementById("canvas")
@@ -423,7 +430,7 @@ export default function TempleteDetail() {
     // graph.addEdge(a2, a3);
     // graph.addEdge(a3, a2);
     // graph.addEdge(a3, a4);
-  }, [adults, children, background])
+  }, [product, adults, children, background])
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -459,12 +466,13 @@ export default function TempleteDetail() {
               className="cactus-templete_detail_side__view_arrow_up"
             />
             {sideTempleArray.map((item) => {
+              console.log("RATIO RATIO", item.image, ratios)
               return (
                 <img
                   key={item.id}
                   src={item.image.url}
-                  style={{ cursor: 'pointer' }}
                   onClick={() => setBackground(item.image)}
+                  style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
                   className="cactus-templete_detail_side__view_image_style"
                 />
               );
@@ -570,9 +578,16 @@ export default function TempleteDetail() {
           <h1>Recently Viewed</h1>
           <div className="cactus-dashboard-templete_top_view">
             {templeteArray.map((item) => {
+              console.log("Hello", item)
               return (
                 <TempleteView
-                  onClick={() => navigate("/templetedetail")}
+                  onClick={() => {
+                    setProduct(item)
+                      // navigate(`/templetedetail?${setParam({
+                      //     product: JSON.stringify(item)
+                      // })}`)
+                    }
+                  }
                   item={item}
                 />
               );
