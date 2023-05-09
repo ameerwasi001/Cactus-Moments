@@ -22,7 +22,7 @@ import "./dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [templeteArray, setTemplateArray] = useState([]);
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")

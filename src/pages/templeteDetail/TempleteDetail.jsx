@@ -392,18 +392,20 @@ export default function TempleteDetail() {
     setRatios(ratios)
   }
 
-  useEffect(async () => {
-    await editData()
-    let cactusRecents = localStorage.getItem("cactus_recents") ?? "[]"
-    if(cactusRecents.length == 0) localStorage.setItem("cactus_recents", "")
-    const parsedRecents = JSON.parse(cactusRecents)
-    const newRecents = []
-    for(const recent of parsedRecents) 
-      if(recent._id == product._id) newRecents.push(product)
-      else newRecents.push(recent)
-    setTemplateArray(newRecents)
-    if(!parsedRecents.find(p => p._id == product._id)) newRecents.push(product)
-    localStorage.setItem("cactus_recents", JSON.stringify(newRecents))
+  useEffect(() => {
+    editData()
+      .then(_ => {
+        let cactusRecents = localStorage.getItem("cactus_recents") ?? "[]"
+        if(cactusRecents.length == 0) localStorage.setItem("cactus_recents", "")
+        const parsedRecents = JSON.parse(cactusRecents)
+        const newRecents = []
+        for(const recent of parsedRecents) 
+          if(recent._id == product._id) newRecents.push(product)
+          else newRecents.push(recent)
+        setTemplateArray(newRecents)
+        if(!parsedRecents.find(p => p._id == product._id)) newRecents.push(product)
+        localStorage.setItem("cactus_recents", JSON.stringify(newRecents))
+      })
   }, [])
 
   useEffect(() => {
