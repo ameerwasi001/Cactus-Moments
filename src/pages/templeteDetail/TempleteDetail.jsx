@@ -415,7 +415,7 @@ export default function TempleteDetail() {
     const graph = initializeGraph([], [], context);
 
     const sprites = shuffleSeed(product._id)(product.maxAdults + product.maxChildren, [...adults, ...children].filter(x => !!x))
-    const distribution = distributeGraph(product.maxAdults+product.maxChildren, background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
+    const distribution = distributeGraph((product.maxAdults ?? 1)+(product.maxChildren ?? 1), background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
     distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
 
     // graph.addEdge(a1, a2);
