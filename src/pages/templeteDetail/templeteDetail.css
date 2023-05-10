@@ -38,12 +38,13 @@
 }
 
 .cactus-templete_detail-main_image_view {
-  width: 61.9rem;
-  height: 88rem;
+  /* width: 61.9rem;
+  height: 88rem; */
   display: flex;
   flex-direction: column;
-  background: #eaf6ff;
+  /* background: #eaf6ff; */
   margin-right: 7.2rem;
+  padding-bottom: 5rem;
 }
 
 .cactus-templete_detail-main_image_button_view {
@@ -200,8 +201,8 @@
   } */
   .cactus-templete_detail-main_image_view {
     margin-right: 0;
-    width: 100%;
-    height: 52rem;
+    /* width: 100%; */
+    /* height: 52rem; */
   }
 
   .cactus-templete_detail_side_templetes_view {
