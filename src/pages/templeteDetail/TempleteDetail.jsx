@@ -252,6 +252,7 @@ class GraphDrawer {
         var ratioY = document.getElementById('canvas').height / 200;
         var ratio = Math.min(ratioX, ratioY);
         
+        console.log(ratio, ratioX, ratioY)
         context.drawImage(img, node.x, node.y, 100 * ratio, 100 * ratio);
       };
       img.src = node.sprite;
@@ -388,6 +389,8 @@ export default function TempleteDetail() {
       if(ratio >= 1.1 && ratio <= 1.5) ratios.add(background.url)
     }
     console.log(product.backgrounds)
+    setTitle(product.name)
+    setSubtitle(product.subtitle)
     setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
     setRatios(ratios)
   }
@@ -421,6 +424,7 @@ export default function TempleteDetail() {
 
     const graph = initializeGraph([], [], context);
 
+    console.log("Rewriting Cnavss")
     const sprites = shuffleSeed(product._id)(product.maxAdults + product.maxChildren, [...adults, ...children].filter(x => !!x))
     const distribution = distributeGraph((product.maxAdults ?? 1)+(product.maxChildren ?? 1), background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
     distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
@@ -465,7 +469,7 @@ export default function TempleteDetail() {
               src={arrowBack}
               className="cactus-templete_detail_side__view_arrow_up"
             />
-            {sideTempleArray.map((item) => {
+            {sideTempleArray.filter(item => item.image.url).map((item) => {
               console.log("RATIO RATIO", item.image, ratios)
               return (
                 <img
@@ -488,7 +492,7 @@ export default function TempleteDetail() {
             </div>
             {console.log(ratios, background.url)}
             <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+              <canvas id="canvas" height={ratios.has(background.url) ? "500px" : undefined} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
