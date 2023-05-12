@@ -252,7 +252,6 @@ class GraphDrawer {
         var ratioY = document.getElementById('canvas').height / 200;
         var ratio = Math.min(ratioX, ratioY);
         
-        console.log(ratio, ratioX, ratioY)
         context.drawImage(img, node.x, node.y, 100 * ratio, 100 * ratio);
       };
       img.src = node.sprite;
@@ -319,13 +318,28 @@ const distributeGraph = (n, x, y, getXVariation, getYVariation) => {
 
 export default function TempleteDetail() {
   const navigate = useNavigate();
-  const { product: JSONProduct } = getAllParams()
+  const { product: JSONProduct, recents } = getAllParams()
   const [product, setProduct] = useState(JSON.parse(JSONProduct))
+
+  const localDict = localStorage.getItem('backgrounds') ?? '{}'
+  const dict = JSON.parse(localDict)
+  console.log(dict)
+
   shuffleSeed(product._id)(product.maxAdults, product.adultFemaleVariations)
   shuffleSeed(product._id)(product.maxAdults, product.adultMaleVariations)
   shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
   shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
-  const [background, setBackground] = useState(product.backgrounds[product.defaultBackground])
+
+  const [background, setBackground] = useState(
+    recents == 'no' ? 
+      (dict[product._id] ? 
+        (
+          product.backgrounds.find(x => x.url == dict[product._id].url) ?? product.backgrounds[product.defaultBackground]) 
+          : product.backgrounds[product.defaultBackground]
+        ) 
+      : product.backgrounds[product.defaultBackground]
+    )
+
   const [title, setTitle] = useState(product.name)
   const [subtitle, setSubtitle] = useState(product.subtitle)
   const [showFrameModel, setShowFrameModel] = useState(false);
@@ -384,11 +398,9 @@ export default function TempleteDetail() {
     const ratios = new Set()
     for(const background of product.backgrounds) {
       const {height, width} = await getImageSize(background.url)
-      console.log({height, width})
       const ratio = height/width
       if(ratio >= 1.1 && ratio <= 1.5) ratios.add(background.url)
     }
-    console.log(product.backgrounds)
     setTitle(product.name)
     setSubtitle(product.subtitle)
     setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
@@ -410,12 +422,25 @@ export default function TempleteDetail() {
         localStorage.setItem("cactus_recents", JSON.stringify(newRecents))
 
         // Setting the required states
-        setBackground(product.backgrounds[product.defaultBackground])
         setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
         setAdults(shuffleSeed(product._id)(product.maxAdults, [...product.adultMaleVariations, ...product.adultFemaleVariations]).slice(0, product.maxAdults))
         setChildren(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxAdults))
-
       })
+  }, [product])
+
+  useEffect(() => {
+    if(recents == 'no') {
+      const newBackgrounds = {...dict}
+      newBackgrounds[product._id] = background
+      localStorage.setItem('backgrounds', JSON.stringify(newBackgrounds))
+    }
+  }, [background])
+
+  useEffect(() => {
+    console.log("PrOdUcT =>>", product)
+    if(recents == 'no') setBackground(
+        product.backgrounds.find(x => {console.log(x.url == dict[product._id].url); return x.url == dict[product._id].url}) ? product.backgrounds.find(x => x.url == dict[product._id].url) : product.backgrounds[product.defaultBackground]
+    ) 
   }, [product])
 
   useEffect(() => {
@@ -424,7 +449,6 @@ export default function TempleteDetail() {
 
     const graph = initializeGraph([], [], context);
 
-    console.log("Rewriting Cnavss")
     const sprites = shuffleSeed(product._id)(product.maxAdults + product.maxChildren, [...adults, ...children].filter(x => !!x))
     const distribution = distributeGraph((product.maxAdults ?? 1)+(product.maxChildren ?? 1), background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
     distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
@@ -438,7 +462,7 @@ export default function TempleteDetail() {
 
   return (
     <div className="cactus-dashboard-main_container">
-      <NavBar />
+      {recents == 'no' ? <></> : <NavBar />}
       {familyCompositionModel && (
         <CompositionModel onClick={() => setFamilyCompositionModel(false)} />
       )}
@@ -453,7 +477,6 @@ export default function TempleteDetail() {
       )}
       {chooseGenderModel && (
         <GenderModel maleVariations={chooseGenderModel.maleArray} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
-          console.log(data)
           if(data.type) return setChooseGenderModel(undefined)
           if(!data.image) data.image = undefined
           if(chooseGenderModel.type == "adult") setAdults(adults.map((adult, i) => i == chooseGenderModel.index ? data.image : adult))
@@ -470,7 +493,6 @@ export default function TempleteDetail() {
               className="cactus-templete_detail_side__view_arrow_up"
             />
             {sideTempleArray.filter(item => item.image.url).map((item) => {
-              console.log("RATIO RATIO", item.image, ratios)
               return (
                 <img
                   key={item.id}
@@ -490,7 +512,6 @@ export default function TempleteDetail() {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{subtitle}</h5>
             </div>
-            {console.log(ratios, background.url)}
             <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={ratios.has(background.url) ? "500px" : undefined} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
             </div>
@@ -578,11 +599,10 @@ export default function TempleteDetail() {
             </div>
           </div>
         </div>
-        <div className="cactus-templet_detail_bottom_view">
+        <div style={{ display: recents == 'no' ? 'none' : 'undefined' }} className="cactus-templet_detail_bottom_view">
           <h1>Recently Viewed</h1>
           <div className="cactus-dashboard-templete_top_view">
             {templeteArray.map((item) => {
-              console.log("Hello", item)
               return (
                 <TempleteView
                   onClick={() => {
@@ -598,7 +618,7 @@ export default function TempleteDetail() {
             })}
           </div>
         </div>
-        <Footer />
+        { recents == 'no' ? <></> : <Footer /> }
       </div>
     </div>
   );
