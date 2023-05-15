@@ -29,6 +29,8 @@ function random(seed) {
   return x - Math.floor(x);
 }
 
+const fontAPI = 'AIzaSyAWrXbPuJpa4VLfqfjmVHGy4M2DG-y4cj4'
+
 const sdbm = str => {
   let arr = str.split('');
   return arr.reduce(
@@ -165,8 +167,9 @@ class Tags {
 }
 
 class VisualizationGraph {
-  constructor(nodes=[], edges=[], context){
+  constructor(nodes=[], edges=[], context, textNodes=[]){
     this.context = this.context
+    this.textNodes = textNodes
     this.nodes = nodes
     this.edges = edges
     this.drawer = new GraphDrawer(this, context)
@@ -214,6 +217,11 @@ class VisualizationGraph {
       this.drawer.draw()
       return shouldRet ? edge : null
   }
+
+  addTextNode(name, obj) {
+    this.textNodes.push({name, tags: obj})
+    this.drawer.draw()
+  }
 }
 
 class GraphDrawer {
@@ -244,32 +252,30 @@ class GraphDrawer {
         context.stroke()
     })
 
+    let renderedNodes = 0
     this.graph.nodes.map(node => {
 
       var img = new Image();
-      img.onload = function() {
+      img.onload = () => {
         var ratioX = document.getElementById('canvas').width / 200;
         var ratioY = document.getElementById('canvas').height / 200;
         var ratio = Math.min(ratioX, ratioY);
         
         context.drawImage(img, node.x, node.y, 100 * ratio, 100 * ratio);
+
+        renderedNodes += 1
+        if(renderedNodes == this.graph.nodes.length) {
+          this.graph.textNodes.map(node => {
+            const {textSize, xText, yText, font, color} = node.tags
+            const name = node.name
+            console.log(node)
+            this.context.font = `${textSize}pt ${font}`;
+            this.context.fillStyle = color
+            this.context.fillText(`${name}`, xText, yText);
+          })
+        }
       };
       img.src = node.sprite;
-        // context.beginPath()
-        // context.fillStyle = node.selected ? node.selectedFill : node.fillStyle
-        // context.arc(node.x, node.y, node.radius, 0, Math.PI * 2, true)
-        // context.strokeStyle = node.strokeStyle
-        // context.fill()
-        // if ("text" in node) {
-        //     context.beginPath()
-        //     context.fillStyle = node.text.fillStyle
-        //     context.font = node.text.font
-        //     context.textBaseline = node.text.textBaseline
-        //     context.textAlign = node.text.textAlign
-        //     context.fillText(node.text.text, node.x, node.y)
-        //     context.fill()
-        // }
-        context.stroke()
     })
   }
 
@@ -323,7 +329,6 @@ export default function TempleteDetail() {
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
-  console.log(dict)
 
   shuffleSeed(product._id)(product.maxAdults, product.adultFemaleVariations)
   shuffleSeed(product._id)(product.maxAdults, product.adultMaleVariations)
@@ -439,11 +444,12 @@ export default function TempleteDetail() {
   useEffect(() => {
     console.log("PrOdUcT =>>", product)
     if(recents == 'no') setBackground(
-        product.backgrounds.find(x => {console.log(x.url == dict[product._id].url); return x.url == dict[product._id].url}) ? product.backgrounds.find(x => x.url == dict[product._id].url) : product.backgrounds[product.defaultBackground]
+        product.backgrounds.find(x => {return x.url == dict[product._id].url}) ? product.backgrounds.find(x => x.url == dict[product._id].url) : product.backgrounds[product.defaultBackground]
     ) 
   }, [product])
 
   useEffect(() => {
+    console.log("Hi!")
     const canvas = document.getElementById("canvas")
     const context = canvas.getContext('2d')
 
@@ -453,12 +459,27 @@ export default function TempleteDetail() {
     const distribution = distributeGraph((product.maxAdults ?? 1)+(product.maxChildren ?? 1), background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
     distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
 
+    const bg = background
+    const font = bg.font
+    const smallFont = bg.smallFont
+    const variation = bg.coordinateVariation
+    const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
+    // const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
+    // context.font = `${textSize}pt ${font}`;
+    // context.fillStyle = color
+    // context.fillText(`${product.name}`, xText, yText);
+    graph.addTextNode(title, {textSize, xText, yText, color, font})
+    graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
+    // context.font = `${smallTextSize}pt ${smallFont}`;
+    // context.fillStyle = smallColor
+    // context.fillText(`${product.subtitle}`, xSmallText, ySmallText);
+
     // graph.addEdge(a1, a2);
     // graph.addEdge(a1, a3);
     // graph.addEdge(a2, a3);
     // graph.addEdge(a3, a2);
     // graph.addEdge(a3, a4);
-  }, [product, adults, children, background])
+  }, [product, adults, title, subtitle, children, background])
 
   return (
     <div className="cactus-dashboard-main_container">
