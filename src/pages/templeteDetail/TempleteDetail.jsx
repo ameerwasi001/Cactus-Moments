@@ -444,7 +444,7 @@ export default function TempleteDetail() {
   useEffect(() => {
     console.log("PrOdUcT =>>", product)
     if(recents == 'no') setBackground(
-        product.backgrounds.find(x => {return x.url == dict[product._id].url}) ? product.backgrounds.find(x => x.url == dict[product._id].url) : product.backgrounds[product.defaultBackground]
+        product.backgrounds.find(x => {return x?.url == dict[product._id].url}) ? product.backgrounds.find(x => x?.url == dict[product._id].url) : product.backgrounds[product.defaultBackground]
     ) 
   }, [product])
 
@@ -534,7 +534,7 @@ export default function TempleteDetail() {
               <h5>{subtitle}</h5>
             </div>
             <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" height={ratios.has(background.url) ? "500px" : undefined} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+              <canvas id="canvas" height={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
