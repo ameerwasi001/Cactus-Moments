@@ -18,7 +18,7 @@ export default function CustomInputWithDropdown(props) {
                             <img src={edit} />
                         </div>
                         <div className="cactus-templete_detail-form_dropdown_title_divider" />
-                        <h5>Sub Title</h5>
+                        <h5>Desc</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
                             <input placeholder="Enter sub title" value={props.subtitle} onChange={ev => props.onChangeSubtitle(ev.target.value)} />
                             <img src={edit} />
