@@ -263,12 +263,12 @@ class GraphDrawer {
         
         context.drawImage(img, node.x, node.y, 100 * ratio, 100 * ratio);
 
-        renderedNodes += 1
+        // renderedNodes += 1
+        renderedNodes = this.graph.nodes.length
         if(renderedNodes == this.graph.nodes.length) {
           this.graph.textNodes.map(node => {
             const {textSize, xText, yText, font, color} = node.tags
             const name = node.name
-            console.log(node)
             this.context.font = `${textSize}pt ${font}`;
             this.context.fillStyle = color
             this.context.fillText(`${name}`, xText, yText);
@@ -360,7 +360,7 @@ export default function TempleteDetail() {
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [adults, setAdults] = useState(shuffleSeed(product._id)(product.maxAdults, [...product.adultMaleVariations, ...product.adultFemaleVariations]).slice(0, product.maxAdults))
-  const [children, setChildren] = useState(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxAdults))
+  const [children, setChildren] = useState(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxChildren))
 
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
@@ -429,7 +429,7 @@ export default function TempleteDetail() {
         // Setting the required states
         setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
         setAdults(shuffleSeed(product._id)(product.maxAdults, [...product.adultMaleVariations, ...product.adultFemaleVariations]).slice(0, product.maxAdults))
-        setChildren(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxAdults))
+        setChildren(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxChildren))
       })
   }, [product])
 
@@ -442,21 +442,27 @@ export default function TempleteDetail() {
   }, [background])
 
   useEffect(() => {
-    console.log("PrOdUcT =>>", product)
     if(recents == 'no') setBackground(
         product.backgrounds.find(x => {return x?.url == dict[product._id].url}) ? product.backgrounds.find(x => x?.url == dict[product._id].url) : product.backgrounds[product.defaultBackground]
     ) 
   }, [product])
 
   useEffect(() => {
-    console.log("Hi!")
     const canvas = document.getElementById("canvas")
     const context = canvas.getContext('2d')
 
     const graph = initializeGraph([], [], context);
+    console.log("Hiu!")
 
-    const sprites = shuffleSeed(product._id)(product.maxAdults + product.maxChildren, [...adults, ...children].filter(x => !!x))
-    const distribution = distributeGraph((product.maxAdults ?? 1)+(product.maxChildren ?? 1), background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
+    const sprites = [...adults, ...children].splice(0, product.maxAdults + product.maxChildren).filter(_ => true)
+    // const distribution = distributeGraph((product.maxAdults ?? 1)+(product.maxChildren ?? 1), background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
+    const distribution = background.positions.map((pos, i) => {
+      return {
+        x: pos[0],
+        y: pos[1]
+      }
+    }).slice(0, product.maxAdults+product.maxChildren)
+    console.log(distribution,)
     distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
 
     const bg = background
@@ -501,7 +507,7 @@ export default function TempleteDetail() {
           if(data.type) return setChooseGenderModel(undefined)
           if(!data.image) data.image = undefined
           if(chooseGenderModel.type == "adult") setAdults(adults.map((adult, i) => i == chooseGenderModel.index ? data.image : adult))
-          else setChildren(children.map((child, i) => [[console.log("Child", data.image, child, i)], i == chooseGenderModel.index ? data.image : child][1]))
+          else setChildren(children.map((child, i) => [[0], i == chooseGenderModel.index ? data.image : child][1]))
           setChooseGenderModel(undefined)
         }} />
       )}
