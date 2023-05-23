@@ -463,7 +463,19 @@ export default function TempleteDetail() {
       }
     }).slice(0, product.maxAdults+product.maxChildren)
     console.log(distribution,)
-    distribution.forEach(({x, y}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite: sprites[i]}))));
+
+    // middling algorithm
+    const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: sprites[i] } })
+    const nulls = spritedDistribution.filter(({sprite}) => !sprite)
+    const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
+
+    const len = Math.round(nulls.length/2)
+    const nulls1 = nulls.splice(0, len)
+    const nulls2 = nulls.splice(len, nulls.length)
+
+    const finalDistribution = [...nulls1, ...actuals, ...nulls2]
+
+    finalDistribution.forEach(({x, y, sprite}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite}))));
 
     const bg = background
     const font = bg.font
