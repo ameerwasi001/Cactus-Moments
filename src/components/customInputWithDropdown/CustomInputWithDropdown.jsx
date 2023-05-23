@@ -12,13 +12,13 @@ export default function CustomInputWithDropdown(props) {
             {props.dropdownValue &&
                 (props.type === 'name' ?
                     <>
-                        <h5>Title</h5>
+                        <h5>Surname</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
                             <input placeholder="Enter title" value={props.title} onChange={ev => props.onChangeTitle(ev.target.value)} />
                             <img src={edit} />
                         </div>
                         <div className="cactus-templete_detail-form_dropdown_title_divider" />
-                        <h5>Desc</h5>
+                        <h5>Family Name</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
                             <input placeholder="Enter sub title" value={props.subtitle} onChange={ev => props.onChangeSubtitle(ev.target.value)} />
                             <img src={edit} />

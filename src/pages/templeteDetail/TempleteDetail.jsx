@@ -537,7 +537,7 @@ export default function TempleteDetail() {
           </div>
           <div className="cactus-templete_detail-main_image_view">
             <div className="cactus-templete_detail-main_image_button_view">
-              <h5>{subtitle}</h5>
+              <h5>{product.mainDesc}</h5>
             </div>
             <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
