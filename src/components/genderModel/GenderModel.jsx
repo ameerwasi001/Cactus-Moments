@@ -6,22 +6,10 @@ export default function GenderModel(props) {
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
     const [everSelects, setEverSelects] = useState(false)
     const [selectedData, setSelectedData] = useState({ id: -1 })
-    const [genderArray, setGenderArray] = useState([
-        {
-            id: 1,
-            title: 'Female',
-            array: props.femaleVariations.map((x, id) => { return { image: x, id: id+1 } }),
-            icon: female
-        },
-        {
-            id: 2,
-            title: 'Male',
-            array: props.maleVariations.map((x, id) => { return { image: x, id: id+1 } }),
-            icon: male
-        },
-    ])
+    const [genderArray, setGenderArray] = useState(props.variation.map(({id, ...obj}) => { return {id: id+1, ...obj} }))
+    console.log("Proops >=>", props)
 
-    useEffect(() => console.log(selectedGender), selectedGender)
+    useEffect(() => console.log(selectedGender, genderArray), [selectedGender])
 
     return (
         <div className="cactus-gender-model_top_view">

@@ -53,6 +53,9 @@ const shuffleSeed = (seed) => (n, array) => {
   return array
 }
 
+const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).splice(0, cat.max)
+const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).splice(0, product.categories.map(cat => cat.max).reduce((a, b) => a + b, 0))
+
 const srandom = (str, i=0) => random(sdbm(str)+i)
 
 class ObjectRewriter {
@@ -322,6 +325,27 @@ const distributeGraph = (n, x, y, getXVariation, getYVariation) => {
   return [...arr1, ...arr2]
 }
 
+const findIndex = (f, arr) => {
+  for(let i = 0; i < arr.length; i++)
+    if(f(arr[i])) return i
+  return -1
+}
+
+const accImageIndexes = (arg) => {
+  let i = 0
+  const newArr = arg.map(([cat, images]) => {
+    return [
+      cat, 
+      images.map(([image, _]) => {
+        const res = [image, i]
+        i += 1
+        return res
+      })
+    ]
+  })
+  return newArr
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
@@ -329,11 +353,6 @@ export default function TempleteDetail() {
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
-
-  shuffleSeed(product._id)(product.maxAdults, product.adultFemaleVariations)
-  shuffleSeed(product._id)(product.maxAdults, product.adultMaleVariations)
-  shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
-  shuffleSeed(product._id)(product.maxChildren, product.childMaleVariations)
 
   const [background, setBackground] = useState(
     recents == 'no' ? 
@@ -354,14 +373,10 @@ export default function TempleteDetail() {
     useState(false);
   const [showEditAdultDropdown, setShowEditAdultDropdown] = useState(undefined);
     useState(false);
-  const [showEditChildDropdown, setShowEditChildDropdown] =
-    useState(undefined);
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
-  const [adults, setAdults] = useState(shuffleSeed(product._id)(product.maxAdults, [...product.adultMaleVariations, ...product.adultFemaleVariations]).slice(0, product.maxAdults))
-  const [children, setChildren] = useState(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxChildren))
-
+  const [characters, setCharacters] = useState(getCategoryCharacters(product))
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
     name: "Without Frame",
@@ -428,8 +443,7 @@ export default function TempleteDetail() {
 
         // Setting the required states
         setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
-        setAdults(shuffleSeed(product._id)(product.maxAdults, [...product.adultMaleVariations, ...product.adultFemaleVariations]).slice(0, product.maxAdults))
-        setChildren(shuffleSeed(product._id)(product.maxChildren, [...product.childMaleVariations, ...product.childFemaleVariations]).slice(0, product.maxChildren))
+        setCharacters(getCategoryCharacters(product))
       })
   }, [product])
 
@@ -452,17 +466,14 @@ export default function TempleteDetail() {
     const context = canvas.getContext('2d')
 
     const graph = initializeGraph([], [], context);
-    console.log("Hiu!")
 
-    const sprites = [...adults, ...children].splice(0, product.maxAdults + product.maxChildren).filter(_ => true)
-    // const distribution = distributeGraph((product.maxAdults ?? 1)+(product.maxChildren ?? 1), background.coordinateVariation.x, background.coordinateVariation.y, () => background.coordinateVariation.xVariation, (i) => (srandom(product._id, i)  > 0.5 ? 1 : -1) * Math.round(srandom(product._id, i)*background.coordinateVariation.yVariation))
+    const sprites = characters
     const distribution = background.positions.map((pos, i) => {
       return {
         x: pos[0],
         y: pos[1]
       }
-    }).slice(0, product.maxAdults+product.maxChildren)
-    console.log(distribution,)
+    }).slice(0, product.categories.map(x => x.max).reduce((a, b) => a + b, 0))
 
     // middling algorithm
     const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: sprites[i] } })
@@ -497,7 +508,7 @@ export default function TempleteDetail() {
     // graph.addEdge(a2, a3);
     // graph.addEdge(a3, a2);
     // graph.addEdge(a3, a4);
-  }, [product, adults, title, subtitle, children, background])
+  }, [product, characters, title, subtitle, background])
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -515,11 +526,10 @@ export default function TempleteDetail() {
         />
       )}
       {chooseGenderModel && (
-        <GenderModel maleVariations={chooseGenderModel.maleArray} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
+        <GenderModel variation={chooseGenderModel.array} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
           if(data.type) return setChooseGenderModel(undefined)
           if(!data.image) data.image = undefined
-          if(chooseGenderModel.type == "adult") setAdults(adults.map((adult, i) => i == chooseGenderModel.index ? data.image : adult))
-          else setChildren(children.map((child, i) => [[0], i == chooseGenderModel.index ? data.image : child][1]))
+          setCharacters(characters.map((ch, i) => i == data.index ? data.image : ch))
           setChooseGenderModel(undefined)
         }} />
       )}
@@ -607,31 +617,30 @@ export default function TempleteDetail() {
                 }
               />
               {
-                adults?.map((x, i) => <CustomInputWithDropdown
-                  onClickButton={() => setChooseGenderModel({type: "adult", index: i, maleArray: product.adultMaleVariations, femaleArray: product.adultFemaleVariations})}
+                accImageIndexes(product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => <CustomInputWithDropdown
+                  onClickButton={() => setChooseGenderModel({type: name, index: i, array: product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
+                    const giveni = findIndex(cat => cat.name == name,  product.categories)
+                    const j = id
+                    return {
+                      id,
+                      title: sub.name,
+                      array: sub.characters.map((x, n) => { return { id: n+1, index: totalIndex, image: x, i: giveni, j, k: n } }),
+                      icon: sub.image,
+                    }
+                  })})}
                   type={"adult"}
-                  value={`Edit Adult ${i+1}`}
-                  dropdownValue={showEditAdultDropdown === i}
-                  dropdownData={{image: adults[i]}}
-                  onClickEditNameDropdown={() =>
-                    setShowEditAdultDropdown(showEditAdultDropdown === i ? undefined : i)
+                  value={`Edit ${name} ${i+1}`}
+                  dropdownValue={showEditAdultDropdown?.index === i && showEditAdultDropdown?.category == name}
+                  dropdownData={{ image: characters[totalIndex] }}
+                  onClickEditNameDropdown={() => {
+                    setShowEditAdultDropdown(showEditAdultDropdown?.index === i && showEditAdultDropdown?.category == name ? undefined : {index: i, category: name})
+                    }
                   }
-                />)
+                />))
               }
-              {
-                children?.map((x, i) => <CustomInputWithDropdown
-                  onClickButton={() => setChooseGenderModel({type: "child", index: i, maleArray: product.childMaleVariations, femaleArray: product.childFemaleVariations})}
-                  type={"child"}
-                  value={`Edit Child ${i+1}`}
-                  dropdownValue={showEditChildDropdown == i}
-                  dropdownData={{image: children[i]}}
-                  onClickEditNameDropdown={() =>
-                    setShowEditChildDropdown(showEditChildDropdown === i ? undefined : i)
-                  }
-              />)}
             </div>
             <div
-              onClick={() => navigate(`/billingAddress?${setParam({ product: JSON.stringify(product), adults, children })}`)}
+              onClick={() => navigate(`/billingAddress?${setParam({ product: JSON.stringify(product), characters })}`)}
               className="cactus-templete_detail-order_button"
             >
               <h5>Order Now</h5>
