@@ -5,9 +5,9 @@ import './genderModel.css'
 export default function GenderModel(props) {
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
     const [everSelects, setEverSelects] = useState(false)
-    const [selectedData, setSelectedData] = useState({ id: -1 })
+    const [selectedData, setSelectedData] = useState({ id: -1, index: props.index })
     const [genderArray, setGenderArray] = useState(props.variation.map(({id, ...obj}) => { return {id: id+1, ...obj} }))
-    console.log("Proops >=>", props)
+    console.log("EMPTY >>>>>", props)
 
     useEffect(() => console.log(selectedGender, genderArray), [selectedGender])
 

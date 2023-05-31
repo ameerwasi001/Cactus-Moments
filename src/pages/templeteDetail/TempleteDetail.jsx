@@ -526,9 +526,10 @@ export default function TempleteDetail() {
         />
       )}
       {chooseGenderModel && (
-        <GenderModel variation={chooseGenderModel.array} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
+        <GenderModel index={chooseGenderModel.index} variation={chooseGenderModel.array} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
           if(data.type) return setChooseGenderModel(undefined)
           if(!data.image) data.image = undefined
+          console.log("EMPTY >>>>>", data)
           setCharacters(characters.map((ch, i) => i == data.index ? data.image : ch))
           setChooseGenderModel(undefined)
         }} />
@@ -633,7 +634,7 @@ export default function TempleteDetail() {
                   dropdownValue={showEditAdultDropdown?.index === i && showEditAdultDropdown?.category == name}
                   dropdownData={{ image: characters[totalIndex] }}
                   onClickEditNameDropdown={() => {
-                    setShowEditAdultDropdown(showEditAdultDropdown?.index === i && showEditAdultDropdown?.category == name ? undefined : {index: i, category: name})
+                    setShowEditAdultDropdown(showEditAdultDropdown?.index === i && showEditAdultDropdown?.category == name ? undefined : {index: i, category: name, index: totalIndex})
                     }
                   }
                 />))
