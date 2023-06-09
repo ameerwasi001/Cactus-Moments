@@ -7,7 +7,7 @@ export default function GenderModel(props) {
     const [everSelects, setEverSelects] = useState(false)
     const [selectedData, setSelectedData] = useState({ id: -1, index: props.index })
     const [genderArray, setGenderArray] = useState(props.variation.map(({id, ...obj}) => { return {id: id+1, ...obj} }))
-    console.log("EMPTY >>>>>", props)
+    console.log("EMPTer >>>>>", props, genderArray)
 
     useEffect(() => console.log(selectedGender, genderArray), [selectedGender])
 

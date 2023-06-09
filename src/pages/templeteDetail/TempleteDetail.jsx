@@ -531,8 +531,8 @@ export default function TempleteDetail() {
         <GenderModel index={chooseGenderModel.index} variation={chooseGenderModel.array} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
           if(data.type) return setChooseGenderModel(undefined)
           if(!data.image) data.image = undefined
-          console.log("EMPTY >>>>>", data)
-          setCharacters(characters.map((ch, i) => i == data.index ? data.image : ch))
+          console.log("EMPTY >>>>>", chooseGenderModel)
+          setCharacters(characters.map((ch, i) => i == chooseGenderModel.totalIndex ? data.image : ch))
           setChooseGenderModel(undefined)
         }} />
       )}
@@ -621,7 +621,7 @@ export default function TempleteDetail() {
               />
               {
                 accImageIndexes(product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => <CustomInputWithDropdown
-                  onClickButton={() => setChooseGenderModel({type: name, index: i, array: product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
+                  onClickButton={() => setChooseGenderModel({type: name, totalIndex, index: i, array: product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
                     const giveni = findIndex(cat => cat.name == name,  product.categories)
                     const j = id
                     return {
@@ -633,10 +633,11 @@ export default function TempleteDetail() {
                   })})}
                   type={"adult"}
                   value={`Edit ${name} ${i+1}`}
-                  dropdownValue={showEditAdultDropdown?.index === i && showEditAdultDropdown?.category == name}
+                  dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
                   dropdownData={{ image: characters[totalIndex] }}
                   onClickEditNameDropdown={() => {
-                    setShowEditAdultDropdown(showEditAdultDropdown?.index === i && showEditAdultDropdown?.category == name ? undefined : {index: i, category: name, index: totalIndex})
+                      console.log("DIT ADULT DROPDOWN", showEditAdultDropdown)
+                      setShowEditAdultDropdown(showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name ? undefined : {category: name, totalIndex, index: totalIndex})
                     }
                   }
                 />))
