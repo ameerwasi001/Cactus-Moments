@@ -256,8 +256,9 @@ class GraphDrawer {
     })
 
     let renderedNodes = 0
-    this.graph.nodes.map(node => {
-
+    const sortedNodes = this.graph.nodes.sort((a, b) => parseInt(a.layer) > parseInt(b.layer) ? 1 : -1)
+    console.log("SORTED NODES", sortedNodes)
+    sortedNodes.map(node => {
       var img = new Image();
       img.onload = () => {
         var ratioX = document.getElementById('canvas').width / 200;
@@ -471,7 +472,8 @@ export default function TempleteDetail() {
     const distribution = background.positions.map((pos, i) => {
       return {
         x: pos[0],
-        y: pos[1]
+        y: pos[1],
+        layer: pos[2]
       }
     }).slice(0, product.categories.map(x => x.max).reduce((a, b) => a + b, 0))
 
@@ -486,7 +488,7 @@ export default function TempleteDetail() {
 
     const finalDistribution = [...nulls1, ...actuals, ...nulls2]
 
-    finalDistribution.forEach(({x, y, sprite}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, sprite}))));
+    finalDistribution.forEach(({x, y, sprite, layer}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite}))));
 
     const bg = background
     const font = bg.font
