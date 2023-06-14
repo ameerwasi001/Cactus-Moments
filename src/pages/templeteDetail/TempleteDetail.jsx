@@ -17,6 +17,7 @@ import {
   DropdownModel,
   Footer,
   GenderModel,
+  DefaultModel,
   NavBar,
   TempleteView,
 } from "../../components";
@@ -377,6 +378,7 @@ export default function TempleteDetail() {
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
+  const [defaultModel, setDefaultModel] = useState(true);
   const [characters, setCharacters] = useState(getCategoryCharacters(product))
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
@@ -520,6 +522,15 @@ export default function TempleteDetail() {
   return (
     <div className="cactus-dashboard-main_container">
       {recents == 'no' ? <></> : <NavBar />}
+      {defaultModel && (
+        <DefaultModel
+          product={product}
+          onClick={product => {
+            setProduct(product)
+            setDefaultModel(false)
+          }}
+        />
+      )}
       {familyCompositionModel && (
         <CompositionModel onClick={() => setFamilyCompositionModel(false)} />
       )}
