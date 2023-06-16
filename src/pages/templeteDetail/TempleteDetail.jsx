@@ -562,13 +562,15 @@ export default function TempleteDetail() {
             />
             {sideTempleArray.filter(item => item.image.url).map((item) => {
               return (
-                <img
-                  key={item.id}
-                  src={item.image.url}
-                  onClick={() => setBackground(item.image)}
-                  style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
-                  className="cactus-templete_detail_side__view_image_style"
-                />
+                item.image.url ?
+                  <img
+                    key={item.id}
+                    src={item.image.url}
+                    onClick={() => setBackground(item.image)}
+                    style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
+                    className="cactus-templete_detail_side__view_image_style"
+                  /> :
+                <h3>No image selected</h3>
               );
             })}
             <img
