@@ -265,8 +265,10 @@ class GraphDrawer {
         var ratioX = document.getElementById('canvas').width / 200;
         var ratioY = document.getElementById('canvas').height / 200;
         var ratio = Math.min(ratioX, ratioY);
-        
-        context.drawImage(img, node.x, node.y, 100 * ratio, 100 * ratio);
+        const specifiedRatio = node.scale == 0 ? 1 : node.scale/10 
+
+        console.log("CALCULATED RATIO", node.scale,specifiedRatio)
+        context.drawImage(img, node.x, node.y, 100 * ratio * specifiedRatio, 100 * ratio * specifiedRatio);
 
         // renderedNodes += 1
         renderedNodes = this.graph.nodes.length
@@ -475,7 +477,8 @@ export default function TempleteDetail() {
       return {
         x: pos[0],
         y: pos[1],
-        layer: pos[2]
+        layer: pos[2],
+        scale: pos[3]
       }
     }).slice(0, product.categories.map(x => x.max).reduce((a, b) => a + b, 0))
 
@@ -490,7 +493,7 @@ export default function TempleteDetail() {
 
     const finalDistribution = [...nulls1, ...actuals, ...nulls2]
 
-    finalDistribution.forEach(({x, y, sprite, layer}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite}))));
+    finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
 
     const bg = background
     const font = bg.font
