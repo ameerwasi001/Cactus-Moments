@@ -521,8 +521,8 @@ export default function TempleteDetail() {
     canvas.style.height = canvas.height + "px";
     canvas.getContext("2d").scale(ratio, ratio);
 
-    return canvas;
   }, [])
+
   return (
     <div className="cactus-dashboard-main_container">
       {recents == 'no' ? <></> : <NavBar />}
