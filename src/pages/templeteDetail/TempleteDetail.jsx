@@ -25,95 +25,8 @@ import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
 
-function getBackgroundSize(elem) {
-    // This:
-    //       * Gets elem computed styles:
-    //             - CSS background-size
-    //             - element's width and height
-    //       * Extracts background URL
-    var computedStyle = getComputedStyle(elem),
-        image = new Image(),
-        src = computedStyle.backgroundImage.replace(/url\((['"])?(.*?)\1\)/gi, '$2'),
-        cssSize = computedStyle.backgroundSize,
-        elemW = parseInt(computedStyle.width.replace('px', ''), 10),
-        elemH = parseInt(computedStyle.height.replace('px', ''), 10),
-        elemDim = [elemW, elemH],
-        computedDim = [],
-        ratio;
-    // Load the image with the extracted URL.
-    // Should be in cache already.
-    image.src = src;
-    // Determine the 'ratio'
-    ratio = image.width > image.height ? image.width / image.height : image.height / image.width;
-    // Split background-size properties into array
-    cssSize = cssSize.split(' ');
-    // First property is width. It is always set to something.
-    computedDim[0] = cssSize[0];
-    // If height not set, set it to auto
-    computedDim[1] = cssSize.length > 1 ? cssSize[1] : 'auto';
-    if(cssSize[0] === 'cover') {
-        // Width is greater than height
-        if(elemDim[0] > elemDim[1]) {
-            // Elem's ratio greater than or equal to img ratio
-            if(elemDim[0] / elemDim[1] >= ratio) {
-                computedDim[0] = elemDim[0];
-                computedDim[1] = 'auto';
-            } else {
-                computedDim[0] = 'auto';
-                computedDim[1] = elemDim[1];
-            }
-        } else {
-            computedDim[0] = 'auto';
-            computedDim[1] = elemDim[1];
-        }
-    } else if(cssSize[0] === 'contain') {
-        // Width is less than height
-        if(elemDim[0] < elemDim[1]) {
-            computedDim[0] = elemDim[0];
-            computedDim[1] = 'auto';
-        } else {
-            // elem's ratio is greater than or equal to img ratio
-            if(elemDim[0] / elemDim[1] >= ratio) {
-                computedDim[0] = 'auto';
-                computedDim[1] = elemDim[1];
-            } else {
-                computedDim[1] = 'auto';
-                computedDim[0] = elemDim[0];
-            }
-        }
-    } else {
-        // If not 'cover' or 'contain', loop through the values
-        for(var i = cssSize.length; i--;) {
-            // Check if values are in pixels or in percentage
-            if (cssSize[i].indexOf('px') > -1) {
-                // If in pixels, just remove the 'px' to get the value
-                computedDim[i] = cssSize[i].replace('px', '');
-            } else if (cssSize[i].indexOf('%') > -1) {
-                // If percentage, get percentage of elem's dimension
-                // and assign it to the computed dimension
-                computedDim[i] = elemDim[i] * (cssSize[i].replace('%', '') / 100);
-            }
-        }
-    }
-    // If both values are set to auto, return image's 
-    // original width and height
-    if(computedDim[0] === 'auto' && computedDim[1] === 'auto') {
-        computedDim[0] = image.width;
-        computedDim[1] = image.height;
-    } else {
-        // Depending on whether width or height is auto,
-        // calculate the value in pixels of auto.
-        // ratio in here is just getting proportions.
-        ratio = computedDim[0] === 'auto' ? image.height / computedDim[1] : image.width / computedDim[0];
-        computedDim[0] = computedDim[0] === 'auto' ? image.width / ratio : computedDim[0];
-        computedDim[1] = computedDim[1] === 'auto' ? image.height / ratio : computedDim[1];
-    }
-    // Finally, return an object with the width and height of the
-    // background image.
-    return {
-        width: computedDim[0],
-        height: computedDim[1]
-    };
+const renderText = (context, name, xText, yText, textSize, font, color) => {
+
 }
 
 function random(seed) {
@@ -369,9 +282,7 @@ class GraphDrawer {
           self.graph.textNodes.map(node => {
             const {textSize, xText, yText, font, color} = node.tags
             const name = node.name
-            self.context.font = `${textSize}pt ${font}`;
-            self.context.fillStyle = color
-            self.context.fillText(`${name}`, xText, yText);
+            renderText(self.context, name, xText, yText, textSize, font, color)
           })
         }
       };
@@ -594,28 +505,21 @@ export default function TempleteDetail() {
     const smallFont = bg.smallFont
     const variation = bg.coordinateVariation
     const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
-    // const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
-    // context.font = `${textSize}pt ${font}`;
-    // context.fillStyle = color
-    // context.fillText(`${product.name}`, xText, yText);
     graph.addTextNode(title, {textSize, xText, yText, color, font})
     graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
-    // context.font = `${smallTextSize}pt ${smallFont}`;
-    // context.fillStyle = smallColor
-    // context.fillText(`${product.subtitle}`, xSmallText, ySmallText);
-
-    // graph.addEdge(a1, a2);
-    // graph.addEdge(a1, a3);
-    // graph.addEdge(a2, a3);
-    // graph.addEdge(a3, a2);
-    // graph.addEdge(a3, a4);
   }, [product, characters, title, subtitle, background])
 
   useEffect(() => {
-    var canvas = document.getElementById('canvas');
-    // const {width, height} = getBackgroundSize(canvas)
-    // canvas.width = width;
-    // canvas.height = height;
+    const ratio = window.devicePixelRatio;
+    const canvas = document.getElementById("canvas");
+
+    canvas.width = canvas.width * ratio;
+    canvas.height = canvas.height * ratio;
+    canvas.style.width = canvas.width + "px";
+    canvas.style.height = canvas.height + "px";
+    canvas.getContext("2d").scale(ratio, ratio);
+
+    return canvas;
   }, [])
   return (
     <div className="cactus-dashboard-main_container">
@@ -682,6 +586,31 @@ export default function TempleteDetail() {
             </div>
             <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} width={"250px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+              {console.log(background.coordinateVariation)}
+              <div id="overlay-title" style={{ position: "absolute", left: "25rem", zIndex: 100 }}>
+                <div style={{
+                  height: "500px", 
+                  width: "250px", 
+                  position: "relative", 
+                  left: `${background.coordinateVariation.xText}px`, 
+                  top: `${background.coordinateVariation.yText}px`,
+                  fontSize: `${background.coordinateVariation.textSize}pt`,
+                  fontFamily: background.font,
+                  color: background.coordinateVariation.color,
+                }}>{title}</div>
+              </div>
+              <div id="overlay-subtitle" style={{ position: "absolute", left: "25rem", zIndex: 100 }}>
+                <div style={{
+                  height: "500px", 
+                  width: "250px", 
+                  position: "relative", 
+                  left: `${background.coordinateVariation.xSmallText}px`, 
+                  top: `${background.coordinateVariation.ySmallText}px`,
+                  fontSize: `${background.coordinateVariation.smallTextSize}pt`,
+                  fontFamily: background.smallFont,
+                  color: background.coordinateVariation.smallColor,
+                }}>{title}</div>
+              </div>
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
