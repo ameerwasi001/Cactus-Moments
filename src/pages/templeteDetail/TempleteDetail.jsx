@@ -25,6 +25,8 @@ import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
 
+let renderCanvas = true
+
 const renderText = (context, name, xText, yText, textSize, font, color) => {
 
 }
@@ -507,7 +509,7 @@ export default function TempleteDetail() {
     const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
     graph.addTextNode(title, {textSize, xText, yText, color, font})
     graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
-  }, [product, characters, title, subtitle, background])
+  }, [product, characters, background])
 
   useEffect(() => {
     const ratio = window.devicePixelRatio;
@@ -584,14 +586,14 @@ export default function TempleteDetail() {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined }))} className="cactus-templete_detail-main_image">
+            <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined, position: "relative" }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} width={"250px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
               {console.log(background.coordinateVariation)}
-              <div id="overlay-title" style={{ position: "absolute", left: "25rem", zIndex: 100 }}>
+              <div id="overlay-title" style={{ position: "absolute", zIndex: 100 }}>
                 <div style={{
                   height: "500px", 
                   width: "250px", 
-                  position: "relative", 
+                  position: "absolute", 
                   left: `${background.coordinateVariation.xText}px`, 
                   top: `${background.coordinateVariation.yText}px`,
                   fontSize: `${background.coordinateVariation.textSize}pt`,
@@ -599,17 +601,17 @@ export default function TempleteDetail() {
                   color: background.coordinateVariation.color,
                 }}>{title}</div>
               </div>
-              <div id="overlay-subtitle" style={{ position: "absolute", left: "25rem", zIndex: 100 }}>
+              <div id="overlay-subtitle" style={{ position: "absolute", zIndex: 100 }}>
                 <div style={{
                   height: "500px", 
                   width: "250px", 
-                  position: "relative", 
+                  position: "absolute", 
                   left: `${background.coordinateVariation.xSmallText}px`, 
                   top: `${background.coordinateVariation.ySmallText}px`,
                   fontSize: `${background.coordinateVariation.smallTextSize}pt`,
                   fontFamily: background.smallFont,
                   color: background.coordinateVariation.smallColor,
-                }}>{title}</div>
+                }}>{subtitle}</div>
               </div>
             </div>
           </div>
