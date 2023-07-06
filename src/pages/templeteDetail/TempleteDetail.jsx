@@ -289,7 +289,7 @@ class GraphDrawer {
         }
       };
       img.src = node.sprite
-      img.crossOrigin = "Anonymous"
+      // img.crossOrigin = "Anonymous"
     })
   }
 
