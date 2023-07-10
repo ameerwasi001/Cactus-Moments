@@ -36,7 +36,7 @@ function random(seed) {
   return x - Math.floor(x);
 }
 
-const fontAPI = 'AIzaSyAWrXbPuJpa4VLfqfjmVHGy4M2DG-y4cj4'
+const fontAPI = 'AIzaSyAWrXbPuJpa4VLfqfjmVHGy4M2DG-y4cj4';
 
 const sdbm = str => {
   let arr = str.split('');
