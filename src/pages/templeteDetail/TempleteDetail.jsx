@@ -595,16 +595,16 @@ export default function TempleteDetail() {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined, position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" height={"500px"} width={"250px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+            <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '250px' : undefined, position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
+              <canvas id="canvas" height={"250px"} width={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
               {groupDistribution(distribution).map(sprites => <>
                 {
                   defaultModel ? [] : sprites.filter(sprite => !!sprite.sprite).map(sprite => <img src={sprite.sprite} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
-                    left: `${Math.max(sprite.x-45, 0)}px`, 
-                    top: `${Math.max(sprite.y-35, 0)}px`,
+                    left: `${Math.max(sprite.x, 0)}px`, 
+                    top: `${Math.max(sprite.y, 0)}px`,
                     scale: `${sprite.scale == 0 ? 1 : sprite.scale/10}`,
                     transformOrigin: "0 0",
                     zIndex: 100*(sprite.layer+1)
@@ -613,8 +613,8 @@ export default function TempleteDetail() {
               </>)}
               <div id="overlay-title" style={{ position: "absolute", zIndex: 100000 }}>
                 {!defaultModel && <div style={{
-                  height: "500px", 
-                  width: "250px", 
+                  height: "250px", 
+                  width: "500px", 
                   position: "absolute", 
                   left: `${background.coordinateVariation.xText}px`, 
                   top: `${background.coordinateVariation.yText}px`,
