@@ -80,7 +80,9 @@ class QueryBuilder {
     }
 }
 
-const Query = (...queries) => ({queries: new QueryBuilder(queries).exec()})
+const AbstractQuery = f => (...queries) => f({queries: new QueryBuilder(queries).exec()})
+
+const Query = AbstractQuery(async x => x)
 
 // Matcher Helpers
 const Matcher = (matcher, data) => ({ __matcher: matcher, data })
@@ -90,23 +92,21 @@ const Eq = data => Matcher("eq", data)
 const PostProcessor = (aggregator, args=[], as=undefined) => ({ aggregator, arguments: args, as })
 
 
-console.log(
-    JSON.stringify(Query(
-        new QueryModel("User")
-            .select(["streak", "submissions.date"])
-            .where("_id", Eq("64a833ae7e7230302126d3ba")),
+Query(
+    new QueryModel("User")
+        .select(["streak", "submissions.date"])
+        .where("_id", Eq("64a833ae7e7230302126d3ba")),
 
-        new QueryModel("Exercise")
-            .select(["name", "breath", "texts", "image"])
-            .where("submissions.user._id", Eq("64a833ae7e7230302126d3ba"))
-            .where("submissions.date", Eq("2023-07-07"))
-            .postProcessor("submissions", PostProcessor("exists", [], "submitted"))
-            .postProcessor("submissions", PostProcessor("ignore")),
+    new QueryModel("Exercise")
+        .select(["name", "breath", "texts", "image"])
+        .where("submissions.user._id", Eq("64a833ae7e7230302126d3ba"))
+        .where("submissions.date", Eq("2023-07-07"))
+        .postProcessor("submissions", PostProcessor("exists", [], "submitted"))
+        .postProcessor("submissions", PostProcessor("ignore")),
 
-        new QueryModel("Blog")
-            .select(["title", "subtitle", "text", "thumbnail", "video", "duration", "date"]),
-    ))
-)
+    new QueryModel("Blog")
+        .select(["title", "subtitle", "text", "thumbnail", "video", "duration", "date"]),
+).then(data => console.log(JSON.stringify(data)))
 
 module.exports = {
     Query,
