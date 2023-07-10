@@ -357,10 +357,18 @@ const accImageIndexes = (arg) => {
   return newArr
 }
 
+const groupDistribution = arr => {
+  const obj = {}
+  for(const el of arr) obj[el.layer] = []
+  for(const el of arr) obj[el.layer].push(el)
+  return Object.values(obj).sort(({layer1}, {layer2}) => layer1 > layer2 ? 1 : -1)
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
   const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
+  const [distribution, setDistribution] = useState([])
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
@@ -500,15 +508,16 @@ export default function TempleteDetail() {
 
     const finalDistribution = [...nulls1, ...actuals, ...nulls2]
 
-    finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
+    // finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
 
     const bg = background
     const font = bg.font
     const smallFont = bg.smallFont
     const variation = bg.coordinateVariation
     const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
-    graph.addTextNode(title, {textSize, xText, yText, color, font})
-    graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
+    // graph.addTextNode(title, {textSize, xText, yText, color, font})
+    // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
+    setDistribution(finalDistribution)
   }, [product, characters, background])
 
   useEffect(() => {
@@ -588,7 +597,19 @@ export default function TempleteDetail() {
             </div>
             <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '500px' : undefined, position: "relative" }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} width={"250px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-              {console.log(background.coordinateVariation)}
+              {groupDistribution(distribution).map(sprites => <>
+                {
+                  sprites.filter(sprite => !!sprite.sprite).map(sprite => <img src={sprite.sprite} style={{
+                    height: "unset", 
+                    width: "unset", 
+                    position: "absolute", 
+                    left: `${sprite.x}px`, 
+                    top: `${sprite.y}px`,
+                    scale: `${sprite.scale == 0 ? 1 : sprite.scale/10}`,
+                    transformOrigin: "0 0"
+                  }}/>)
+                }
+              </>)}
               <div id="overlay-title" style={{ position: "absolute", zIndex: 100 }}>
                 <div style={{
                   height: "500px", 
