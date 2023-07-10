@@ -60,8 +60,8 @@ const shuffleSeed = (seed) => (n, array) => {
   return array
 }
 
-const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).splice(0, cat.max)
-const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).splice(0, product.categories.map(cat => cat.max).reduce((a, b) => a + b, 0))
+const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).slice(0, parseInt(cat.max))
+const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).slice(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
 
 const srandom = (str, i=0) => random(sdbm(str)+i)
 
@@ -360,7 +360,7 @@ const accImageIndexes = (arg) => {
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
-  const [product, setProduct] = useState(JSON.parse(JSONProduct))
+  const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
@@ -487,7 +487,7 @@ export default function TempleteDetail() {
         layer: pos[2],
         scale: pos[3]
       }
-    }).slice(0, product.categories.map(x => x.max).reduce((a, b) => a + b, 0))
+    }).slice(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
 
     // middling algorithm
     const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: sprites[i] } })
@@ -495,8 +495,8 @@ export default function TempleteDetail() {
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
 
     const len = Math.round(nulls.length/2)
-    const nulls1 = nulls.splice(0, len)
-    const nulls2 = nulls.splice(len, nulls.length)
+    const nulls1 = nulls.slice(0, len)
+    const nulls2 = nulls.slice(len, nulls.length)
 
     const finalDistribution = [...nulls1, ...actuals, ...nulls2]
 
@@ -530,7 +530,7 @@ export default function TempleteDetail() {
         <DefaultModel
           product={product}
           onClick={product => {
-            setProduct(product)
+            setProduct(Object.freeze(product))
             setDefaultModel(false)
           }}
         />
@@ -705,7 +705,7 @@ export default function TempleteDetail() {
               return (
                 <TempleteView
                   onClick={() => {
-                    setProduct(item)
+                    setProduct(Object.freeze(item))
                       // navigate(`/templetedetail?${setParam({
                       //     product: JSON.stringify(item)
                       // })}`)
