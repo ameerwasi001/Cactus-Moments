@@ -521,14 +521,11 @@ export default function TempleteDetail() {
   }, [product, characters, background])
 
   useEffect(() => {
-    const ratio = window.devicePixelRatio;
-    const canvas = document.getElementById("canvas");
-
-    canvas.width = canvas.width * ratio;
-    canvas.height = canvas.height * ratio;
-    canvas.style.width = canvas.width + "px";
-    canvas.style.height = canvas.height + "px";
-    canvas.getContext("2d").scale(ratio, ratio);
+    setInterval(() => {
+      const el = document.getElementById("canvas")
+      el.style.height = '250px'
+      el.style.width = '500px'
+    }, 1000)
 
   }, [])
 
@@ -613,8 +610,8 @@ export default function TempleteDetail() {
               </>)}
               <div id="overlay-title" style={{ position: "absolute", zIndex: 100000 }}>
                 {!defaultModel && <div style={{
-                  height: "250px", 
-                  width: "500px", 
+                  height: "500px", 
+                  width: "250px", 
                   position: "absolute", 
                   left: `${background.coordinateVariation.xText}px`, 
                   top: `${background.coordinateVariation.yText}px`,
