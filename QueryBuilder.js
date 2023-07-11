@@ -76,7 +76,20 @@ class QueryBuilder {
     }
 
     exec() {
-        return this.queries.map(q => q.exec())
+        const results = this.queries.map(q => q.exec())
+        const duplicates = {}
+        for(const res of results) duplicates[res.name] = []
+        for(const res of results) duplicates[res.name].push(res)
+
+        const nOfEverything = [[]]
+        let i = 0
+        for(const k in duplicates) {
+            const val = duplicates[k]
+            nOfEverything[nOfEverything.length - 1].push()
+            i++
+        }
+
+        return [results.reduce((a, b) => ({...a, ...b}), {})]
     }
 }
 
