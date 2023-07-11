@@ -29,6 +29,7 @@ const getField = (field, query) => {
 class QueryModel {
     constructor(name) {
         this.name = name
+        this.postProcessors = []
         this.queryObj = {}
     }
 
@@ -46,7 +47,19 @@ class QueryModel {
         return this
     }
 
+    findById(a) {
+        return this
+            .where("_id", Eq(a))
+            .postProcessor("_id", PostProcessor("first"))
+    }
+
     postProcessor(q, p) {
+        for(const a of p instanceof Array ? p : [p])
+            if(!a.aggregator) throw Error("Use of a postprocessor is required for the postprocessor clause")
+        if(q == this.name || q == "_id") {
+            this.postProcessors.push(...(p instanceof Array ? p : [p]))
+            return this
+        }
         const res = getField(q, this.queryObj)?.__postprocessors
         const postProcessorArray = p instanceof Array ? [...p, ...(res ?? [])] : [...(res ?? []), p]
         if(res) processField(`${q}.__postprocessors`, postProcessorArray, this.queryObj)
@@ -62,7 +75,10 @@ class QueryModel {
     }
 
     exec() {
-        return {[this.name]: this.queryObj}
+        if(this.postProcessors.length) return {
+            [this.name]: {__postprocessors: this.postProcessors, query: this.queryObj}
+        }
+        else return {[this.name]: this.queryObj}
     }
 }
 
@@ -114,7 +130,7 @@ const PostProcessor = (aggregator, args=[], as=undefined) => ({ aggregator, argu
 Query(
     new QueryModel("User")
         .select(["streak", "submissions.date"])
-        .where("_id", Eq("64a833ae7e7230302126d3ba")),
+        .findById("64a833ae7e7230302126d3ba"),
 
     new QueryModel("Exercise")
         .select(["name", "breath", "texts", "image"])
