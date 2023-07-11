@@ -76,20 +76,26 @@ class QueryBuilder {
     }
 
     exec() {
-        const results = this.queries.map(q => q.exec())
+        const results = this.queries
         const duplicates = {}
         for(const res of results) duplicates[res.name] = []
-        for(const res of results) duplicates[res.name].push(res)
+        for(const res of results) duplicates[res.name].push(res.exec())
 
         const nOfEverything = [[]]
         let i = 0
-        for(const k in duplicates) {
-            const val = duplicates[k]
-            nOfEverything[nOfEverything.length - 1].push()
+        const maxObjectKeySize = Object.values(duplicates).map(arr => arr.length).reduce((a, b) => Math.max(a, b), 0)
+
+        while(i < maxObjectKeySize) {
+            for(const k in duplicates) {
+                const val = duplicates[k]
+                if(val[i]) nOfEverything[nOfEverything.length - 1].push(val[i])
+            }
+            nOfEverything.push([])
             i++
         }
 
-        return [results.reduce((a, b) => ({...a, ...b}), {})]
+        const filteredNOfEverything = nOfEverything.filter(arr => arr.length > 0)
+        return filteredNOfEverything.map(obj => obj.reduce((a, b) => ({...a, ...b}), {}))
     }
 }
 
