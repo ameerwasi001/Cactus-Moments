@@ -60,8 +60,8 @@ const shuffleSeed = (seed) => (n, array) => {
   return array
 }
 
-const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).slice(0, parseInt(cat.max))
-const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).slice(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
+const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).fit(0, parseInt(cat.max))
+const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).fit(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
 
 const srandom = (str, i=0) => random(sdbm(str)+i)
 
@@ -320,22 +320,6 @@ class GraphDrawer {
       this.draw()
   }
 }
-
-const initializeGraph = (nodes=[], edges=[], context) => {
-  const graph = new VisualizationGraph(nodes, edges, context)
-  return graph
-}
-
-const distributeGraph = (n, x, y, getXVariation, getYVariation) => {
-  let arr1 = new Array(Math.ceil(n/2)).fill(0).map((_, i) => { return { x: x+i*getXVariation(i) } })
-  let arr2 = new Array(Math.floor(n/2)).fill(0).map((_, i) => { return { x: x-(i+1)*getXVariation(i) } })
-
-  arr1 = arr1.map(({x}, i) => { return { x, y: y+i*getYVariation(i) } })
-  arr2 = arr2.map(({x}, i) => { return { x, y: y-(i+1)*getYVariation(i) } })
-
-  return [...arr1, ...arr2]
-}
-
 const findIndex = (f, arr) => {
   for(let i = 0; i < arr.length; i++)
     if(f(arr[i])) return i
@@ -357,11 +341,28 @@ const accImageIndexes = (arg) => {
   return newArr
 }
 
+const makeRepeatedArray = (arr, l) => {
+  const newArr = []
+  let j = 0
+  for(const i of new Array(l).fill(0).map((_, i) => i)) {
+      if(j >= arr.length) j = 0
+      const el = arr[j]
+      newArr.push(el)
+      j++
+  }
+  return newArr
+}
+
+Array.prototype.fit = function (a, b, c, d) {
+  const args = [a, b, c, d]
+  if(a == 0 && c == undefined && d == undefined) {
+    if(b > this.length) return makeRepeatedArray(this, b)
+    else return this.slice(...args)
+  } else return this.slice(...args)
+}
+
 const groupDistribution = arr => {
-  const obj = {}
-  for(const el of arr) obj[el.layer] = []
-  for(const el of arr) obj[el.layer].push(el)
-  return Object.values(obj).sort(({layer1}, {layer2}) => layer1 > layer2 ? 1 : -1)
+  return [arr]
 }
 
 export default function TempleteDetail() {
@@ -396,7 +397,7 @@ export default function TempleteDetail() {
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [defaultModel, setDefaultModel] = useState(true);
-  const [characters, setCharacters] = useState(getCategoryCharacters(product))
+  const [characters, setCharacters] = useState([])
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
     name: "Without Frame",
@@ -463,6 +464,7 @@ export default function TempleteDetail() {
 
         // Setting the required states
         setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
+        console.log("PRODUCT XYZ", product.categories.map(cat => [cat.name, cat.subcategories[0]?.characters]))
         setCharacters(getCategoryCharacters(product))
       })
   }, [product])
@@ -482,20 +484,16 @@ export default function TempleteDetail() {
   }, [product])
 
   useEffect(() => {
-    const canvas = document.getElementById("canvas")
-    const context = canvas.getContext('2d')
-
-    const graph = initializeGraph([], [], context);
-
     const sprites = characters
     const distribution = background.positions.map((pos, i) => {
+      console.log("Postion", pos)
       return {
         x: pos[0],
         y: pos[1],
         layer: pos[2],
         scale: pos[3]
       }
-    }).slice(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
+    }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
 
     // middling algorithm
     const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: sprites[i] } })
@@ -503,10 +501,11 @@ export default function TempleteDetail() {
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
 
     const len = Math.round(nulls.length/2)
-    const nulls1 = nulls.slice(0, len)
-    const nulls2 = nulls.slice(len, nulls.length)
+    const nulls1 = nulls.fit(0, len)
+    const nulls2 = nulls.fit(len, nulls.length)
 
     const finalDistribution = [...nulls1, ...actuals, ...nulls2]
+    console.log("Distribution", spritedDistribution, characters)
 
     // finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
 
@@ -596,7 +595,7 @@ export default function TempleteDetail() {
               <canvas id="canvas" height={"250px"} width={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
               {groupDistribution(distribution).map(sprites => <>
                 {
-                  defaultModel ? [] : sprites.filter(sprite => !!sprite.sprite).map(sprite => <img src={sprite.sprite} style={{
+                  defaultModel ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
