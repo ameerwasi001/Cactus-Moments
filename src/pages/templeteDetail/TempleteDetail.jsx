@@ -269,7 +269,7 @@ class GraphDrawer {
       var img = new Image();
       const self = this
       img.onload = function () {
-        const specifiedRatio = node.scale == 0 ? 1 : node.scale/10 
+        const specifiedRatio = node.scale == 0 ? 1 : node.scale/100
 
         console.log("CALCULATED RATIO", node.scale,specifiedRatio)
         context.webkitImageSmoothingEnabled = true;
@@ -591,24 +591,24 @@ export default function TempleteDetail() {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div style={JSON.parse(JSON.stringify({ height: ratios.has(background.url) ? '250px' : undefined, position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
+            <div style={JSON.parse(JSON.stringify({ height: '250px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"250px"} width={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
               {groupDistribution(distribution).map(sprites => <>
                 {
-                  defaultModel ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
+                  (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
                     left: `${Math.max(sprite.x, 0)}px`, 
                     top: `${Math.max(sprite.y, 0)}px`,
-                    scale: `${sprite.scale == 0 ? 1 : sprite.scale/10}`,
+                    scale: `${sprite.scale == 0 ? 1 : sprite.scale/100}`,
                     transformOrigin: "0 0",
                     zIndex: 100*(sprite.layer+1)
                   }}/>)
                 }
               </>)}
               <div id="overlay-title" style={{ position: "absolute", zIndex: 100000 }}>
-                {!defaultModel && <div style={{
+                {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
                   height: "500px", 
                   width: "250px", 
                   position: "absolute", 
@@ -619,7 +619,7 @@ export default function TempleteDetail() {
                   color: background.coordinateVariation.color,
                 }}>{title}</div>}
               </div>
-              {!defaultModel && <div id="overlay-subtitle" style={{ position: "absolute", zIndex: 100000 }}>
+              {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div id="overlay-subtitle" style={{ position: "absolute", zIndex: 100000 }}>
                 <div style={{
                   height: "500px", 
                   width: "250px", 
