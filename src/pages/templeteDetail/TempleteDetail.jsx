@@ -522,7 +522,7 @@ export default function TempleteDetail() {
   useEffect(() => {
     setInterval(() => {
       const el = document.getElementById("canvas")
-      el.style.height = '250px'
+      el.style.height = '500px'
       el.style.width = '500px'
     }, 1000)
 
@@ -591,8 +591,8 @@ export default function TempleteDetail() {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div style={JSON.parse(JSON.stringify({ height: '250px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" height={"250px"} width={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+            <div style={JSON.parse(JSON.stringify({ height: '500px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
+              <canvas id="canvas" height={"500px"} width={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
               {groupDistribution(distribution).map(sprites => <>
                 {
                   (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
@@ -610,7 +610,7 @@ export default function TempleteDetail() {
               <div id="overlay-title" style={{ position: "absolute", zIndex: 100000 }}>
                 {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
                   height: "500px", 
-                  width: "250px", 
+                  width: "500px", 
                   position: "absolute", 
                   left: `${background.coordinateVariation.xText}px`, 
                   top: `${background.coordinateVariation.yText}px`,
@@ -622,7 +622,7 @@ export default function TempleteDetail() {
               {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div id="overlay-subtitle" style={{ position: "absolute", zIndex: 100000 }}>
                 <div style={{
                   height: "500px", 
-                  width: "250px", 
+                  width: "500px", 
                   position: "absolute", 
                   left: `${background.coordinateVariation.xSmallText}px`, 
                   top: `${background.coordinateVariation.ySmallText}px`,
