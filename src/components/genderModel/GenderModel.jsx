@@ -47,8 +47,10 @@ export default function GenderModel(props) {
                             </div>
                         }
                     </div>
-                    <div onClick={() => props.onClick(selectedData, everSelects)} className='cactus-composition_model_button_view' style={{ marginTop: -50 }}>
-                        <h3>Select</h3>
+                    <div onClick={() => props.onClick(selectedData, everSelects)} style={{ position: 'fixed', bottom: 0, width: '60%', display: 'flex', justifyContent: 'center', background: 'white' }}>
+                        <div className='cactus-composition_model_button_view'>
+                            <h3>Select</h3>
+                        </div>
                     </div>
                 </div>
             </div>
