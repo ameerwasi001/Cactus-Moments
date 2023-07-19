@@ -20,7 +20,7 @@ export default function GenderModel(props) {
                             <div key={item.id} onClick={() => {
                                 setSelectedGender(item)
                                 setEverSelects(true)
-                            }} style={{ borderWidth: item.id === selectedGender.id ? 2 : 0 }} className='cactus-gender_model_side_gender_view'>
+                            }} style={{ borderWidth: item.id === selectedGender.id ? 2 : 0, marginLeft: item.parent ? '4rem' : '0px' }} className='cactus-gender_model_side_gender_view'>
                                 <img src={item.icon} />
                                 <h2>{item.title}</h2>
                             </div>

@@ -365,6 +365,19 @@ const groupDistribution = arr => {
   return [arr]
 }
 
+const arrangeByParent = arr => {
+  const parentArrangement = {}
+  const parents = []
+
+  for(const el of arr) parentArrangement[el.parent] = []
+  for(const el of arr)
+    if(el.parent) parentArrangement[el.parent].push(el)
+    else parents.push(el)
+
+  const parentChildArray = parents.map(p => [p, ...(parentArrangement[p.title] ?? [])]).reduce((a, b) => [...a, ...b], [])
+  return parentChildArray
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
@@ -686,16 +699,17 @@ export default function TempleteDetail() {
               />
               {
                 accImageIndexes(product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => <CustomInputWithDropdown
-                  onClickButton={() => setChooseGenderModel({type: name, totalIndex, index: i, array: product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
+                  onClickButton={() => setChooseGenderModel({type: name, totalIndex, index: i, array: arrangeByParent(product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
                     const giveni = findIndex(cat => cat.name == name,  product.categories)
                     const j = id
                     return {
                       id,
+                      parent: sub.parent,
                       title: sub.name,
                       array: sub.characters.map((x, n) => { return { id: n+1, index: totalIndex, image: x, i: giveni, j, k: n } }),
                       icon: sub.image,
                     }
-                  })})}
+                  }))})}
                   type={"adult"}
                   value={`Edit ${name} ${i+1}`}
                   dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
