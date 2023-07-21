@@ -4,20 +4,23 @@ import './genderModel.css'
 
 export default function GenderModel(props) {
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
+    const [selectedParent, setSelectedParent] = useState("none")
     const [everSelects, setEverSelects] = useState(false)
     const [selectedData, setSelectedData] = useState({ id: -1, index: props.index })
     const [genderArray, setGenderArray] = useState(props.variation.map(({id, ...obj}) => { return {id: id+1, ...obj} }))
     console.log("EMPTer >>>>>", props, genderArray)
 
     useEffect(() => console.log(selectedGender, genderArray), [selectedGender])
+    useEffect(() => console.log("PARENT SELECTED =>>", selectedParent), [selectedParent])
 
     return (
         <div className="cactus-gender-model_top_view">
             <div className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view'>
-                    {genderArray.map((item) => {
+                    {genderArray.filter(cat => cat.parent == selectedParent || !cat.parent).map((item) => {
                         return (
                             <div key={item.id} onClick={() => {
+                                if(!item.parent)setSelectedParent(item.title)
                                 setSelectedGender(item)
                                 setEverSelects(true)
                             }} style={{ borderWidth: item.id === selectedGender.id ? 2 : 0, marginLeft: item.parent ? '4rem' : '0px' }} className='cactus-gender_model_side_gender_view'>

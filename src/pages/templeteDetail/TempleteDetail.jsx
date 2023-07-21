@@ -264,15 +264,13 @@ class GraphDrawer {
 
     let renderedNodes = 0
     const sortedNodes = this.graph.nodes.sort((a, b) => parseInt(a.layer) > parseInt(b.layer) ? 1 : -1)
-    console.log("SORTED NODES", sortedNodes)
     sortedNodes.map(node => {
       var img = new Image();
       const self = this
       img.onload = function () {
         const specifiedRatio = node.scale == 0 ? 1 : node.scale/100
 
-        console.log("CALCULATED RATIO", node.scale,specifiedRatio)
-        context.webkitImageSmoothingEnabled = true;
+       context.webkitImageSmoothingEnabled = true;
         context.mozImageSmoothingEnabled = true;
         context.imageSmoothingEnabled = true;
         // drawImage(context, node.sprite, this.width * specifiedRatio, this.height * specifiedRatio)
@@ -477,7 +475,6 @@ export default function TempleteDetail() {
 
         // Setting the required states
         setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
-        console.log("PRODUCT XYZ", product.categories.map(cat => [cat.name, cat.subcategories[0]?.characters]))
         setCharacters(getCategoryCharacters(product))
       })
   }, [product])
@@ -499,7 +496,6 @@ export default function TempleteDetail() {
   useEffect(() => {
     const sprites = characters
     const distribution = background.positions.map((pos, i) => {
-      console.log("Postion", pos)
       return {
         x: pos[0],
         y: pos[1],
@@ -518,7 +514,6 @@ export default function TempleteDetail() {
     const nulls2 = nulls.fit(len, nulls.length)
 
     const finalDistribution = [...nulls1, ...actuals, ...nulls2]
-    console.log("Distribution", spritedDistribution, characters)
 
     // finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
 
@@ -715,7 +710,6 @@ export default function TempleteDetail() {
                   dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
                   dropdownData={{ image: characters[totalIndex] }}
                   onClickEditNameDropdown={() => {
-                      console.log("DIT ADULT DROPDOWN", showEditAdultDropdown)
                       setShowEditAdultDropdown(showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name ? undefined : {category: name, totalIndex, index: totalIndex})
                     }
                   }
