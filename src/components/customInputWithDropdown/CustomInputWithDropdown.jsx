@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { arrowDown, arrowDownTwo, arrowUp, edit, maleDummy, onlyBg } from '../../assets'
 import './customInputWithDropdown.css'
 
 export default function CustomInputWithDropdown(props) {
+    const title = useRef(null)
+    const subtitle = useRef(null)
+
+
     return (
         <div className="cactus-templete_detail-form_dropdown_top_view">
             <div className="cactus-templete_detail-form_dropdown_title_view">
@@ -14,14 +18,14 @@ export default function CustomInputWithDropdown(props) {
                     <>
                         <h5>Surname</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
-                            <input placeholder="Enter title" value={props.title} onChange={ev => props.onChangeTitle(ev.target.value)} />
-                            <img src={edit} />
+                            <input placeholder="Enter title" ref={title} value={props.title} onChange={ev => props.onChangeTitle(ev.target.value)} />
+                            <img src={edit} onClick={() => title.current.focus()} />
                         </div>
                         <div className="cactus-templete_detail-form_dropdown_title_divider" />
                         <h5>Family Name</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
-                            <input placeholder="Enter sub title" value={props.subtitle} onChange={ev => props.onChangeSubtitle(ev.target.value)} />
-                            <img src={edit} />
+                            <input ref={subtitle} placeholder="Enter sub title" value={props.subtitle} onChange={ev => props.onChangeSubtitle(ev.target.value)} />
+                            <img src={edit} onClick={() => subtitle.current.focus()} />
                         </div>
                         <div className="cactus-templete_detail-form_dropdown_title_divider" />
                         <div style={{ height: 10 }} />

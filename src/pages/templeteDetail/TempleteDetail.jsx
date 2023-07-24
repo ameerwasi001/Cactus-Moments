@@ -617,8 +617,9 @@ export default function TempleteDetail() {
               </>)}
               <div id="overlay-title" style={{ position: "absolute", zIndex: 100000 }}>
                 {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
-                  height: "500px", 
-                  width: "500px", 
+                  // height: "500px", 
+                  // width: "500px", 
+                  whiteSpace: 'nowrap',
                   position: "absolute", 
                   left: `${background.coordinateVariation.xText}px`, 
                   top: `${background.coordinateVariation.yText}px`,
@@ -629,8 +630,9 @@ export default function TempleteDetail() {
               </div>
               {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div id="overlay-subtitle" style={{ position: "absolute", zIndex: 100000 }}>
                 <div style={{
-                  height: "500px", 
-                  width: "500px", 
+                  // height: "500px", 
+                  // width: "500px", 
+                  whiteSpace: 'nowrap',
                   position: "absolute", 
                   left: `${background.coordinateVariation.xSmallText}px`, 
                   top: `${background.coordinateVariation.ySmallText}px`,
