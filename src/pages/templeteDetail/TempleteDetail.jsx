@@ -444,6 +444,7 @@ export default function TempleteDetail() {
     },
   ];
   const [templeteArray, setTemplateArray] = useState([]);
+  const [autoSelect, setAutoSelect] = useState(true)
 
   const [ratios, setRatios] = useState(new Set())
   const editData = async () => {
@@ -541,9 +542,12 @@ export default function TempleteDetail() {
       {recents == 'no' ? <></> : <NavBar />}
       {defaultModel && (
         <DefaultModel
+          autoSelect={autoSelect}
+          ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
           product={product}
           onClick={product => {
             setProduct(Object.freeze(product))
+            setAutoSelect(false)
             setDefaultModel(false)
           }}
         />
@@ -671,6 +675,11 @@ export default function TempleteDetail() {
               <div className="cactus-templete_detail-form_title">
                 <h4>Personalize</h4>
                 <h5>COMPOSITION OF THE FAMILY</h5>
+              </div>
+              <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', width: "200px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
+                    <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "2rem" }}>Edit Characters</h3>
+                </button>
               </div>
               <CustomInputWithDropdown
                 type={"name"}
