@@ -5,16 +5,48 @@ import './genderModel.css'
 
 const { Option } = Select
 
-const getCategoryMaxes = (max, categories) => {
-    const maxDict = Object.fromEntries(categories.map(cat => [cat.name, 0]))
+const productPositions = product => {
+    const productNMax = product.categories?.map(x => parseInt(x.max ?? 0) ?? 0)?.reduce((a, b) => a+b, 0)
+    const arr = product.categories
+        .map(cat => new Array(parseInt(cat.max ?? 0) ?? 0).fill(cat))
+        .map(arr => arr.map((cat, i) => cat?.subcategories?.[0]?.characters?.[0]))
+        .reduce((a, b) => [...a, ...b], [])
+        .slice(0, productNMax)
+    const nameArr = product.categories
+        .map(cat => new Array(parseInt(cat.max ?? 0) ?? 0).fill(cat))
+        .map(arr => arr.map((cat, i) => [cat?.name, i+1]))
+        .reduce((a, b) => [...a, ...b], [])
+        .slice(0, productNMax)
+    const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => ({x: pos[0], y: pos[1], scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined, staticAssociation: pos[5] != undefined ? nameArr[i] : null}) ?? [])
+    return poses
+}
+
+const minCategoryGivenStatics = product => {
+    const positions = productPositions(product)
+    const dict = {}
+    for(const p of product.categories) dict[p.name] = 0
+    for(const p of positions)
+        if(p.isStatic) {
+            console.log("P", p.staticAssociation)
+            dict[p.staticAssociation[0]] += 1
+        }
+    return dict
+}
+
+const getCategoryMaxes = (max, categories, ogProduct) => {
+    const staicsDict = minCategoryGivenStatics(ogProduct)
+    categories?.forEach(cat => cat.min = staicsDict[cat.name])
+    console.log(staicsDict, categories)
+    const maxDict = Object.fromEntries(categories.map(cat => [cat.name, cat.min]))
     let runningMax = 0
     for(const cat of categories) {
-        if(maxDict[cat.name] + 1 >= parseInt(cat.max)) continue
+        console.log(cat.max, maxDict[cat.name]+1)
+        if(maxDict[cat.name] + 1 > parseInt(cat.max)) continue
         if(runningMax >= max) break
         maxDict[cat.name] += 1
         runningMax += 1
     }
-    console.log(maxDict)
+    // console.log(maxDict, runningMax, max)
     const newCategories = categories.map(cat => ({ ...cat, max: maxDict[cat.name] }))
     return newCategories
 }
@@ -23,9 +55,12 @@ const getMax = categories => categories.map(cat => cat.max).map(x => parseInt(x)
 
 export default function DefaultModel(props) {
     const product = props.product
+    const hasStaticPositions = props.hasStaticPositions
     const ogProduct = props.ogProduct
     ogProduct.max = parseInt(ogProduct.max)
-    const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories) : props.product.categories)
+    const mins = minCategoryGivenStatics(ogProduct)
+    console.log("MINSSSS", mins)
+    const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : props.product.categories)
     const [overSelected, setOverselected] = useState(false)
 
     useEffect(() => console.log("MODAL PRODUCT", product), [product])
@@ -48,15 +83,14 @@ export default function DefaultModel(props) {
                                     newCategories[n].max = val
                                     setCategories(newCategories)
                                 }}>
-                                    <Option value={0}>0</Option>
-                                    {new Array(parseInt(category?.max ?? 0)).fill(0).map((_, i) => i+1).map(i => <Option value={i}>{i}</Option>)}
+                                    {[0, new Array(parseInt(category?.max ?? 0)).fill(0).map((_, i) => i+1)].slice(-mins[category?.name]).map(i => <Option value={i}>{i}</Option>)}
                                 </Select>
                             </div>
                         </div>)}
                         <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: getMax(categories) > ogProduct.max ? "0.5" : undefined, pointer: getMax(categories) > ogProduct.max ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
                             if(getMax(categories) > ogProduct.max) return
                             const newProduct = {...product}
-                            newProduct.categories = categories
+                            newProduct.categories = ogProduct.categories.map(cat => ({...cat, hidden: !categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)}))
                             props.onClick(newProduct)
                         }}>
                             <h3>Select</h3>

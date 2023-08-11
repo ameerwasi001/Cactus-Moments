@@ -318,11 +318,34 @@ class GraphDrawer {
       this.draw()
   }
 }
+
 const findIndex = (f, arr) => {
   for(let i = 0; i < arr.length; i++)
     if(f(arr[i])) return i
   return -1
 }
+
+const productPositions = product => {
+  const productNMax = product.categories?.map(x => parseInt(x.max ?? 0) ?? 0)?.reduce((a, b) => a+b, 0)
+  const arr = product.categories
+      .map(cat => new Array(parseInt(cat.max ?? 0) ?? 0).fill(cat))
+      .map(arr => arr.map((cat, i) => cat?.subcategories?.[0]?.characters?.[0]))
+      .reduce((a, b) => [...a, ...b], [])
+      .slice(0, productNMax)
+  const nameArr = product.categories
+      .map(cat => new Array(parseInt(cat.max ?? 0) ?? 0).fill(cat))
+      .map(arr => arr.map((cat, i) => [cat?.name, i+1]))
+      .reduce((a, b) => [...a, ...b], [])
+      .slice(0, productNMax)
+  const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => ({x: pos[0], y: pos[1], scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined, staticAssociation: pos[5] != undefined ? nameArr[i] : null}) ?? [])
+  return poses
+}
+
+const hasStaticPositions = product => {
+  const positions = productPositions(product)
+  return positions.map((x, i) => x.isStatic ? i : null).filter(x => x != null).length != 0
+}
+
 
 const accImageIndexes = (arg) => {
   let i = 0
@@ -359,8 +382,10 @@ Array.prototype.fit = function (a, b, c, d) {
   } else return this.slice(...args)
 }
 
-const groupDistribution = arr => {
-  return [arr]
+const groupDistribution = (ogProduct, arr) => {
+  const iArr = arr
+  // findProductPositionIndexes(ogProduct).forEach(i => iArr[i] = )
+  return [iArr]
 }
 
 const arrangeByParent = arr => {
@@ -379,6 +404,7 @@ const arrangeByParent = arr => {
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
+  const ogProduct = JSON.parse(JSONProduct)
   const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
   const [distribution, setDistribution] = useState([])
 
@@ -496,17 +522,20 @@ export default function TempleteDetail() {
 
   useEffect(() => {
     const sprites = characters
+    const positions = productPositions(ogProduct)
     const distribution = background.positions.map((pos, i) => {
       return {
         x: pos[0],
         y: pos[1],
         layer: pos[2],
-        scale: pos[3]
+        scale: pos[3],
+        hidden: product.categories.find(cat => cat.name == positions[i]?.name?.[0])?.hidden
       }
     }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
 
+    console.log("DIST00", distribution)
     // middling algorithm
-    const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: sprites[i] } })
+    const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: x.hidden ? "" : sprites[i] } })
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
 
@@ -545,6 +574,7 @@ export default function TempleteDetail() {
           autoSelect={autoSelect}
           ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
           product={product}
+          hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={product => {
             setProduct(Object.freeze(product))
             setAutoSelect(false)
@@ -605,7 +635,7 @@ export default function TempleteDetail() {
             </div>
             <div style={JSON.parse(JSON.stringify({ height: '500px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} width={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-              {groupDistribution(distribution).map(sprites => <>
+              {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
                   (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
                     height: "unset", 
@@ -705,6 +735,7 @@ export default function TempleteDetail() {
               />
               {
                 accImageIndexes(product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => <CustomInputWithDropdown
+                  containerStyle={{ display: product.categories.find(cat => cat.name == name)?.hidden ? "none" : undefined }}
                   onClickButton={() => setChooseGenderModel({type: name, totalIndex, index: i, array: arrangeByParent(product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
                     const giveni = findIndex(cat => cat.name == name,  product.categories)
                     const j = id
@@ -712,7 +743,7 @@ export default function TempleteDetail() {
                       id,
                       parent: sub.parent,
                       title: sub.name,
-                      array: sub.characters.map((x, n) => { return { id: n+1, index: totalIndex, image: x, i: giveni, j, k: n } }),
+                      array: sub.characters.map((x, n) => { return { id: n+1, index: totalIndex, image: product.categories.find(cat => cat.name == name)?.hidden ? "" : x , i: giveni, j, k: n } }),
                       icon: sub.image,
                     }
                   }))})}
