@@ -17,7 +17,11 @@ const productPositions = product => {
         .map(arr => arr.map((cat, i) => [cat?.name, i+1]))
         .reduce((a, b) => [...a, ...b], [])
         .slice(0, productNMax)
-    const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => ({x: pos[0], y: pos[1], scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined, staticAssociation: pos[5] != undefined ? nameArr[i] : null}) ?? [])
+    const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => {
+        const ret = {x: pos[0], y: pos[1], scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined && pos[5] != 0, staticAssociation: pos[5] != undefined && pos[5] != 0 ? nameArr[i] : null}
+        console.log("POSIT", pos[5], ret)
+        return ret
+    }) ?? []
     return poses
 }
 
@@ -25,11 +29,11 @@ const minCategoryGivenStatics = product => {
     const positions = productPositions(product)
     const dict = {}
     for(const p of product.categories) dict[p.name] = 0
-    for(const p of positions)
+    for(const p of positions){
         if(p.isStatic) {
             console.log("P", p.staticAssociation)
             dict[p.staticAssociation[0]] += 1
-        }
+        }}
     return dict
 }
 
@@ -83,7 +87,8 @@ export default function DefaultModel(props) {
                                     newCategories[n].max = val
                                     setCategories(newCategories)
                                 }}>
-                                    {[0, new Array(parseInt(category?.max ?? 0)).fill(0).map((_, i) => i+1)].slice(-mins[category?.name]).map(i => <Option value={i}>{i}</Option>)}
+                                    {console.log("CNAME", category?.name, -mins[category?.name])}
+                                    {[0, ...(new Array(parseInt(category?.max ?? 0)).fill(0).map((_, i) => i+1))].slice(-mins[category?.name]).map(i => <Option value={i}>{i}</Option>)}
                                 </Select>
                             </div>
                         </div>)}
