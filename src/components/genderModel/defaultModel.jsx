@@ -62,7 +62,7 @@ export default function DefaultModel(props) {
     const hasStaticPositions = props.hasStaticPositions
     const ogProduct = props.ogProduct
     ogProduct.max = parseInt(ogProduct.max)
-    const mins = minCategoryGivenStatics(ogProduct)
+    const mins = Object.fromEntries(Object.entries(minCategoryGivenStatics(ogProduct)).map(([k, _]) => [k, 0]))
     console.log("MINSSSS", mins)
     const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : props.product.categories)
     const [overSelected, setOverselected] = useState(false)
@@ -95,7 +95,8 @@ export default function DefaultModel(props) {
                         <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: getMax(categories) > ogProduct.max ? "0.5" : undefined, pointer: getMax(categories) > ogProduct.max ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
                             if(getMax(categories) > ogProduct.max) return
                             const newProduct = {...product}
-                            newProduct.categories = ogProduct.categories.map(cat => ({...cat, hidden: !categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)}))
+                            if(hasStaticPositions) newProduct.categories = ogProduct.categories.map(cat => ({...cat, hidden: !categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)}))
+                            else newProduct.categories = categories
                             props.onClick(newProduct)
                         }}>
                             <h3>Select</h3>

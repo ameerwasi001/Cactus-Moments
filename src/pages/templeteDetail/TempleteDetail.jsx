@@ -533,7 +533,7 @@ export default function TempleteDetail() {
       }
     }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
 
-    console.log("DIST00", distribution)
+    console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
     // middling algorithm
     const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: x.hidden ? "" : sprites[i] } })
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
