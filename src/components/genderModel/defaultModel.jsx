@@ -60,6 +60,7 @@ const getMax = categories => categories.map(cat => cat.max).map(x => parseInt(x)
 export default function DefaultModel(props) {
     const product = props.product
     const hasStaticPositions = props.hasStaticPositions
+                            console.log("STATICITY", hasStaticPositions, props.ogProduct)
     const ogProduct = props.ogProduct
     ogProduct.max = parseInt(ogProduct.max)
     const mins = Object.fromEntries(Object.entries(minCategoryGivenStatics(ogProduct)).map(([k, _]) => [k, 0]))

@@ -337,7 +337,7 @@ const productPositions = product => {
       .map(arr => arr.map((cat, i) => [cat?.name, i+1]))
       .reduce((a, b) => [...a, ...b], [])
       .slice(0, productNMax)
-  const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => ({x: pos[0], y: pos[1], scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined, staticAssociation: pos[5] != undefined ? nameArr[i] : null}) ?? [])
+  const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => ({x: pos[0], y: pos[1], scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined && pos[5] != 0, staticAssociation: pos[5] != undefined ? nameArr[i] : null}) ?? [])
   return poses
 }
 
