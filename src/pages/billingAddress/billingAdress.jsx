@@ -230,6 +230,7 @@ const BillingAdress = () => {
             </p>
           </div>
           <div
+            style={{ opacity: ischecked ? 1 : 0.5 }}
             onClick={() => {
               console.log("SELECTECTIONSS", selections)
               if(!ischecked) return setError("Agreement with the terms and conditions is requred")

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { creditCardBlack, radioFilled, successGif } from "../../assets";
 import { NavBar, Footer } from "../../components";
 import { req } from "../../requests";
 import { getAllParams, setParam } from "../../urlParams";
+import swal from 'sweetalert';
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
+import ScaleLoader from "react-spinners/ScaleLoader";
 import "./payment.css";
 
 const Payment = () => {
@@ -13,8 +15,52 @@ const Payment = () => {
   const [cardNumber, setCardNumber] = useState("")
   const [cvv, setCvv] = useState("")
   const [expiry, setExpiry] = useState("")
+  const [loading, setLoading] = useState(false)
   const [lastExpiryLength, setLastExpiryLength] = useState(0)
   const [error, setError] = useState("")
+
+  const {
+    courtesyTitle,
+    day,
+    country,
+    month,
+    year,
+    firstName,
+    lastName,
+    email,
+    number,
+    city,
+    postCode,
+    addressLine1,
+    adults,
+    children,
+    addressLine2,
+  } = getAllParams()
+
+  const getN = () => {
+    let n = 0
+    for(const ch of cardNumber)
+      if([1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => `${x}`).includes(ch)) n += 1
+    return n
+  }
+
+  useEffect(() => {
+    if(error) {
+      swal({
+        title: "Error",
+        text: error,
+        icon: "error",
+        dangerMode: true,
+        onClose: () => {
+          setError("")
+        }
+      })
+      setTimeout(() => {
+        setError("")
+      }, 3_000)
+    }
+  }, [error])
+
   return (
     null,
     (
@@ -22,7 +68,6 @@ const Payment = () => {
         <NavBar />
 
         <div className="billing-address-main-container">
-          {error && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>}
           {next ? (
             <>
               <div className="payment-method-price-main-container">
@@ -89,26 +134,49 @@ const Payment = () => {
                     />
                   </div>
                   <div
-                    onClick={() => {
-                      let n = 0
-                      for(const ch of cardNumber)
-                        if([1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => `${x}`).includes(ch)) n += 1
+                    style={{ opacity: getN() != 16 || expiry.length != 5 || cvv.length != 3 ? 0.5 : 1 }}
+                    onClick={async () => {
+                      if(loading) return
+                      let n = getN()
                       if(n != 16) return setError("The card must have the format XXXX XXXX XXXX XXXX")
                       if(expiry.length != 5) return setError("The expiry formst must be MM/YY")
                       if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
-                      req('POST', '/user/order', {
+                      setLoading(true)
+                      await req('POST', '/user/order', {
                         product: product._id,
-                        cardNumber,
-                        cvv,
-                        expiry,
+                        bill: {
+                          cardNumber,
+                          cvv,
+                          expiry,
+                          courtesyTitle,
+                          day,
+                          country,
+                          month,
+                          year,
+                          firstName,
+                          lastName,
+                          email,
+                          number,
+                          city,
+                          postCode,
+                          addressLine1,
+                          adults,
+                          children,
+                          addressLine2,
+                        },
                         product: product._id,
                         selections: {product, ...restProduct}
-                      }).then(_ => _)
-                      setNext(false)
+                      }, err => {
+                        setLoading(false)
+                        setError(err)
+                      }, () => {
+                        setLoading(false)
+                        setNext(false)
+                      })
                     }}
                     className="payment-btn-main-container"
                   >
-                    <p>Pay ${product.price ?? 10}</p>
+                    {loading ? <ScaleLoader color="#fff" /> : <p>Pay ${product.price ?? 10}</p>}
                   </div>
                 </div>
               </div>
@@ -117,13 +185,14 @@ const Payment = () => {
             <div className="after-payment-main-container">
               <img src={successGif} alt="gif" />
               <div className="after-payment-text-main-container">
-                <h2>Your Order placed Succesfully</h2>
-                <p>
+                <h1>Your Order placed Succesfully</h1>
+                <h3>
                   Your order Number is{" "}
                   <span style={{ color: "#333333" }}>#545734</span> .We send an
                   email to you and You will received your Order with in 5 to 7
                   working days thanks.
-                </p>
+                </h3>
+                <p></p>
               </div>
             </div>
           )}
