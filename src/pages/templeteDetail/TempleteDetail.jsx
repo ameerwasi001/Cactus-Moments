@@ -24,6 +24,7 @@ import {
 import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
+import html2canvas from 'html2canvas';
 
 let renderCanvas = true
 
@@ -401,6 +402,20 @@ const arrangeByParent = arr => {
   return parentChildArray
 }
 
+const screenshot = async ref => {
+  // Select the element that you want to capture
+  const captureElement = ref;
+
+  // Call the html2canvas function and pass the element as an argument
+  const canvas = await html2canvas(captureElement)
+  // Get the image data as a base64-encoded string
+  const imageData = canvas.toDataURL("image/png");
+
+  // Do something with the image data, such as saving it as a file or sending it to a server
+  // For example, you can create an anchor element and trigger a download action
+  return imageData
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
@@ -759,7 +774,24 @@ export default function TempleteDetail() {
               }
             </div>
             <div
-              onClick={() => navigate(`/billingAddress?${setParam({ product: JSON.stringify(product), characters })}`)}
+              onClick={async () => {
+                const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
+                console.log("imgs=>", img)
+                navigate(`/billingAddress?${setParam({ product: product._id })}`, {
+                  state: { 
+                    selections: {
+                      product, 
+                      distribution,
+                      background,
+                      title,
+                      subtitle,
+                      characters,
+                      selectedDimension,
+                      templeteArray,
+                    } 
+                  }
+                })
+              }}
               className="cactus-templete_detail-order_button"
             >
               <h5>Order Now</h5>

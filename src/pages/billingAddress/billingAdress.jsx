@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { radio, radioFilled } from "../../assets";
 import { Footer, TextInput } from "../../components";
 import { getAllParams, setParam } from "../../urlParams";
@@ -49,6 +49,7 @@ const countryArr = [
 
 const BillingAdress = () => {
   const { product, adults, children } = getAllParams()
+  const { state: {selections} } = useLocation()
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
@@ -230,6 +231,7 @@ const BillingAdress = () => {
           </div>
           <div
             onClick={() => {
+              console.log("SELECTECTIONSS", selections)
               if(!ischecked) return setError("Agreement with the terms and conditions is requred")
               let error = ""
               const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
@@ -258,7 +260,11 @@ const BillingAdress = () => {
                 adults: adults,
                 children: children,
                 addressLine2: address2,
-              })}`)
+              })}`, {
+                state: {
+                  selections
+                }
+              })
             }}
             className="billing-address-move-next-btn-container"
           >

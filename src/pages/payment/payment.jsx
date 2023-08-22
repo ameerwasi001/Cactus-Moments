@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { creditCardBlack, radioFilled, successGif } from "../../assets";
 import { NavBar, Footer } from "../../components";
 import { req } from "../../requests";
@@ -7,13 +8,13 @@ import TextInputBilling from "../../components/textInputBilling/textInputBilling
 import "./payment.css";
 
 const Payment = () => {
+  const { state: { selections: {product, ...restProduct} } } = useLocation()
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
   const [cvv, setCvv] = useState("")
   const [expiry, setExpiry] = useState("")
   const [lastExpiryLength, setLastExpiryLength] = useState(0)
   const [error, setError] = useState("")
-  const { product, ...params } = getAllParams()
   return (
     null,
     (
@@ -28,7 +29,7 @@ const Payment = () => {
                 <h2>
                   Total <span style={{ color: "#666666" }}>Incl .Tax</span>
                 </h2>
-                <h2>${JSON.parse(product).price ?? 10}</h2>
+                <h2>${product.price ?? 10}</h2>
               </div>
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
@@ -96,18 +97,18 @@ const Payment = () => {
                       if(expiry.length != 5) return setError("The expiry formst must be MM/YY")
                       if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
                       req('POST', '/user/order', {
-                        product: JSON.parse(product)._id,
-                        ...params,
+                        product: product._id,
                         cardNumber,
                         cvv,
                         expiry,
-                        product: JSON.parse(product)._id,
+                        product: product._id,
+                        selections: {product, ...restProduct}
                       }).then(_ => _)
                       setNext(false)
                     }}
                     className="payment-btn-main-container"
                   >
-                    <p>Pay ${JSON.parse(product).price ?? 10}</p>
+                    <p>Pay ${product.price ?? 10}</p>
                   </div>
                 </div>
               </div>
