@@ -86,6 +86,8 @@ const BillingAdress = () => {
     }
   }, []);
 
+  const isCharacter = ch => 'abcdefghijklmnopqrstuvwxyz'.split("").map(x => [x, x.toLocaleUpperCase()]).reduce((a, b) => [...a, ...b], []).includes(ch)
+
   return (
     <>
       <Navbar />
@@ -117,14 +119,14 @@ const BillingAdress = () => {
                 inputStyle={{ width: "70%" }}
                 title={"First Name*"}
                 value={firstName}
-                onChange={ev => setFirstName(ev.target.value)}
+                onChange={ev => setFirstName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
                 type={"text"}
               />
               <TextInputBilling
                 inputStyle={{ width: "70%" }}
                 title={"Last Name*"}
                 value={lastName}
-                onChange={ev => setLastName(ev.target.value)}
+                onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
                 type={"text"}
               />
               <TextInputBilling
@@ -194,9 +196,11 @@ const BillingAdress = () => {
               <TextInputBilling
                 inputStyle={{ width: "75%" }}
                 title={"Post Code*"}
-                type={"number"}
+                type={"text"}
                 value={postCode}
-                onChange={ev => setPostCode(ev.target.value)}
+                onChange={ev => {
+                  setPostCode(ev.target.value.split("").map(ch => [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => x.toString()).includes(ch) ? ch : "").join(""))
+                }}
               />
               <TextInputBilling
                 inputStyle={{ width: "75%" }}
@@ -230,12 +234,13 @@ const BillingAdress = () => {
             </p>
           </div>
           <div
-            style={{ opacity: ischecked && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true) ? 1 : 0.5 }}
+            style={{ opacity: ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true) ? 1 : 0.5 }}
             onClick={() => {
               console.log("SELECTECTIONSS", selections)
               if(!ischecked) return setError("Agreement with the terms and conditions is requred")
               let error = ""
               const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
+              if(!email.includes("@")) return 
               Object.entries(notEmpty).forEach(([f, x]) => {
                 if(!x) error = `${f} is required`
                 window.scrollTo(0, 0)
