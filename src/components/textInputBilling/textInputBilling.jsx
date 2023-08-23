@@ -12,12 +12,13 @@ const TextInputBilling = ({
   onChange,
   inputStyle,
   mainWidth,
+  extraDividerStyles,
 }) => {
   return (
     <div style={mainWidth} className="text-input-billing-main-container">
       <div className="text-input-billing-divider-container">
         <h3>{title}</h3>
-        <div className="text-input-billing-input-divider"></div>
+        <div className="text-input-billing-input-divider" style={extraDividerStyles ? extraDividerStyles : {}}></div>
       </div>
 
       <input

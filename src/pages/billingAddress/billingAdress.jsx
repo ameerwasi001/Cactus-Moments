@@ -196,6 +196,7 @@ const BillingAdress = () => {
               <TextInputBilling
                 inputStyle={{ width: "75%" }}
                 title={"Post Code*"}
+                extraDividerStyles={{ marginRight: "1rem" }}
                 type={"text"}
                 value={postCode}
                 onChange={ev => {
