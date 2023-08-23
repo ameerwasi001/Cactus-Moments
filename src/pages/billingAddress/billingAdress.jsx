@@ -53,18 +53,18 @@ const BillingAdress = () => {
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
-  const [dayselect, setDaySelected] = useState({ label: "Day", value: "Day" });
+  const [dayselect, setDaySelected] = useState({ label: "1", value: "1" });
   const [countryselect, setCountrySelected] = useState({
     label: "England",
     value: "England",
   });
   const [monthSelect, setMonthSelected] = useState({
-    label: "Month",
-    value: "Month",
+    label: "January",
+    value: "january",
   });
   const [yearSelect, setYearSelect] = useState({
-    label: "Year",
-    value: "Year",
+    label: "2000",
+    value: "2000",
   });
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -207,7 +207,7 @@ const BillingAdress = () => {
               />
               <TextInputBilling
                 inputStyle={{ width: "65%" }}
-                title={"Address line 2*"}
+                title={"Address line 2"}
                 type={"text"}
                 value={address2}
                 onChange={ev => setAddres2(ev.target.value)}
@@ -230,7 +230,7 @@ const BillingAdress = () => {
             </p>
           </div>
           <div
-            style={{ opacity: ischecked ? 1 : 0.5 }}
+            style={{ opacity: ischecked && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true) ? 1 : 0.5 }}
             onClick={() => {
               console.log("SELECTECTIONSS", selections)
               if(!ischecked) return setError("Agreement with the terms and conditions is requred")

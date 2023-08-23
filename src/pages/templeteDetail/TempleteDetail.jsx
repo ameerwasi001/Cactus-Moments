@@ -775,8 +775,8 @@ export default function TempleteDetail() {
             </div>
             <div
               onClick={async () => {
-                const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
-                console.log("imgs=>", img)
+                // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
+                // console.log("imgs=>", img)
                 navigate(`/billingAddress?${setParam({ product: product._id })}`, {
                   state: { 
                     selections: {
