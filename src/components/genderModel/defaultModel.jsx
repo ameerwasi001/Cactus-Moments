@@ -5,6 +5,12 @@ import './genderModel.css'
 
 const { Option } = Select
 
+const findIndex = (f, arr) => {
+    for(let i = 0; i < arr.length; i++)
+      if(f(arr[i])) return i
+    return -1
+}
+
 const productPositions = product => {
     const productNMax = product.categories?.map(x => parseInt(x.max ?? 0) ?? 0)?.reduce((a, b) => a+b, 0)
     const arr = product.categories
@@ -38,6 +44,8 @@ const minCategoryGivenStatics = product => {
 }
 
 const getCategoryMaxes = (max, categories, ogProduct) => {
+    const i = findIndex(x => {console.log(x); return x?.name?.toLowerCase() == "frame"}, categories)
+    categories[i].max = 1
     const staicsDict = minCategoryGivenStatics(ogProduct)
     categories?.forEach(cat => cat.min = staicsDict[cat.name])
     console.log(staicsDict, categories)
@@ -80,11 +88,11 @@ export default function DefaultModel(props) {
             <div style={{ minHeight:'70%', minWidth: '30rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
-                        {ogProduct.categories.map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
+                        {ogProduct.categories.filter(x => x.name.toLowerCase() !== "frame").map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '10rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <h2>{category?.name}</h2>
                                 <Select value={categories.find(c => c.name === category?.name)?.max} onChange={val => {
-                                    const newCategories = JSON.parse(JSON.stringify(categories))
+                                    const newCategories = {...JSON.parse(JSON.stringify(categories)), }
                                     newCategories[n].max = val
                                     setCategories(newCategories)
                                 }}>

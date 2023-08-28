@@ -659,6 +659,7 @@ export default function TempleteDetail() {
                     left: `${Math.max(sprite.x, 0)}px`, 
                     top: `${Math.max(sprite.y, 0)}px`,
                     scale: `${sprite.scale == 0 ? 1 : sprite.scale/100}`,
+                    maxWidth: "500px",
                     transformOrigin: "0 0",
                     zIndex: 100*(sprite.layer+1)
                   }}/>)
