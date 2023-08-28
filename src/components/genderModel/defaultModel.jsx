@@ -45,7 +45,7 @@ const minCategoryGivenStatics = product => {
 
 const getCategoryMaxes = (max, categories, ogProduct) => {
     const i = findIndex(x => {console.log(x); return x?.name?.toLowerCase() == "frame"}, categories)
-    categories[i].max = 1
+    if(i != -1) categories[i].max = 1
     const staicsDict = minCategoryGivenStatics(ogProduct)
     categories?.forEach(cat => cat.min = staicsDict[cat.name])
     console.log(staicsDict, categories)
