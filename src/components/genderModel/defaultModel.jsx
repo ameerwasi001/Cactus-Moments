@@ -44,8 +44,6 @@ const minCategoryGivenStatics = product => {
 }
 
 const getCategoryMaxes = (max, categories, ogProduct) => {
-    const i = findIndex(x => {console.log(x); return x?.name?.toLowerCase() == "frame"}, categories)
-    if(i != -1) categories[i].max = 1
     const staicsDict = minCategoryGivenStatics(ogProduct)
     categories?.forEach(cat => cat.min = staicsDict[cat.name])
     console.log(staicsDict, categories)
@@ -88,12 +86,13 @@ export default function DefaultModel(props) {
             <div style={{ minHeight:'70%', minWidth: '30rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
-                        {ogProduct.categories.filter(x => x.name.toLowerCase() !== "frame").map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
+                        {ogProduct.categories.map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '10rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <h2>{category?.name}</h2>
                                 <Select value={categories.find(c => c.name === category?.name)?.max} onChange={val => {
-                                    const newCategories = {...JSON.parse(JSON.stringify(categories)), }
+                                    const newCategories = JSON.parse(JSON.stringify(categories))
                                     newCategories[n].max = val
+                                    console.log("NEW-CAT", newCategories)
                                     setCategories(newCategories)
                                 }}>
                                     {console.log("CNAME", category?.name, -mins[category?.name])}

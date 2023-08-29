@@ -650,6 +650,15 @@ export default function TempleteDetail() {
             </div>
             <div style={JSON.parse(JSON.stringify({ height: '500px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} width={"500px"} style={{ backgroundImage: `url("${background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+              {defaultModel || chooseBackgroundModel || chooseGenderModel ? <></> : <img src={background.coordinateVariation.frame} style={{
+                zIndex: 100000000000000,
+                position: "absolute", 
+                top: 0,
+                left: 0,
+                height: "100%",
+                maxWidth: "500px",
+                width: background.coordinateVariation.fameScale == undefined ? "200px" : `${background.coordinateVariation.fameScale}px`,
+              }}/>}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
                   (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
