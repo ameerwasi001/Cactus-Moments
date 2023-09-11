@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.8e780964.css",
+    "main.css": "/static/css/main.e4ba161a.css",
     "main.js": "/static/js/main.63ec522b.js",
     "static/media/dummyFive.png": "/static/media/dummyFive.e3e4442b304b843ed59f.png",
     "static/media/home-image2.png": "/static/media/home-image2.847dcd225ea4a6e018bd.png",
@@ -15,22 +15,33 @@
     "static/media/aboutUsImage.png": "/static/media/aboutUsImage.b111460bd591898b6e20.png",
     "static/media/privacy.png": "/static/media/privacy.0003f4876af829253495.png",
     "static/media/dummyTwo.png": "/static/media/dummyTwo.c4e12f522fb00e0617fb.png",
+    "static/media/suprema-extrabold-italic.ttf": "/static/media/suprema-extrabold-italic.5a18d91bbb3142b0bf01.ttf",
     "static/media/terms.png": "/static/media/terms.ca37ae7badc20a9840cc.png",
     "static/media/banner.png": "/static/media/banner.d6de2610eb28329950c7.png",
+    "static/media/Montserrat-ExtraBoldItalic.ttf": "/static/media/Montserrat-ExtraBoldItalic.c28b8c5ae1c07628dfb3.ttf",
+    "static/media/FontsFree-Net-Montserrat-BlackItalic.ttf": "/static/media/FontsFree-Net-Montserrat-BlackItalic.e656be392bac6a4aed4d.ttf",
     "static/media/dummyRoundOne.png": "/static/media/dummyRoundOne.23a6587a6f1278c72f95.png",
     "static/media/dummyRoundThree.png": "/static/media/dummyRoundThree.2dd2aa8ef6b5f95f0404.png",
+    "static/media/BeautyGadish.otf": "/static/media/BeautyGadish.74af7ee0e508d9910b39.otf",
     "static/media/dummyRoundTwo.png": "/static/media/dummyRoundTwo.c0563daf009b3fbe9b68.png",
+    "static/media/FontsFree-Net-MYRIADPRO-REGULAR.ttf": "/static/media/FontsFree-Net-MYRIADPRO-REGULAR.3e5c30ff8f7f6c3464f5.ttf",
+    "static/media/machiarge.ttf": "/static/media/machiarge.61a71cd76f9109317996.ttf",
     "static/media/success-gif.gif": "/static/media/success-gif.d5db6c1e7b8d02187a8c.gif",
+    "static/media/NuevaStd-Bold.otf": "/static/media/NuevaStd-Bold.01aacea0531c23544e20.otf",
     "static/media/maleDummy.png": "/static/media/maleDummy.96909af874923ba4d358.png",
+    "static/media/BagdollDisplay-Regular.otf": "/static/media/BagdollDisplay-Regular.777fe7a54d2aef67bab7.otf",
+    "static/media/BeautyDemo.otf": "/static/media/BeautyDemo.9f71153c5220dd7942ca.otf",
+    "static/media/SinkinSans-300Light.otf": "/static/media/SinkinSans-300Light.3cfcac476bf2b074a01b.otf",
+    "static/media/GoboldBold.otf": "/static/media/GoboldBold.3e7fc4fdce676f66f60c.otf",
     "static/media/female.png": "/static/media/female.158a76c5703bc85b6711.png",
     "static/media/logo.png": "/static/media/logo.39e178a24ac4f9c0ca3a.png",
     "static/media/male.png": "/static/media/male.8efe1ac46adf8ba26d83.png",
     "index.html": "/index.html",
-    "main.8e780964.css.map": "/static/css/main.8e780964.css.map",
+    "main.e4ba161a.css.map": "/static/css/main.e4ba161a.css.map",
     "main.63ec522b.js.map": "/static/js/main.63ec522b.js.map"
   },
   "entrypoints": [
-    "static/css/main.8e780964.css",
+    "static/css/main.e4ba161a.css",
     "static/js/main.63ec522b.js"
   ]
 }

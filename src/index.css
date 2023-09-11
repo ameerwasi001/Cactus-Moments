@@ -1,5 +1,60 @@
 @import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700;800&display=swap');
 
+@font-face {
+  font-family: "BagdollDisplay-Regular";
+  src: url("./assets/BagdollDisplay-Regular.otf");
+}
+
+@font-face {
+  font-family: "BeautyGadish";
+  src: url("./assets/BeautyGadish.otf");
+}
+
+@font-face {
+  font-family: "BeautyDemo";
+  src: url("./assets/BeautyDemo.otf");
+}
+
+@font-face {
+  font-family: "Montserrat-BlackItalic";
+  src: url("./assets/FontsFree-Net-Montserrat-BlackItalic.ttf");
+}
+
+@font-face {
+  font-family: "MYRIADPRO-REGULAR";
+  src: url("./assets/FontsFree-Net-MYRIADPRO-REGULAR.ttf");
+}
+
+@font-face {
+  font-family: "GoboldBold";
+  src: url("./assets/GoboldBold.otf");
+}
+
+@font-face {
+  font-family: "machiarge";
+  src: url("./assets/machiarge.ttf");
+}
+
+@font-face {
+  font-family: "Montserrat-ExtraBoldItalic";
+  src: url("./assets/Montserrat-ExtraBoldItalic.ttf");
+}
+
+@font-face {
+  font-family: "NuevaStd-Bold";
+  src: url("./assets/NuevaStd-Bold.otf");
+}
+
+@font-face {
+  font-family: "SinkinSans-300Light";
+  src: url("./assets/SinkinSans-300Light.otf");
+}
+
+@font-face {
+  font-family: "suprema-extrabold-italic";
+  src: url("./assets/suprema-extrabold-italic.ttf");
+}
+
 :root {
   --font-family: 'K2D', sans-serif;
 }
