@@ -33,7 +33,7 @@ export default function Dashboard() {
     req('GET', '/user/product')
       .then(({products}) => {
         console.log(products)
-        setTemplateArray(products?.filter(prod => prod.backgrounds.length)?.map((p, id) => { return {...p, id, image: p.backgrounds[p.defaultBackground]} }))
+        setTemplateArray(products?.filter(prod => prod.backgrounds.length)?.map((p, id) => { return {...p, id, image: p.defaultIllustration ? {url: p.defaultIllustration} : p.backgrounds[p.defaultBackground]} }))
       })
   }, [])
 

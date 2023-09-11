@@ -11,3 +11,7 @@ html {
 * {
   box-sizing: border-box;
 }
+
+body {
+  zoom: 100% !important;
+}
