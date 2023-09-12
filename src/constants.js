@@ -1,1 +1,1 @@
-export const baseURL = 'http://ec2-18-189-194-242.us-east-2.compute.amazonaws.com'
+export const baseURL = 'https://api.cactusmoments.com'
