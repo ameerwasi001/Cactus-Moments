@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   arrowBack,
@@ -416,10 +416,43 @@ const screenshot = async ref => {
   return imageData
 }
 
+const TitleComponent = ({ elementId, givenId, background, title, style }) => {
+  const hiddentitleCentricEl = document.querySelector(`#${elementId} > div`)
+  // const hiddentitleCentricEl = overlayTitleHidden?.current
+  if(!hiddentitleCentricEl) return <></>
+
+  const halfTitleLen = Math.round(title.length/2)
+  const [titleFirstHalf, titleSecondHalf] = [title.slice(0, halfTitleLen), title.slice(halfTitleLen)]
+  const width = hiddentitleCentricEl.getBoundingClientRect().width
+  const singleCharWidth = width/title.length
+  const widthHalf = width/2
+  const computedLeftX = background.coordinateVariation.xText - widthHalf
+  const computedMainX = background.coordinateVariation.xText
+
+  console.log("COMPUTED-AXIS", width, widthHalf, computedLeftX, computedMainX)
+  return <div id={givenId} style={{
+    // height: "500px", 
+    // width: "500px", 
+    whiteSpace: 'nowrap',
+    position: "absolute", 
+    // left: `${background.coordinateVariation.xText}px`, 
+    top: `${background.coordinateVariation.yText}px`,
+    fontSize: `${background.coordinateVariation.textSize}pt`,
+    fontFamily: background.font,
+    color: background.coordinateVariation.color,
+    display: "flex",
+    ...(style ? style : {})
+  }}>
+    <p style={{ position: "absolute", left: `${computedLeftX}px` }}>{title}</p>
+    {/* <p style={{ position: "absolute", left: `${computedMainX}px` }}>{titleSecondHalf}</p> */}
+  </div>
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
   const ogProduct = JSON.parse(JSONProduct)
+  const overlayTitleHidden = useRef(null)
   const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
   const [distribution, setDistribution] = useState([])
 
@@ -438,6 +471,7 @@ export default function TempleteDetail() {
 
   const [title, setTitle] = useState(product.name)
   const [subtitle, setSubtitle] = useState(product.subtitle)
+  const [fontLoaded, setFontLoaded] = useState(false)
   const [showFrameModel, setShowFrameModel] = useState(false);
   const [showDimensionModel, setShowDimensionModel] = useState(false);
   const [showEditNameDropdown, setShowEditNameDropdown] = useState(false);
@@ -581,6 +615,16 @@ export default function TempleteDetail() {
 
   }, [])
 
+  useEffect(() => {
+    const fonts = new Set(Array.from(document.fonts).map(x => x.family))
+    setFontLoaded(fonts.has(title));
+
+    document.fonts.onloadingdone = e => {
+      console.log("fontSet>>", new Set([...e.fontfaces].map(x => x.family)))
+      setFontLoaded(fonts.has(title));
+   }
+  }, [title, subtitle, product, characters, background])
+
   return (
     <div className="cactus-dashboard-main_container">
       {recents == 'no' ? <></> : <NavBar />}
@@ -674,7 +718,8 @@ export default function TempleteDetail() {
                   }}/>)
                 }
               </>)}
-              <div id="overlay-title" style={{ position: "absolute", zIndex: 100000 }}>
+              {console.log("fontssssssss", document.fonts, fontLoaded)}
+              {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
                 {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
                   // height: "500px", 
                   // width: "500px", 
@@ -686,9 +731,10 @@ export default function TempleteDetail() {
                   fontFamily: background.font,
                   color: background.coordinateVariation.color,
                 }}>{title}</div>}
-              </div>
-              {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div id="overlay-subtitle" style={{ position: "absolute", zIndex: 100000 }}>
-                <div style={{
+              </div>}
+              {<TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title"/>}
+              {<div id="overlay-subtitle-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+                {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
                   // height: "500px", 
                   // width: "500px", 
                   whiteSpace: 'nowrap',
@@ -698,8 +744,17 @@ export default function TempleteDetail() {
                   fontSize: `${background.coordinateVariation.smallTextSize}pt`,
                   fontFamily: background.smallFont,
                   color: background.coordinateVariation.smallColor,
-                }}>{subtitle}</div>
+                }}>{subtitle}</div>}
               </div>}
+              {<TitleComponent title={subtitle} background={background} elementId="overlay-subtitle-hidden" givenId="overlay-subtitle" style={{
+                whiteSpace: 'nowrap',
+                position: "absolute", 
+                left: `${background.coordinateVariation.xSmallText}px`, 
+                top: `${background.coordinateVariation.ySmallText}px`,
+                fontSize: `${background.coordinateVariation.smallTextSize}pt`,
+                fontFamily: background.smallFont,
+                color: background.coordinateVariation.smallColor,
+              }}/>}
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
