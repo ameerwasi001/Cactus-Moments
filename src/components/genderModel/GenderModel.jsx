@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { closeBox, female, male, maleDummy } from '../../assets'
 import './genderModel.css'
 
+const dimensions = el => [el.getBoundingClientRect().width, el.getBoundingClientRect().heigth]
+const rem = x => x * parseFloat(getComputedStyle(document.documentElement).fontSize);
+
 export default function GenderModel(props) {
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
     const [selectedParent, setSelectedParent] = useState("none")
@@ -12,6 +15,13 @@ export default function GenderModel(props) {
 
     useEffect(() => console.log(selectedGender, genderArray), [selectedGender])
     useEffect(() => console.log("PARENT SELECTED =>>", selectedParent), [selectedParent])
+
+    useEffect(() => {
+        for(const el of [...document.getElementsByClassName("character-box")]) {
+            const [w, h] = dimensions(el)
+            
+        }
+    }, [])
 
     return (
         <div className="cactus-gender-model_top_view">
@@ -42,7 +52,7 @@ export default function GenderModel(props) {
                             <div className='cactus-gender_model_detail_images_view'>
                                 {selectedGender.array.map((item) => {
                                     return (
-                                        <div onClick={() => setSelectedData(item)} style={{ borderWidth: selectedData.id === item.id ? 2 : 0 }} key={item.id}>
+                                        <div className='character-box' onClick={() => setSelectedData(item)} style={{ borderWidth: selectedData.id === item.id ? 2 : 0 }} key={item.id}>
                                             <img src={item.image} />
                                         </div>
                                     )

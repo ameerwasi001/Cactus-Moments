@@ -99,8 +99,8 @@ const Navbar = () => {
   return (
     <div className="cactus__navbar">
       <div className="cactus__navbar-links_logo">
-        <img src={logo} alt="Logo" />
-        <p>Cactus Moments</p>
+        <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>
+        <p style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Cactus Moments</p>
       </div>
       <div className="cactus__navbar-links">
         <div className="cactus_navbar-links_container">
