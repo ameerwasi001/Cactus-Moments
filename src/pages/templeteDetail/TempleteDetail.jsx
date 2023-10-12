@@ -26,6 +26,7 @@ import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
 import html2canvas from 'html2canvas';
 
+const CONSTANT_BOTTOM_OFFSET = 53
 let renderCanvas = true
 
 const renderText = (context, name, xText, yText, textSize, font, color) => {
@@ -448,6 +449,8 @@ const TitleComponent = ({ elementId, givenId, background, title, style }) => {
   </div>
 }
 
+const decodeOffsets = obj => Object.fromEntries(Object.entries(obj).map(([k, v]) => [decodeURIComponent(k), v]))
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
@@ -522,6 +525,8 @@ export default function TempleteDetail() {
   const [autoSelect, setAutoSelect] = useState(true)
 
   const [ratios, setRatios] = useState(new Set())
+  const [offsets, setOffsets] = useState({})
+
   const editData = async () => {
     const ratios = new Set()
     for(const background of product.backgrounds) {
@@ -534,6 +539,22 @@ export default function TempleteDetail() {
     setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
     setRatios(ratios)
   }
+
+  useEffect(() => {
+    const calculatedOffsets = {}
+    for(const ch of groupDistribution(ogProduct, distribution).flat(1)) {
+      console.log("STRING >>", ch, ch?.sprite)
+      const img = ch?.sprite
+      const el = document.querySelector(`[src="${img}"]`)
+      if(!el) return
+      const { height } = el.getBoundingClientRect()
+      console.log("IAMHERE!", height)
+      calculatedOffsets[img] = height+CONSTANT_BOTTOM_OFFSET
+    }
+    console.log("OFFSET-VALUE-X", calculatedOffsets)
+    setOffsets(calculatedOffsets)
+    console.log("OFFSET >=>", calculatedOffsets)
+  }, [title, subtitle, product, characters, distribution, background])
 
   useEffect(() => {
     editData()
@@ -703,6 +724,7 @@ export default function TempleteDetail() {
                 maxWidth: "500px",
                 width: background.coordinateVariation.fameScale == undefined ? "200px" : `${background.coordinateVariation.fameScale}px`,
               }}/>}
+              {console.log("OFSET>", offsets, product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
                   (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
@@ -710,7 +732,7 @@ export default function TempleteDetail() {
                     width: "unset", 
                     position: "absolute", 
                     left: `${Math.max(sprite.x, 0)}px`, 
-                    top: `${Math.max(sprite.y, 0)}px`,
+                    top: `${Math.max(sprite.y - (product.alignBottom ? offsets[sprite.sprite] : 0), 0)}px`,
                     scale: `${sprite.scale == 0 ? 1 : sprite.scale/100}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
@@ -853,7 +875,9 @@ export default function TempleteDetail() {
                       characters,
                       selectedDimension,
                       templeteArray,
-                    } 
+                      offsets,
+                      rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
+                    }
                   }
                 })
               }}
@@ -870,7 +894,7 @@ export default function TempleteDetail() {
               return (
                 <TempleteView
                   onClick={() => {
-                    setProduct(Object.freeze(item))
+                    setProduct({...Object.freeze(item)})
                       // navigate(`/templetedetail?${setParam({
                       //     product: JSON.stringify(item)
                       // })}`)
