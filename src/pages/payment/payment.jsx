@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { creditCardBlack, radioFilled, successGif } from "../../assets";
+import { creditCardBlack, radioFilled, radio, successGif } from "../../assets";
 import { NavBar, Footer } from "../../components";
 import { req } from "../../requests";
 import { getAllParams, setParam } from "../../urlParams";
@@ -11,10 +11,12 @@ import "./payment.css";
 
 const Payment = () => {
   const { state: { selections: {product, ...restProduct} } } = useLocation()
+  const [selectedMethod, setSelectedMethod] = useState("card")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
   const [cvv, setCvv] = useState("")
   const [expiry, setExpiry] = useState("")
+  const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [lastExpiryLength, setLastExpiryLength] = useState(0)
   const [error, setError] = useState("")
@@ -79,15 +81,15 @@ const Payment = () => {
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
                   <div className="paymwnt-methood-credit-card-img-container">
-                    <img src={radioFilled} alt="img" />
+                    <img src={selectedMethod == "card" ? radioFilled : radio} alt="img" onClick={() => setSelectedMethod(selectedMethod == "card" ? "code" : "card")} />
                     <div className="payment-method-credit-card-img">
-                      <img src={creditCardBlack} alt="img" />
+                      <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
                     </div>
                     <h2>Credit card</h2>
                   </div>
                   <div></div>
                 </div>
-                <div className="payment-text-input-main-container">
+                {selectedMethod == "card" && <div className="payment-text-input-main-container">
                   <div style={{ marginTop: "5rem" }}>
                     <TextInputBilling
                       flag={true}
@@ -133,14 +135,42 @@ const Payment = () => {
                       placeholder={"3 digit"}
                     />
                   </div>
-                  <div
-                    style={{ opacity: getN() != 16 || expiry.length != 5 || cvv.length != 3 ? 0.5 : 1 }}
+                </div>}
+                <div className="payment-method-credit-card-title-container">
+                  <div className="paymwnt-methood-credit-card-img-container">
+                    <img src={selectedMethod == "card" ? radio : radioFilled} alt="img" onClick={() => setSelectedMethod(selectedMethod == "code" ? "card" : "code")} />
+                    <div className="payment-method-credit-card-img">
+                      <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
+                    </div>
+                    <h2>Code</h2>
+                  </div>
+                  <div></div>
+                </div>
+                {selectedMethod == "code" && <div className="payment-text-input-main-container">
+                  <div style={{ marginTop: "5rem" }}>
+                      <TextInputBilling
+                        flag={true}
+                        value={code}
+                        onChange={ev => setCode(ev.target.value)}
+                        type={"text"}
+                        title={"Code"}
+                        placeholder={"noel2023"}
+                      />
+                    </div>
+                </div>}
+                <div
+                    style={{ marginRight: "1rem", marginLeft: "1rem", opacity: selectedMethod == "card" ? (getN() != 16 || expiry.length != 5 || cvv.length != 3 ? 0.5 : 1) : (code == "" ? 0.5 : 1) }}
                     onClick={async () => {
                       if(loading) return
-                      let n = getN()
-                      if(n != 16) return setError("The card must have the format XXXX XXXX XXXX XXXX")
-                      if(expiry.length != 5) return setError("The expiry formst must be MM/YY")
-                      if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
+                      if(selectedMethod == "card") {
+                        let n = getN()
+                        if(n != 16) return setError("The card must have the format XXXX XXXX XXXX XXXX")
+                        if(expiry.length != 5) return setError("The expiry formst must be MM/YY")
+                        if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
+                      }
+                      if(selectedMethod == "code") {
+                        if(code != "noel2023") return setError("Invalid code")
+                      }
                       setLoading(true)
                       await req('POST', '/user/order', {
                         product: product._id,
@@ -163,6 +193,7 @@ const Payment = () => {
                           adults,
                           children,
                           addressLine2,
+                          code,
                         },
                         product: product._id,
                         selections: {product, ...restProduct}
@@ -178,7 +209,6 @@ const Payment = () => {
                   >
                     {loading ? <ScaleLoader color="#fff" /> : <p>Pay ${product.price ?? 10}</p>}
                   </div>
-                </div>
               </div>
             </>
           ) : (
