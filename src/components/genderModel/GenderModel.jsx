@@ -53,7 +53,7 @@ export default function GenderModel(props) {
                                 {selectedGender.array.map((item) => {
                                     return (
                                         <div className='character-box' onClick={() => setSelectedData(item)} style={{ borderWidth: selectedData.id === item.id ? 2 : 0 }} key={item.id}>
-                                            <img src={item.image} />
+                                            <img src={item.image} style={item.image?.toLowerCase()?.includes("small") ? { transform: "scale(1.8)" } : {}} />
                                         </div>
                                     )
                                 })}
