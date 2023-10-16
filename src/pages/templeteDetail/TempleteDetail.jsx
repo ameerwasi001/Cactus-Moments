@@ -26,7 +26,7 @@ import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
 import html2canvas from 'html2canvas';
 
-const CONSTANT_BOTTOM_OFFSET = 53
+const CONSTANT_BOTTOM_OFFSET = 150
 let renderCanvas = true
 
 const renderText = (context, name, xText, yText, textSize, font, color) => {
@@ -339,7 +339,13 @@ const productPositions = product => {
       .map(arr => arr.map((cat, i) => [cat?.name, i+1]))
       .reduce((a, b) => [...a, ...b], [])
       .slice(0, productNMax)
-  const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => ({x: pos[0], y: pos[1], scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined && pos[5] != 0, staticAssociation: pos[5] != undefined ? nameArr[i] : null}) ?? [])
+  const categoryArr = product.categories
+      .map(cat => new Array(parseInt(cat.max ?? 0) ?? 0).fill(cat))
+      .map(arr => arr.map(cat => cat?.categoryScale))
+      .reduce((a, b) => [...a, ...b], [])
+      .slice(0, productNMax)
+
+  const poses = product.backgrounds[0]?.positions?.slice(0, productNMax)?.map((pos, i) => ({x: pos[0], y: pos[1], categoryScale: categoryArr[i] ?? 0, scale: pos[3], name: nameArr[i], isStatic: pos[5] != undefined && pos[5] != 0, staticAssociation: pos[5] != undefined ? nameArr[i] : null}) ?? [])
   return poses
 }
 
@@ -605,7 +611,12 @@ export default function TempleteDetail() {
 
     console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
     // middling algorithm
-    const spritedDistribution = distribution.map((x, i) => { return { ...x, sprite: x.hidden ? "" : sprites[i] } })
+    const spritedDistribution = distribution.map((x, i) => {
+      const sprite = sprites[i]
+      const foundCategory = ogProduct?.categories?.find(cat => cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite))
+      console.log("FINDCATEGORY", sprite, foundCategory)
+      return { ...x, categoryScale: foundCategory?.categoryScale ?? 0, sprite: x.hidden ? "" : sprite }
+    })
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
 
@@ -724,7 +735,7 @@ export default function TempleteDetail() {
                 maxWidth: "500px",
                 width: background.coordinateVariation.fameScale == undefined ? "200px" : `${background.coordinateVariation.fameScale}px`,
               }}/>}
-              {console.log("OFSET>", offsets, product?.offsets)}
+              {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
                   (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
@@ -733,7 +744,8 @@ export default function TempleteDetail() {
                     position: "absolute", 
                     left: `${Math.max(sprite.x, 0)}px`, 
                     top: `${Math.max(sprite.y - (product.alignBottom ? offsets[sprite.sprite] : 0), 0)}px`,
-                    scale: `${sprite.scale == 0 ? 1 : sprite.scale/100}`,
+                    _: console.log("CTSCALE", sprite.categoryScale, sprite),
+                    scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
                     zIndex: 100*(sprite.layer+1)
