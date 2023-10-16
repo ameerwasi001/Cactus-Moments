@@ -26,7 +26,7 @@ import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
 import html2canvas from 'html2canvas';
 
-const CONSTANT_BOTTOM_OFFSET = 150
+const CONSTANT_BOTTOM_OFFSET = 0
 let renderCanvas = true
 
 const renderText = (context, name, xText, yText, textSize, font, color) => {
@@ -615,7 +615,7 @@ export default function TempleteDetail() {
       const sprite = sprites[i]
       const foundCategory = ogProduct?.categories?.find(cat => cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite))
       console.log("FINDCATEGORY", sprite, foundCategory)
-      return { ...x, categoryScale: foundCategory?.categoryScale ?? 0, sprite: x.hidden ? "" : sprite }
+      return { ...x, categoryScale: foundCategory?.categoryScale ?? 0, offset: product?.offsets?.[foundCategory?.name], sprite: x.hidden ? "" : sprite }
     })
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
@@ -743,7 +743,7 @@ export default function TempleteDetail() {
                     width: "unset", 
                     position: "absolute", 
                     left: `${Math.max(sprite.x, 0)}px`, 
-                    top: `${Math.max(sprite.y - (product.alignBottom ? offsets[sprite.sprite] : 0), 0)}px`,
+                    top: `${Math.max(sprite.y - (product.alignBottom ? sprite.offset : 0), 0)}px`,
                     _: console.log("CTSCALE", sprite.categoryScale, sprite),
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
