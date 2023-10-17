@@ -889,11 +889,12 @@ export default function TempleteDetail() {
                     selections: {
                       product, 
                       distribution,
+                      selectedDimension: selectedDimension.name,
+                      selectedFrame: selectedFrame.name,
                       background,
                       title,
                       subtitle,
                       characters,
-                      selectedDimension,
                       templeteArray,
                       offsets,
                       rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))

@@ -37,6 +37,8 @@ const Payment = () => {
     adults,
     children,
     addressLine2,
+    selectedDimension,
+    selectedFrame,
   } = getAllParams()
 
   const getN = () => {
@@ -193,6 +195,8 @@ const Payment = () => {
                           adults,
                           children,
                           addressLine2,
+                          selectedDimension,
+                          selectedFrame,
                           code,
                         },
                         product: product._id,
