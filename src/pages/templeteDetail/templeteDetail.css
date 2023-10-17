@@ -99,7 +99,17 @@
   font-size: 2.4rem;
   line-height: 3.2rem;
   color: #333333;
-  padding-bottom: 2.3rem;
+  padding-bottom: 1rem;
+}
+
+.cactus-templete_detail-detail_top_view p {
+  font-family: "K2D";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 3.2rem;
+  color: #333333;
+  padding-bottom: 2.2rem;
 }
 
 .cactus-templete_detail-detail_top_view h3 {

@@ -19,6 +19,7 @@ export default function TempleteView(props) {
           <img alt="" src={logo} />
         </div>
         <h3>{item?.desc}</h3>
+        <p>{item?.posterDesc}</p>
         <h4>{item?.price}</h4>
       </div>
     </div>

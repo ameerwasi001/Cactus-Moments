@@ -495,37 +495,44 @@ export default function TempleteDetail() {
   const [characters, setCharacters] = useState([])
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
-    name: "Without Frame",
+    name: "Sans cadre",
+    price: product.frame1Price ?? 0,
   });
   const [selectedDimension, setSelectedDimesion] = useState({
     id: 1,
-    name: "A3 - (29,7 x 42 cm",
+    name: "A3 - (29,7 x 42 cm)",
+    price: product.a3Price ?? 0,
   });
 
-  const [sideTempleArray, setSideTempleArray] = useState(product.backgrounds.map((x, id) => { return { id, image: x } }));
+  const [sideTempleArray, setSideTempleArray] = useState(product.backgrounds.map((x, id) => { return { id, _: console.log("BG00", x), image: x } }));
   const frameArray = [
     {
       id: 1,
-      name: "Without Frame",
+      name: "Sans cadre",
+      price: product.frame1Price ?? 0,
     },
     {
       id: 2,
-      name: "With Frame",
+      name: "Cadre bois",
+      price: product.frame2Price ?? 0,
+    },
+    {
+      id: 3,
+      name: "Cadre en bois blanc",
+      price: product.frame3Price ?? 0,
     },
   ];
   const dimensionArray = [
     {
       id: 1,
       name: "A3 - (29,7 x 42 cm)",
+      price: product.a3Price ?? 0,
     },
     {
       id: 2,
       name: "A4 - (29,7 x 42 cm)",
-    },
-    {
-      id: 2,
-      name: "A6 - (29,7 x 42 cm)",
-    },
+      price: product.a4Price ?? 0,
+    }
   ];
   const [templeteArray, setTemplateArray] = useState([]);
   const [autoSelect, setAutoSelect] = useState(true)
@@ -577,7 +584,7 @@ export default function TempleteDetail() {
         localStorage.setItem("cactus_recents", JSON.stringify(newRecents))
 
         // Setting the required states
-        setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
+        setSideTempleArray(product.backgrounds.map((x, id) => { return { id, _: console.log("BG00", x), image: x } }))
         setCharacters(getCategoryCharacters(product))
       })
   }, [product])
@@ -702,12 +709,12 @@ export default function TempleteDetail() {
               src={arrowBack}
               className="cactus-templete_detail_side__view_arrow_up"
             />
-            {sideTempleArray.filter(item => item.image.url).map((item) => {
+            {sideTempleArray.filter(item => item?.image?.coordinateVariation?.preview || item?.image?.url).map((item) => {
               return (
                 item.image.url ?
                   <img
                     key={item.id}
-                    src={item.image.url}
+                    src={item?.image?.coordinateVariation?.preview}
                     onClick={() => setBackground(item.image)}
                     style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
                     className="cactus-templete_detail_side__view_image_style"
@@ -794,11 +801,12 @@ export default function TempleteDetail() {
           <div className="cactus-templete_detail-detail_top_view">
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
-            <h3>${product.price}</h3>
+            <p>{product.posterDesc}</p>
+            <h3>€{product.price + parseInt(selectedDimension.price) + parseInt(selectedFrame.price)}</h3>
             <DropdownModel
               name={selectedFrame.name}
               array={frameArray}
-              dropdownValue={false}
+              dropdownValue={showFrameModel}
               onClickValue={(data) => [
                 setSelectedFrame(data),
                 setShowFrameModel(false),
@@ -902,7 +910,7 @@ export default function TempleteDetail() {
         <div style={{ display: recents == 'no' ? 'none' : 'undefined' }} className="cactus-templet_detail_bottom_view">
           <h1>Recently Viewed</h1>
           <div className="cactus-dashboard-templete_top_view">
-            {templeteArray.map((item) => {
+            {templeteArray.slice(-4).map((item) => {
               return (
                 <TempleteView
                   onClick={() => {

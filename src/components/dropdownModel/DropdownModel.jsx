@@ -10,7 +10,7 @@ export default function DropdowModel(props) {
                 <img onClick={props.onClick} src={arrowDown} />
             </div>
             {props.dropdownValue &&
-                <div className="cactus-templete_detail-frame_dropdown_main_view">
+                <div className="cactus-templete_detail-frame_dropdown_main_view" style={{ zIndex: 100000 }}>
                     {props.array?.map((item) => {
                         return (
                             <h4 onClick={() => props.onClickValue(item)} key={item.id}>{item.name}</h4>
