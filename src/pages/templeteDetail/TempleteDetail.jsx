@@ -459,6 +459,12 @@ const TitleComponent = ({ elementId, givenId, background, title, style }) => {
 
 const decodeOffsets = obj => Object.fromEntries(Object.entries(obj).map(([k, v]) => [decodeURIComponent(k), v]))
 
+const makeSpriteModification = img => {
+  const url = "https://drivebuddyz.s3.us-east-2.amazonaws.com/"
+  const [_, rest] = img.split(url)
+  return url + encodeURIComponent(rest)
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
@@ -622,8 +628,17 @@ export default function TempleteDetail() {
     // middling algorithm
     const spritedDistribution = distribution.map((x, i) => {
       const sprite = sprites[i]
-      const foundCategory = ogProduct?.categories?.find(cat => cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite))
-      console.log("FINDCATEGORY", sprite, foundCategory)
+      const foundCategory = ogProduct?.categories?.find(
+        cat => 
+          cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
+          cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(sprite)) ||
+          cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(sprite))
+      )
+      console.log(
+        "FINDCATEGORY-urix",
+        ogProduct?.categories?.map(cat => cat?.subcategories?.map(sc => sc?.characters)).flat()
+      )
+      console.log("FINDCATEGORY", sprites, i, sprites[i])
       return { ...x, categoryName: foundCategory?.name, categoryScale: foundCategory?.categoryScale ?? 0, offset: product?.offsets?.[foundCategory?.name], sprite: x.hidden ? "" : sprite }
     })
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
@@ -644,7 +659,7 @@ export default function TempleteDetail() {
     const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
-    console.log("DIST01", finalDistribution)
+    console.log("DIST01", sprites, finalDistribution)
     setDistribution(finalDistribution)
   }, [product, characters, background])
 
