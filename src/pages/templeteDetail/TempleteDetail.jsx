@@ -21,6 +21,8 @@ import {
   NavBar,
   TempleteView,
 } from "../../components";
+
+import { logo } from "../../assets";
 import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
@@ -616,13 +618,13 @@ export default function TempleteDetail() {
       }
     }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
 
-    console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
+    // console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
     // middling algorithm
     const spritedDistribution = distribution.map((x, i) => {
       const sprite = sprites[i]
       const foundCategory = ogProduct?.categories?.find(cat => cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite))
       console.log("FINDCATEGORY", sprite, foundCategory)
-      return { ...x, categoryScale: foundCategory?.categoryScale ?? 0, offset: product?.offsets?.[foundCategory?.name], sprite: x.hidden ? "" : sprite }
+      return { ...x, categoryName: foundCategory?.name, categoryScale: foundCategory?.categoryScale ?? 0, offset: product?.offsets?.[foundCategory?.name], sprite: x.hidden ? "" : sprite }
     })
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
@@ -642,6 +644,7 @@ export default function TempleteDetail() {
     const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
+    console.log("DIST01", finalDistribution)
     setDistribution(finalDistribution)
   }, [product, characters, background])
 
@@ -751,7 +754,6 @@ export default function TempleteDetail() {
                     position: "absolute", 
                     left: `${Math.max(sprite.x, 0)}px`, 
                     top: `${Math.max(sprite.y - (product.alignBottom ? sprite.offset : 0), 0)}px`,
-                    _: console.log("CTSCALE", sprite.categoryScale, sprite),
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
@@ -759,7 +761,11 @@ export default function TempleteDetail() {
                   }}/>)
                 }
               </>)}
-              {console.log("fontssssssss", document.fonts, fontLoaded)}
+              {console.log("LOGO COMP", ratios.has(background.url))}
+              {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
+                top: "74px",
+                left: "100px"
+              }}/>}
               {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
                 {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
                   // height: "500px", 
@@ -802,7 +808,7 @@ export default function TempleteDetail() {
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
             <p>{product.posterDesc}</p>
-            <h3>€{product.price + parseInt(selectedDimension.price) + parseInt(selectedFrame.price)}</h3>
+            <h3>{product.price + parseInt(selectedDimension.price) + parseInt(selectedFrame.price)} €</h3>
             <DropdownModel
               name={selectedFrame.name}
               array={frameArray}

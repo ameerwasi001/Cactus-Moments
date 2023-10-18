@@ -112,6 +112,25 @@
   padding-bottom: 2.2rem;
 }
 
+.overlay-logo-container {
+  /* filter: invert(1); */
+  /* position: absolute; */
+}
+
+.overlay-logo-template {
+  z-index: 100000000;
+  position: absolute;
+  width: unset !important;
+  height: 50% !important;
+  top: 125px;
+  left: 50px;
+  clip-path: circle();
+  background: black;
+  opacity: 0.5;
+  scale: .8;
+  filter: invert(1);
+}
+
 .cactus-templete_detail-detail_top_view h3 {
   font-family: "K2D";
   font-weight: 400;
