@@ -621,6 +621,7 @@ export default function TempleteDetail() {
         x: pos[0],
         y: pos[1],
         rectHeight: product?.positionalRects?.[`${pos[0]},${pos[1]}`],
+        rectWidth: product?.positionalWidths?.[`${pos[0]},${pos[1]}`],
         layer: pos[2],
         scale: pos[3],
         hidden: product.categories.find(cat => cat.name == positions[i]?.name?.[0])?.hidden
@@ -642,7 +643,7 @@ export default function TempleteDetail() {
         ogProduct?.categories?.map(cat => cat?.subcategories?.map(sc => sc?.characters)).flat()
       )
       console.log("FINDCATEGORY", sprites, i, sprites[i])
-      return { ...x, categoryName: foundCategory?.name, categoryScale: foundCategory?.categoryScale ?? 0, offset: product?.offsets?.[foundCategory?.name], sprite: x.hidden ? "" : sprite }
+      return { ...x, categoryName: foundCategory?.name, categoryScale: foundCategory?.categoryScale ?? 0, offset: product?.offsets?.[foundCategory?.name], offsetWidth: product?.offsetWidths?.[foundCategory?.name], sprite: x.hidden ? "" : sprite }
     })
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
@@ -770,9 +771,9 @@ export default function TempleteDetail() {
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
-                    left: `${Math.max(sprite.x, 0)}px`, 
-                    _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "add", sprite.offset + sprite.rectHeight, "SUB", sprite.offset - sprite.rectHeight, "SUB2", sprite.rectHeight - sprite.offset),
-                    top: `${Math.max(sprite.y - (product.alignBottom ? sprite.offset - sprite.rectHeight : 0), 0)}px`,
+                    _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
+                    left: `${Math.max(sprite.x - (product.alignCenter ? (sprite.rectWidth == sprite.offsetWidth ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0), 0)}px`, 
+                    top: `${Math.max(sprite.y - (product.alignBottom ? sprite.offset - sprite.rectHeight : (product.alignCenter ? (sprite.rectHeight == sprite.offset ? 0 : (sprite.offset - sprite.rectHeight)/2) : 0)), 0)}px`,
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
