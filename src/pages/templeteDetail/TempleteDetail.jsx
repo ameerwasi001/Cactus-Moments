@@ -759,7 +759,7 @@ export default function TempleteDetail() {
                 zIndex: 100000000000000,
                 position: "absolute", 
                 top: 0,
-                left: 0,
+                left: -1,
                 height: "100%",
                 maxWidth: "500px",
                 width: background.coordinateVariation.fameScale == undefined ? "200px" : `${background.coordinateVariation.fameScale}px`,
