@@ -514,7 +514,7 @@ export default function TempleteDetail() {
     price: product.a3Price ?? 0,
   });
 
-  const [sideTempleArray, setSideTempleArray] = useState(product.backgrounds.map((x, id) => { return { id, _: console.log("BG00", x), image: x } }));
+  const [sideTempleArray, setSideTempleArray] = useState((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }));
   const frameArray = [
     {
       id: 1,
@@ -559,7 +559,8 @@ export default function TempleteDetail() {
     }
     setTitle(product.name)
     setSubtitle(product.subtitle)
-    setSideTempleArray(product.backgrounds.map((x, id) => { return { id, image: x } }))
+    console.log("PREVIEWS", product.previews)
+    setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url:x} } }))
     setRatios(ratios)
   }
 
@@ -594,7 +595,7 @@ export default function TempleteDetail() {
         localStorage.setItem("cactus_recents", JSON.stringify(newRecents))
 
         // Setting the required states
-        setSideTempleArray(product.backgrounds.map((x, id) => { return { id, _: console.log("BG00", x), image: x } }))
+        // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
         setCharacters(getCategoryCharacters(product))
       })
   }, [product])
@@ -736,8 +737,8 @@ export default function TempleteDetail() {
                 item.image.url ?
                   <img
                     key={item.id}
-                    src={item?.image?.coordinateVariation?.preview}
-                    onClick={() => setBackground(item.image)}
+                    src={item?.image?.coordinateVariation?.preview || item?.image?.url}
+                    // onClick={() => setBackground(item.image)}
                     style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
                     className="cactus-templete_detail_side__view_image_style"
                   /> :

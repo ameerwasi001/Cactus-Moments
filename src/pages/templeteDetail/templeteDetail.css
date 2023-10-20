@@ -34,7 +34,7 @@
   height: 9.7rem;
   object-fit: cover;
   margin-bottom: 2.4rem;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .cactus-templete_detail-main_image_view {
