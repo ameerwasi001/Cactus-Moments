@@ -714,6 +714,19 @@ export default function TempleteDetail() {
     var img = new Image();
     img.style.scale = scale
 
+    const foundCategory = ogProduct?.categories?.find(
+      cat => 
+        cat?.subcategories?.map(sc => sc?.characters).flat().includes(url) || 
+        cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(url)) ||
+        cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(url))
+    )
+    const foundSubcategory = foundCategory?.subcategories?.find(
+      sub => sub?.characters?.includes(url) || 
+        sub?.characters?.includes(encodeURIComponent(url)) ||
+        sub?.characters?.includes(makeSpriteModification(url))
+    )
+    const distSprite = distribution.find(dist => foundSubcategory?.characters?.includes?.(dist.sprite))
+
     function getHeight(length, ratio) {
       var height = ((length)/(Math.sqrt((Math.pow(ratio, 2)+1))));
       return Math.round(height);
@@ -728,7 +741,9 @@ export default function TempleteDetail() {
       const height = img.height;
       const width = img.width;
       cb({
-        height: getHeight(height*scale, height/width),
+        height: distSprite ? 
+          document.getElementsByClassName(distSprite.sprite)?.[0]?.getBoundingClientRect()?.height : 
+          getHeight(height*scale, height/width),
         width: getWidth(height*scale, height/width)
       })
     }
