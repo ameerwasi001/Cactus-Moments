@@ -467,6 +467,12 @@ const makeSpriteModification = img => {
   return url + encodeURIComponent(rest)
 }
 
+const getTotalOffset = url => {
+  const el = [...document.getElementsByClassName(url)][0]
+  if(!el) return {}
+  return el.getBoundingClientRect()
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
@@ -549,6 +555,7 @@ export default function TempleteDetail() {
 
   const [ratios, setRatios] = useState(new Set())
   const [offsets, setOffsets] = useState({})
+  const [realOffsets, setRealOffsets] = useState({})
 
   const editData = async () => {
     const ratios = new Set()
@@ -649,9 +656,19 @@ export default function TempleteDetail() {
         "FINDCATEGORY-urix",
         ogProduct?.categories?.map(cat => cat?.subcategories?.map(sc => sc?.characters)).flat()
       )
-      console.log("FINDCATEGORY", sprites, i, sprites[i])
-      return { ...x, subcategoryName: foundSubcategory?.name, categoryName: foundCategory?.name, categoryScale: foundSubcategory?.categoryScale ?? 0, offset: product?.offsets?.[foundCategory?.name], offsetWidth: product?.offsetWidths?.[foundCategory?.name], sprite: x.hidden ? "" : sprite }
+      return { 
+        ...x, 
+        subcategoryName: foundSubcategory?.name, 
+        categoryName: foundCategory?.name, 
+        categoryScale: foundSubcategory?.categoryScale ?? 0, 
+        offset: product?.offsets?.[foundCategory?.name], 
+        offsetWidth: product?.offsetWidths?.[foundCategory?.name], 
+        // offset: getTotalOffset(sprite).height, 
+        // offsetWidth: getTotalOffset(sprite).width, 
+        sprite: x.hidden ? "" : sprite,
+      }
     })
+    
     const nulls = spritedDistribution.filter(({sprite}) => !sprite)
     const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
 
@@ -675,11 +692,11 @@ export default function TempleteDetail() {
   }, [product, characters, background])
 
   useEffect(() => {
-    setInterval(() => {
-      const el = document.getElementById("canvas")
-      el.style.height = '500px'
-      el.style.width = '500px'
-    }, 1000)
+    // setInterval(() => {
+    //   const el = document.getElementById("canvas")
+    //   el.style.height = '500px'
+    //   el.style.width = '500px'
+    // }, 1000)
 
   }, [])
 
@@ -691,7 +708,48 @@ export default function TempleteDetail() {
       console.log("fontSet>>", new Set([...e.fontfaces].map(x => x.family)))
       setFontLoaded(fonts.has(title));
    }
-  }, [title, subtitle, product, characters, background])
+  
+
+   const getImgHeight = (url, scale, cb) => {
+    var img = new Image();
+    img.style.scale = scale
+
+    function getHeight(length, ratio) {
+      var height = ((length)/(Math.sqrt((Math.pow(ratio, 2)+1))));
+      return Math.round(height);
+    }
+
+    function getWidth(length, ratio) {
+      var width = ((length)/(Math.sqrt((1)/(Math.pow(ratio, 2)+1))));
+      return Math.round(width);
+    }
+
+    img.onload = () => {
+      const height = img.height;
+      const width = img.width;
+      cb({
+        height: getHeight(height*scale, height/width),
+        width: getWidth(height*scale, height/width)
+      })
+    }
+
+    img.src = url
+   }
+
+   (async () => {
+    const realOffsets = {}
+    let i = 0
+    for(const sprite of distribution) getImgHeight(
+      sprite.sprite, 
+      (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100),
+      obj => {
+        realOffsets[sprite.sprite] = obj
+        i++
+        if(i == distribution.length) setRealOffsets(realOffsets)
+      }
+    )
+   })()
+  }, [title, subtitle, product, characters, background, distribution])
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -774,13 +832,14 @@ export default function TempleteDetail() {
               {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
-                  (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img src={sprite.sprite} style={{
+                  (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.sprite} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
-                    _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
-                    left: `${Math.max(sprite.x - (product.alignCenter ? (sprite.rectWidth == sprite.offsetWidth || sprite.subcategoryName == sprite.ogSubcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0), 0)}px`, 
-                    top: `${Math.max(sprite.y - (product.alignBottom ? sprite.offset - sprite.rectHeight : (product.alignCenter ? (sprite.rectHeight == sprite.offset || sprite.subcategoryName == sprite.ogSubcategoryName ? 0 : (sprite.offset - sprite.rectHeight)/2) : 0)), 0)}px`,
+                    // _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
+                    _: console.log("STATS", realOffsets[sprite.sprite]?.width, sprite),
+                    left: `${Math.max(sprite.x - ((product.alignCenter ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)), 0)}px`, 
+                    top: `${Math.max(sprite.y - (product.alignBottom ? sprite.offset - sprite.rectHeight : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (realOffsets[sprite.sprite]?.height - sprite.rectHeight)/2) : 0)), 0)}px`,
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
