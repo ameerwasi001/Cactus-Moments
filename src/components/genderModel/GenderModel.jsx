@@ -23,6 +23,7 @@ export default function GenderModel(props) {
         }
     }, [])
 
+    console.log("GARRAY", genderArray)
     return (
         <div className="cactus-gender-model_top_view">
             <div className='cactus-gender_model_view'>
@@ -46,7 +47,7 @@ export default function GenderModel(props) {
                         <img onClick={props.onClick} src={closeBox} />
                     </div>
                     <div className='cactus-gender_model_detail_images_top_view'>
-                        {selectedGender.id === 0 ?
+                        {selectedGender.id === 0 || !selectedGender.parent ?
                             <h1>Select a theme to Display Design</h1>
                             :
                             <div className='cactus-gender_model_detail_images_view'>
