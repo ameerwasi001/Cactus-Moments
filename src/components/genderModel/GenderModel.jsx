@@ -5,6 +5,8 @@ import './genderModel.css'
 const dimensions = el => [el.getBoundingClientRect().width, el.getBoundingClientRect().heigth]
 const rem = x => x * parseFloat(getComputedStyle(document.documentElement).fontSize);
 
+const hasChildren = (cat, genderArray) => !!genderArray.find(xcat => {console.log("xcc", xcat, cat.title); return xcat.parent == cat.title})
+
 export default function GenderModel(props) {
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
     const [selectedParent, setSelectedParent] = useState("none")
@@ -47,7 +49,7 @@ export default function GenderModel(props) {
                         <img onClick={props.onClick} src={closeBox} />
                     </div>
                     <div className='cactus-gender_model_detail_images_top_view'>
-                        {selectedGender.id === 0 || !selectedGender.parent ?
+                        {selectedGender.id === 0 || (!selectedGender.parent && hasChildren(selectedGender, genderArray)) ?
                             <h1>Select a theme to Display Design</h1>
                             :
                             <div className='cactus-gender_model_detail_images_view'>
