@@ -126,7 +126,7 @@
   left: 50px;
   clip-path: circle();
   background: black;
-  opacity: 0.5;
+  opacity: 0.2;
   scale: .8;
   filter: invert(1);
 }

@@ -14,13 +14,14 @@ export default function TempleteView(props) {
         <img alt="" src={item?.image?.url} />
       </div>
       <div>
+        <p>{item?.posterDesc}</p>
         <div className="cactus-dashboard-templete_title_view">
           <h2>{item?.name}</h2>
           <img alt="" src={logo} />
         </div>
         <h3>{item?.desc}</h3>
-        <p>{item?.posterDesc}</p>
-        <h4>{item?.price}</h4>
+        {console.log("UENTER", item)}
+        <h4>{(parseInt(item?.price ?? "0")) + parseInt(item?.a3Price ?? "0") + parseInt(item?.frame1Price ?? "0")}</h4>
       </div>
     </div>
   );

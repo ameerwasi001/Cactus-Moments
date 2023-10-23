@@ -511,12 +511,12 @@ export default function TempleteDetail() {
   const [characters, setCharacters] = useState([])
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
-    name: "Sans cadre",
+    name: `Sans cadre ${product.frame1Price ? `(${product.frame1Price} €)` : ""}`,
     price: product.frame1Price ?? 0,
   });
   const [selectedDimension, setSelectedDimesion] = useState({
     id: 1,
-    name: "A3 - (29,7 x 42 cm)",
+    name: `A3 - (29,7 x 42 cm) ${product.a3Price ? `(${product.a3Price} €)` : ""}`,
     price: product.a3Price ?? 0,
   });
 
@@ -537,7 +537,7 @@ export default function TempleteDetail() {
       name: "Cadre en bois blanc",
       price: product.frame3Price ?? 0,
     },
-  ];
+  ].map(frame => ({ ...frame, name: `${frame.name} ${frame.price ? `(${frame.price} €)` : ""}` }));
   const dimensionArray = [
     {
       id: 1,
@@ -549,7 +549,7 @@ export default function TempleteDetail() {
       name: "A4 - (29,7 x 42 cm)",
       price: product.a4Price ?? 0,
     }
-  ];
+  ].map(frame => ({ ...frame, name: `${frame.name} ${frame.price ? `(${frame.price} €)` : ""}` }));
   const [templeteArray, setTemplateArray] = useState([]);
   const [autoSelect, setAutoSelect] = useState(true)
 
@@ -909,7 +909,7 @@ export default function TempleteDetail() {
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
             <p>{product.posterDesc}</p>
-            <h3>{product.price + parseInt(selectedDimension.price) + parseInt(selectedFrame.price)} €</h3>
+            <h3>{parseInt(product.price ?? "0") + parseInt(selectedDimension.price) + parseInt(selectedFrame.price)} €</h3>
             <DropdownModel
               name={selectedFrame.name}
               array={frameArray}
