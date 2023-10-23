@@ -909,7 +909,7 @@ export default function TempleteDetail() {
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
             <p>{product.posterDesc}</p>
-            <h3>{parseInt(product.price ?? "0") + parseInt(selectedDimension.price ?? "0") + parseInt(selectedFrame.price ?? "0")} €</h3>
+            <h3>{(parseFloat(product.price ?? "0") + parseFloat(selectedDimension.price ?? "0") + parseFloat(selectedFrame.price ?? "0")).toFixed(2)} €</h3>
             <DropdownModel
               name={selectedFrame.name}
               array={frameArray}
