@@ -22,6 +22,7 @@
   font-size: 2rem;
   line-height: 2.6rem;
   color: #121212;
+  cursor: pointer;
 }
 
 .cactus-templete_detail-form_dropdown_title_view img {
