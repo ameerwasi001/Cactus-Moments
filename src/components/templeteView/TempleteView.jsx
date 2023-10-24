@@ -16,6 +16,7 @@ export default function TempleteView(props) {
       <div>
         {/* <p>{item?.posterDesc}</p> */}
         <div className="cactus-dashboard-templete_title_view">
+          <div style={{ width: "3rem", height: "3rem" }}></div>
           <h2>{item?.mainDesc}</h2>
           <img alt="" src={logo} />
         </div>

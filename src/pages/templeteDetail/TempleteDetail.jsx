@@ -913,7 +913,7 @@ export default function TempleteDetail() {
           <div className="cactus-templete_detail-detail_top_view">
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
-            <h3>{(parseFloat(product.price ?? "0") + parseFloat(selectedDimension.price ?? "0") + parseFloat(selectedFrame.price ?? "0")).toFixed(2)} €</h3>
+            <h3>{(parseFloat(selectedDimension.price ?? "0") + parseFloat(selectedFrame.price ?? "0")).toFixed(2)} €</h3>
             <DropdownModel
               name={selectedFrame.name}
               array={frameArray}
