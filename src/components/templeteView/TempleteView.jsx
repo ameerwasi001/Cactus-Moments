@@ -22,7 +22,7 @@ export default function TempleteView(props) {
         </div>
         <h3>{item?.desc}</h3>
         {console.log("UENTER", item)}
-        <h4>{((parseFloat(item?.price ?? "0")) + parseFloat(item?.a3Price ?? "0") + parseFloat(item?.frame1Price ?? "0")).toFixed(2)} €</h4>
+        <h4>{((parseFloat(item?.price ?? "0"))).toFixed(2)} €</h4>
       </div>
     </div>
   );
