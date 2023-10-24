@@ -102,7 +102,7 @@
   padding-bottom: 1rem;
 }
 
-.cactus-templete_detail-detail_top_view p {
+.cactus-templete_poster-desc > p {
   font-family: "K2D";
   font-style: normal;
   font-weight: 500;
@@ -132,6 +132,7 @@
 }
 
 .cactus-templete_detail-detail_top_view h3 {
+  padding-top: 1rem;
   font-family: "K2D";
   font-weight: 400;
   font-size: 2.4rem;
@@ -207,6 +208,11 @@
   padding-bottom: 5rem;
   line-height: 5.2rem;
   color: #333333;
+}
+
+.cactus-templete_poster-desc {
+  display: flex;
+  justify-content: center;
 }
 
 /* -------------Media Query--------------- */

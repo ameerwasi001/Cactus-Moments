@@ -904,11 +904,15 @@ export default function TempleteDetail() {
                 color: background.coordinateVariation.smallColor,
               }}/>}
             </div>
+            <div className="cactus-templete_poster-desc" style={{
+              width: ratios.has(background.url) ? "350px" : "500px",
+            }}>
+              <p>{product.posterDesc}</p>
+            </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
-            <p>{product.posterDesc}</p>
             <h3>{(parseFloat(product.price ?? "0") + parseFloat(selectedDimension.price ?? "0") + parseFloat(selectedFrame.price ?? "0")).toFixed(2)} €</h3>
             <DropdownModel
               name={selectedFrame.name}
@@ -977,6 +981,7 @@ export default function TempleteDetail() {
                     }
                   }))})}
                   type={"adult"}
+                  categoryName={name}
                   value={`Edit ${name} ${i+1}`}
                   dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
                   dropdownData={{ image: characters[totalIndex] }}
