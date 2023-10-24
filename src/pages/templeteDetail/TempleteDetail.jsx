@@ -1002,6 +1002,7 @@ export default function TempleteDetail() {
                       title,
                       subtitle,
                       characters,
+                      realOffsets,
                       templeteArray,
                       offsets,
                       rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
