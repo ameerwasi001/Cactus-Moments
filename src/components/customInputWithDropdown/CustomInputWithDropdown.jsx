@@ -33,7 +33,7 @@ export default function CustomInputWithDropdown(props) {
                     :
                     <>
                         <div className="cactus-templete_detail-form_dropdown_background_data_view">
-                            {props?.dropdownData?.image?.url || props?.dropdownData?.image ? <img src={props.type === 'background' ? props.dropdownData.image.url : props.dropdownData.image} /> : <h3>No image selected</h3>}
+                            {props?.dropdownData?.image?.url || props?.dropdownData?.image ? <img src={props.type === 'background' ? props.dropdownData.image.url : props.dropdownData.image} onClick={props.onClickButton} /> : <h3>No image selected</h3>}
                             <div onClick={props.onClickButton}>
                                 <h6>{props.type === 'background' ? 'Edit Background' : props.type === 'adult' ? 'Edit ' + props.categoryName : 'Edit ' + props.categoryName}</h6>
                             </div>

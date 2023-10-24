@@ -87,22 +87,23 @@
   width: 6rem;
   height: 11rem;
   object-fit: contain;
+  cursor: pointer;
 }
 
 .cactus-templete_detail-form_dropdown_background_data_view div {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.8rem 2.3rem;
+  padding: 1.6rem 4.6rem;
   cursor: pointer;
   background: #2b453e;
-  border-radius: 5.6475px;
+  border-radius: 8px;
 }
 
 .cactus-templete_detail-form_dropdown_background_data_view h6 {
   font-family: "K2D";
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 1.5rem;
   line-height: 1.2rem;
   color: #ffffff;
 }
