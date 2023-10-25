@@ -511,7 +511,7 @@ export default function TempleteDetail() {
   const [characters, setCharacters] = useState([])
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
-    name: `Poster A4 - (21 x 29,7 cm) ${product.a3Price ? `(${product.a4Price} €)` : ""}`,
+    name: `Sans Cadre ${product.a3Price ? `(${product.a4Price} €)` : ""}`,
     price: product.a4Price ?? 0,
   });
   const [selectedDimension, setSelectedDimesion] = useState({
