@@ -561,12 +561,12 @@ export default function TempleteDetail() {
   const dimensionArray = [
     {
       id: 1,
-      name: "A3 - (29,7 x 42 cm)",
+      name: "Poster A3 - (29,7 x 42 cm)",
       price: product.a3Price ?? 0,
     },
     {
       id: 2,
-      name: "A4 - (29,7 x 42 cm)",
+      name: "Poster A4 - (21 x 29,7 cm)",
       price: product.a4Price ?? 0,
     }
   ].map(frame => ({ ...frame, name: `${frame.name} ${frame.price ? `(${frame.price} €)` : ""}` }));
