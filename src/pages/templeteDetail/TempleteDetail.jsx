@@ -529,13 +529,33 @@ export default function TempleteDetail() {
     },
     {
       id: 2,
-      name: "Cadre bois",
+      name: "Cadre bois A4",
       price: product.frame2Price ?? 0,
     },
     {
       id: 3,
-      name: "Cadre en bois blanc",
+      name: "Cadre bois A3",
       price: product.frame3Price ?? 0,
+    },
+    {
+      id: 4,
+      name: "Cadre bois noir A4",
+      price: product.frame4Price ?? 0,
+    },
+    {
+      id: 5,
+      name: "Cadre bois noir A3",
+      price: product.frame5Price ?? 0,
+    },
+    {
+      id: 6,
+      name: "Cadre bois blanc A4",
+      price: product.frame6Price ?? 0,
+    },
+    {
+      id: 7,
+      name: "Cadre bois blanc A3",
+      price: product.frame7Price ?? 0,
     },
   ].map(frame => ({ ...frame, name: `${frame.name} ${frame.price ? `(${frame.price} €)` : ""}` }));
   const dimensionArray = [

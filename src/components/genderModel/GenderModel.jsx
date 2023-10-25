@@ -56,14 +56,14 @@ export default function GenderModel(props) {
                                 {selectedGender.array.map((item) => {
                                     return (
                                         <div className='character-box' onClick={() => setSelectedData(item)} style={{ borderWidth: selectedData.id === item.id ? 2 : 0 }} key={item.id}>
-                                            <img src={item.image} style={item.image?.toLowerCase()?.includes("small") ? { transform: "scale(1.8)" } : (item.image?.toLowerCase()?.includes("medium") ? { transform: "scale(1.3)" } : {})} />
+                                            <img src={item.image}/>
                                         </div>
                                     )
                                 })}
                             </div>
                         }
                     </div>
-                    <div onClick={() => props.onClick(selectedData, everSelects)} style={{ position: 'fixed', bottom: 0, width: '60%', display: 'flex', justifyContent: 'center', background: 'white' }}>
+                    <div onClick={() => props.onClick(selectedData, everSelects)} style={{ position: 'fixed', bottom: 0, width: '64%', display: 'flex', justifyContent: 'center', background: 'white' }}>
                         <div className='cactus-composition_model_button_view'>
                             <h3>Select</h3>
                         </div>
