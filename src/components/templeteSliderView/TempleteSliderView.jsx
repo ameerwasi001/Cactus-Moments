@@ -1,25 +1,20 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { dummyRoundOne, dummyRoundTwo, dummyRoundThree, arrowBack, arrowNext } from '../../assets'
 import './templeteSliderView.css'
+import { req } from '../../requests'
 
 export default function TempleteSliderView(props) {
-    const templateArray = [
-        {
+    const [templateArray, setTemplateArray] = useState([])
+    console.log(props)
+
+    useEffect(() => {
+        req('GET', '/user/productType').then(({productTypes}) => setTemplateArray([{
             id: 1,
-            title: 'Poster',
+            name: 'Poster',
             image: dummyRoundOne
-        },
-        {
-            id: 2,
-            title: 'Mug Personalize',
-            image: dummyRoundTwo
-        },
-        {
-            id: 3,
-            title: 'Gift Ideas',
-            image: dummyRoundThree
-        }
-    ]
+        }, ...productTypes.filter(x => !!x.name).map((x, i) => ({ ...x, id: i+2 }))]))
+    }, [])
+
     return (
         <div className="cactus-dashboard-slider_top_view">
             <div className="cactus-dashboard-slider_title_view" style={props.style}>
@@ -36,8 +31,8 @@ export default function TempleteSliderView(props) {
                     {templateArray.map((item) => {
                         return (
                             <div key={item.id} className="cactus-dashboard-slider_templete_view">
-                                <img src={item.image} alt="" />
-                                <h2>{item.title}</h2>
+                                <img src={item.image} alt="" onClick={() => props.setSelectedCategory(item.name.toLowerCase())}/>
+                                <h2>{item.name}</h2>
                             </div>
                         )
                     })}

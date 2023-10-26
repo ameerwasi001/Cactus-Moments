@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("poster")
 
   useEffect(() => {
     req('GET', '/user/product')
@@ -81,9 +82,9 @@ export default function Dashboard() {
             <img alt="" src={homeImage2} />
           </div>
         </div>
-        <TempleteSliderView title={"Popular Templates"} viewAll />
+        <TempleteSliderView title={"Popular Templates"} viewAll setSelectedCategory={setSelectedCategory}/>
         <div className="cactus-dashboard-templete_top_view">
-        {loading ? <small>Loading...</small> : templeteArray.map((item) => {
+        {loading ? <small>Loading...</small> : templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).map((item) => {
             return (
               <TempleteView
                 onClick={() => navigate(`/templetedetail?${setParam({"product": JSON.stringify(item)})}`)}
