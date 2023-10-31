@@ -532,55 +532,6 @@ export default function TempleteDetail() {
   });
 
   const [sideTempleArray, setSideTempleArray] = useState((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }));
-  const frameArray = [
-    {
-      id: 1,
-      name: "Sans cadre",
-      price: product.frame1Price ?? 0,
-    },
-    {
-      id: 2,
-      name: "Cadre bois A4",
-      price: product.frame2Price ?? 0,
-    },
-    {
-      id: 3,
-      name: "Cadre bois A3",
-      price: product.frame3Price ?? 0,
-    },
-    {
-      id: 4,
-      name: "Cadre bois noir A4",
-      price: product.frame4Price ?? 0,
-    },
-    {
-      id: 5,
-      name: "Cadre bois noir A3",
-      price: product.frame5Price ?? 0,
-    },
-    {
-      id: 6,
-      name: "Cadre bois blanc A4",
-      price: product.frame6Price ?? 0,
-    },
-    {
-      id: 7,
-      name: "Cadre bois blanc A3",
-      price: product.frame7Price ?? 0,
-    },
-  ].map(frame => ({ ...frame, name: `${frame.name} ${frame.price ? `(${frame.price} €)` : ""}` }));
-  const dimensionArray = [
-    {
-      id: 1,
-      name: "Poster A3 - (29,7 x 42 cm)",
-      price: product.a3Price ?? 0,
-    },
-    {
-      id: 2,
-      name: "Poster A4 - (21 x 29,7 cm)",
-      price: product.a4Price ?? 0,
-    }
-  ].map(frame => ({ ...frame, name: `${frame.name} ${frame.price ? `(${frame.price} €)` : ""}` }));
   const [templeteArray, setTemplateArray] = useState([]);
   const [autoSelect, setAutoSelect] = useState(true)
 
@@ -950,7 +901,8 @@ export default function TempleteDetail() {
           <div className="cactus-templete_detail-detail_top_view">
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
-            <h3>{(parseFloat(selectedDimension.price ?? "0") + parseFloat(selectedFrame.price ?? "0")).toFixed(2)} €</h3>
+            {console.log("PRCNGOPT", selectedPricingOptions)}
+            <h3>{(product.price + parseFloat(Object.values(selectedPricingOptions).map(({price}) => parseFloat(price)).reduce((a, b) => a+b, 0))).toFixed(2)} €</h3>
             {Object.entries(pricingObject).map(([section, prices]) => <DropdownModel
               _={console.log("RELAPRICE", prices)}
               name={selectedPricingOptions[section]?.name}
