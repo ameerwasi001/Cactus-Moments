@@ -679,6 +679,7 @@ export default function TempleteDetail() {
       return { 
         ...x, 
         subcategoryName: foundSubcategory?.name, 
+        fixedOffset: foundSubcategory?.fixedOffset,
         categoryName: foundCategory?.name, 
         categoryScale: foundSubcategory?.categoryScale ?? 0, 
         offset: product?.offsets?.[foundCategory?.name], 
@@ -874,7 +875,7 @@ export default function TempleteDetail() {
                     // _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
                     _: console.log("STATS", realOffsets[sprite.sprite]?.width, sprite),
                     left: `${Math.max(sprite.x - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)), 0)}px`, 
-                    top: `${Math.max(sprite.y - (product.alignBottom ? sprite.offset - sprite.rectHeight : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (realOffsets[sprite.sprite]?.height - sprite.rectHeight)/2) : 0)), 0)}px`,
+                    top: `${Math.max((parseFloat(sprite.y) + parseFloat(sprite.fixedOffset ?? "0")) - ((product.alignBottom ? sprite.offset - sprite.rectHeight : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (realOffsets[sprite.sprite]?.height - sprite.rectHeight)/2) : 0))), 0)}px`,
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
