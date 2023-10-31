@@ -685,11 +685,9 @@ export default function TempleteDetail() {
           sub?.characters?.includes(encodeURIComponent(sprite)) ||
           sub?.characters?.includes(makeSpriteModification(sprite))
       )
+      const foundParent = foundCategory?.subcategories?.find(sub => sub?.name == foundSubcategory?.parent)
       let categoryScale = foundSubcategory?.categoryScale
-      if(!categoryScale) {
-        const foundParent = foundCategory?.subcategories?.find(sub => sub.name == foundSubcategory.parent)
-        categoryScale = foundParent?.categoryScale ?? 0
-      }
+      if(!categoryScale) categoryScale = foundParent?.categoryScale ?? 0
       console.log(
         "FINDCATEGORY-urix",
         foundSubcategory
