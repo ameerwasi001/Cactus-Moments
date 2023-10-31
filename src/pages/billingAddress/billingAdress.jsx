@@ -252,8 +252,6 @@ const BillingAdress = () => {
               }
               navigate(`/payment?${setParam({
                 product: product,
-                selectedDimension: selections.selectedDimension,
-                selectedFrame:  selections.selectedFrame,
                 courtesyTitle: selectMr.value,
                 day: dayselect.value,
                 country: countryselect.value,

@@ -67,6 +67,14 @@ const shuffleSeed = (seed) => (n, array) => {
 const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).fit(0, parseInt(cat.max))
 const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).fit(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
 
+const groupPricing = pricings => {
+  console.log("px", pricings)
+  const pricingSections = {}
+  for(const p of pricings) pricingSections[p.section] = []
+  for(const p of pricings) pricingSections[p.section].push(p)
+  return pricingSections
+}
+
 const srandom = (str, i=0) => random(sdbm(str)+i)
 
 class ObjectRewriter {
@@ -506,6 +514,9 @@ export default function TempleteDetail() {
     useState(false);
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
+  const [pricingObject, setPricingObject] = useState(groupPricing(product.pricing));
+  const [selectedPricingOptions, setSelectedPricingOptions] = useState(Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]])))
+  const [shownPricingOptions, setShownPricingOptions] = useState(Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, false])))
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [defaultModel, setDefaultModel] = useState(true);
   const [characters, setCharacters] = useState([])
@@ -873,9 +884,9 @@ export default function TempleteDetail() {
                     width: "unset", 
                     position: "absolute", 
                     // _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
-                    _: console.log("STATS", realOffsets[sprite.sprite]?.width, sprite),
+                    _: console.log("STATS", (parseFloat(sprite.y) + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)), realOffsets[sprite.sprite]?.width, sprite),
                     left: `${Math.max(sprite.x - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)), 0)}px`, 
-                    top: `${Math.max((parseFloat(sprite.y) + parseFloat(sprite.fixedOffset ?? "0")) - ((product.alignBottom ? sprite.offset - sprite.rectHeight : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (realOffsets[sprite.sprite]?.height - sprite.rectHeight)/2) : 0))), 0)}px`,
+                    top: `${Math.max((parseFloat(sprite.y) + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? (sprite.offset ?? 0) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))), 0)}px`,
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
@@ -935,26 +946,17 @@ export default function TempleteDetail() {
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
             <h3>{(parseFloat(selectedDimension.price ?? "0") + parseFloat(selectedFrame.price ?? "0")).toFixed(2)} €</h3>
-            <DropdownModel
-              name={selectedFrame.name}
-              array={frameArray}
-              dropdownValue={showFrameModel}
+            {Object.entries(pricingObject).map(([section, prices]) => <DropdownModel
+              _={console.log("RELAPRICE", prices)}
+              name={selectedPricingOptions[section]?.name}
+              array={prices}
+              dropdownValue={shownPricingOptions[section]}
               onClickValue={(data) => [
-                setSelectedFrame(data),
-                setShowFrameModel(false),
+                setSelectedPricingOptions({ ...selectedPricingOptions, [section]: data }),
+                setShownPricingOptions({ ...shownPricingOptions, [section]: false }),
               ]}
-              onClick={() => setShowFrameModel(!showFrameModel)}
-            />
-            <DropdownModel
-              name={selectedDimension.name}
-              array={dimensionArray}
-              dropdownValue={showDimensionModel}
-              onClickValue={(data) => [
-                setSelectedDimesion(data),
-                setShowDimensionModel(false),
-              ]}
-              onClick={() => setShowDimensionModel(!showDimensionModel)}
-            />
+              onClick={() => setShownPricingOptions({ ...shownPricingOptions, [section]: !shownPricingOptions[section] })}
+            />)}
             <div className="cactus-templete_detail-form_top_view">
               <div className="cactus-templete_detail-form_title">
                 <h4>Personalize</h4>
@@ -1017,13 +1019,13 @@ export default function TempleteDetail() {
               onClick={async () => {
                 // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
                 // console.log("imgs=>", img)
+                console.log("REWORD", )
                 navigate(`/billingAddress?${setParam({ product: product._id })}`, {
                   state: { 
                     selections: {
                       product, 
                       distribution,
-                      selectedDimension: selectedDimension.name,
-                      selectedFrame: selectedFrame.name,
+                      ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
                       background,
                       title,
                       subtitle,

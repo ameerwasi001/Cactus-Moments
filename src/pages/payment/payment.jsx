@@ -198,6 +198,7 @@ const Payment = () => {
                           selectedDimension,
                           selectedFrame,
                           code,
+                          ...restProduct,
                         },
                         product: product._id,
                         selections: {product, ...restProduct}
