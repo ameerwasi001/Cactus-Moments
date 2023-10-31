@@ -484,7 +484,7 @@ const getTotalOffset = url => {
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
-  const ogProduct = JSON.parse(JSONProduct)
+  const ogProduct = Object.freeze(JSON.parse(JSONProduct))
   const overlayTitleHidden = useRef(null)
   const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
   const [distribution, setDistribution] = useState([])
@@ -672,6 +672,8 @@ export default function TempleteDetail() {
     // middling algorithm
     const spritedDistribution = distribution.map((x, i) => {
       const sprite = sprites[i]
+      const { product: JSONProduct } = getAllParams()
+      const ogProduct = JSON.parse(JSONProduct)
       const foundCategory = ogProduct?.categories?.find(
         cat => 
           cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
@@ -683,16 +685,21 @@ export default function TempleteDetail() {
           sub?.characters?.includes(encodeURIComponent(sprite)) ||
           sub?.characters?.includes(makeSpriteModification(sprite))
       )
+      let categoryScale = foundSubcategory?.categoryScale
+      if(!categoryScale) {
+        const foundParent = foundCategory?.subcategories?.find(sub => sub.name == foundSubcategory.parent)
+        categoryScale = foundParent?.categoryScale ?? 0
+      }
       console.log(
         "FINDCATEGORY-urix",
-        ogProduct?.categories?.map(cat => cat?.subcategories?.map(sc => sc?.characters)).flat()
+        foundSubcategory
       )
       return { 
         ...x, 
         subcategoryName: foundSubcategory?.name, 
         fixedOffset: foundSubcategory?.fixedOffset,
         categoryName: foundCategory?.name, 
-        categoryScale: foundSubcategory?.categoryScale ?? 0, 
+        categoryScale, 
         offset: product?.offsets?.[foundCategory?.name], 
         offsetWidth: product?.offsetWidths?.[foundCategory?.name], 
         // offset: getTotalOffset(sprite).height, 
@@ -884,7 +891,7 @@ export default function TempleteDetail() {
                     width: "unset", 
                     position: "absolute", 
                     // _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
-                    _: console.log("STATS", (parseFloat(sprite.y) + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)), realOffsets[sprite.sprite]?.width, sprite),
+                    _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
                     left: `${Math.max(sprite.x - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)), 0)}px`, 
                     top: `${Math.max((parseFloat(sprite.y) + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? (sprite.offset ?? 0) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))), 0)}px`,
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,

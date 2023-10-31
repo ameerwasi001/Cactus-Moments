@@ -198,7 +198,7 @@ const Payment = () => {
                           selectedDimension,
                           selectedFrame,
                           code,
-                          ...restProduct,
+                          ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
                         },
                         product: product._id,
                         selections: {product, ...restProduct}
