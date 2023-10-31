@@ -67,8 +67,8 @@ const shuffleSeed = (seed) => (n, array) => {
 const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).fit(0, parseInt(cat.max))
 const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).fit(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
 
-const groupPricing = pricings => {
-  console.log("px", pricings)
+const groupPricing = pricings_ => {
+  let pricings = pricings_ ?? []
   const pricingSections = {}
   for(const p of pricings) pricingSections[p.section] = []
   for(const p of pricings) pricingSections[p.section].push(p)
@@ -637,16 +637,25 @@ export default function TempleteDetail() {
           sub?.characters?.includes(makeSpriteModification(sprite))
       )
       const foundParent = foundCategory?.subcategories?.find(sub => sub?.name == foundSubcategory?.parent)
+
       let categoryScale = foundSubcategory?.categoryScale
+      let fixedOffset = foundSubcategory?.fixedOffset
+      let fixedWidth = foundCategory?.fixedWidth
       if(!categoryScale) categoryScale = foundParent?.categoryScale ?? 0
+      if(!fixedOffset) fixedOffset = foundParent?.fixedOffset ?? 0
+      if(!fixedWidth) fixedWidth = foundParent?.fixedWidth ?? 0
+
       console.log(
         "FINDCATEGORY-urix",
         foundSubcategory
       )
       return { 
         ...x, 
+        ogscat: foundSubcategory,
+        ogparent: foundParent,
         subcategoryName: foundSubcategory?.name, 
-        fixedOffset: foundSubcategory?.fixedOffset,
+        fixedOffset,
+        fixedWidth,
         categoryName: foundCategory?.name, 
         categoryScale, 
         offset: product?.offsets?.[foundCategory?.name], 
@@ -839,9 +848,10 @@ export default function TempleteDetail() {
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
-                    // _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
+                    _: console.log("GVN", sprite, sprite.fixedWidth, sprite.x),
+                    _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
                     _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
-                    left: `${Math.max(sprite.x - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)), 0)}px`, 
+                    left: `${Math.max((parseFloat(sprite.x) + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.kkkkk)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)), 0)}px`, 
                     top: `${Math.max((parseFloat(sprite.y) + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? (sprite.offset ?? 0) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))), 0)}px`,
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)}`,
                     maxWidth: "500px",
