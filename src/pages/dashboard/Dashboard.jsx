@@ -40,7 +40,7 @@ export default function Dashboard() {
   }, [])
 
   useEffect(() => {
-    setLoading(false)
+    if(templeteArray?.length) setLoading(false)
   }, [templeteArray])
 
   return (
