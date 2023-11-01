@@ -637,13 +637,19 @@ export default function TempleteDetail() {
           sub?.characters?.includes(makeSpriteModification(sprite))
       )
       const foundParent = foundCategory?.subcategories?.find(sub => sub?.name == foundSubcategory?.parent)
+      const foundFirstChild = foundCategory?.subcategories?.find(sub => sub?.parent == foundSubcategory?.name)
 
       let categoryScale = foundSubcategory?.categoryScale
       let fixedOffset = foundSubcategory?.fixedOffset
-      let fixedWidth = foundCategory?.fixedWidth
-      if(!categoryScale) categoryScale = foundParent?.categoryScale ?? 0
-      if(!fixedOffset) fixedOffset = foundParent?.fixedOffset ?? 0
-      if(!fixedWidth) fixedWidth = foundParent?.fixedWidth ?? 0
+      let fixedWidth = foundSubcategory?.fixedWidth
+
+      if(!categoryScale) categoryScale = foundParent?.categoryScale
+      if(!fixedOffset) fixedOffset = foundParent?.fixedOffset
+      if(!fixedWidth) fixedWidth = foundParent?.fixedWidth
+
+      if(!categoryScale) categoryScale = foundFirstChild?.categoryScale ?? 0
+      if(!fixedOffset) fixedOffset = foundFirstChild?.fixedOffset ?? 0
+      if(!fixedWidth) fixedWidth = foundFirstChild?.fixedWidth ?? 0
 
       console.log(
         "FINDCATEGORY-urix",
@@ -848,7 +854,7 @@ export default function TempleteDetail() {
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
-                    _: console.log("GVN", sprite, sprite.fixedWidth, sprite.x),
+                    _: console.log("GVN", sprite.categoryName, sprite, sprite.fixedWidth, sprite.x),
                     _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
                     _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
                     left: `${Math.max((parseFloat(sprite.x) + parseInt(product.xAddition ?? "0") + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.fixedWidth)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)), 0)}px`, 
