@@ -19,10 +19,11 @@ import {
 import { req } from '../../requests'
 import { setParam } from '../../urlParams'
 import "./dashboard.css";
+import { ClipLoader } from "react-spinners";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [templeteArray, setTemplateArray] = useState([]);
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -31,7 +32,7 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("poster")
 
   useEffect(() => {
-    req('GET', '/user/product')
+    req('GET', `/user/product?select=-categories`)
       .then(({products}) => {
         console.log(products)
         setTemplateArray(products?.filter(prod => prod.backgrounds.length)?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: p.defaultIllustration ? {url: p.defaultIllustration} : p.backgrounds[p.defaultBackground]} }))
@@ -84,10 +85,15 @@ export default function Dashboard() {
         </div>
         <TempleteSliderView title={"Popular Templates"} viewAll setSelectedCategory={setSelectedCategory}/>
         <div className="cactus-dashboard-templete_top_view">
-        {loading ? <small>Loading...</small> : templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).map((item) => {
+        {loading ? <ClipLoader color="black" /> : templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).map((item) => {
             return (
               <TempleteView
-                onClick={() => navigate(`/templetedetail?${setParam({"product": JSON.stringify(item)})}`)}
+                onClick={async () => {
+                  setLoading(true)
+                  const { product } = await req("GET", `/user/product/${item._id}`)
+                  setLoading(false)
+                  navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+                }}
                 item={item}
               />
             );
