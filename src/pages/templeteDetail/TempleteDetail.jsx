@@ -845,7 +845,7 @@ export default function TempleteDetail() {
                 left: -1,
                 height: "100%",
                 maxWidth: "500px",
-                width: background.coordinateVariation.fameScale == undefined ? "200px" : `${background.coordinateVariation.fameScale}px`,
+                width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
               }}/>}
               {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
