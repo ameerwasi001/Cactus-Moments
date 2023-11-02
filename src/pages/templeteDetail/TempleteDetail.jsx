@@ -481,6 +481,32 @@ const getTotalOffset = url => {
   return el.getBoundingClientRect()
 }
 
+const NestedDescription = ({
+  setShowModalDes,
+  img,
+}) => {
+  // Set a minimum height for the modal
+  const minHeight = 250;
+  const maxHeight = 600;
+  const descriptionHeight = 500;
+  return (
+    <div
+      onClick={() => setShowModalDes(null)}
+      className="add-product-modal-main-container-video"
+    >
+      <div
+        className="add-product-modal-container-product-description-detail-video"
+      >
+        {/* <h1>Description</h1> */}
+          <img className="video-model"
+            // url={currentVideo.photo}
+            src={img}
+          />
+      </div>
+    </div>
+  );
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
@@ -538,6 +564,7 @@ export default function TempleteDetail() {
   const [ratios, setRatios] = useState(new Set())
   const [offsets, setOffsets] = useState({})
   const [realOffsets, setRealOffsets] = useState({})
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const editData = async () => {
     const ratios = new Set()
@@ -772,6 +799,7 @@ export default function TempleteDetail() {
   return (
     <div className="cactus-dashboard-main_container">
       {recents == 'no' ? <></> : <NavBar />}
+      {selectedImage && <NestedDescription img={selectedImage} setShowModalDes={setSelectedImage}/>}
       {defaultModel && (
         <DefaultModel
           autoSelect={autoSelect}
@@ -823,6 +851,7 @@ export default function TempleteDetail() {
                     // onClick={() => setBackground(item.image)}
                     style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
                     className="cactus-templete_detail_side__view_image_style"
+                    onClick={() => setSelectedImage(item?.image?.coordinateVariation?.preview || item?.image?.url)}
                   /> :
                 <h3>No image selected</h3>
               );
@@ -838,7 +867,7 @@ export default function TempleteDetail() {
             </div>
             <div style={JSON.parse(JSON.stringify({ height: '500px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} width={"500px"} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-              {defaultModel || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
+              {defaultModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
                 zIndex: 100000000000000,
                 position: "absolute", 
                 top: 0,
@@ -867,12 +896,12 @@ export default function TempleteDetail() {
                 }
               </>)}
               {console.log("LOGO COMP", ratios.has(background.url))}
-              {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
+              {(defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
                 top: "74px",
                 left: "100px"
               }}/>}
               {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-                {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
+                {(defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <div style={{
                   // height: "500px", 
                   // width: "500px", 
                   whiteSpace: 'nowrap',
@@ -886,7 +915,7 @@ export default function TempleteDetail() {
               </div>}
               {<TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title"/>}
               {<div id="overlay-subtitle-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-                {(defaultModel || chooseBackgroundModel || chooseGenderModel) ? <></> : <div style={{
+                {(defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <div style={{
                   // height: "500px", 
                   // width: "500px", 
                   whiteSpace: 'nowrap',
