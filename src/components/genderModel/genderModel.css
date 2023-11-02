@@ -113,9 +113,9 @@
 }
 
 .cactus-gender_model_detail_images_view div {
-  width: 18rem;
+  width: 21rem;
   height: 35rem;
-  margin-right: 4rem;
+  margin-right: 1rem;
   margin-bottom: 4rem;
   background: #f5f5f5;
   border-radius: 1rem;
@@ -128,7 +128,7 @@
 }
 
 .cactus-gender_model_detail_images_view img {
-  width: 80%;
+  width: 90%;
   height: 90%;
   object-fit: contain;
 }
