@@ -410,6 +410,7 @@ const arrangeByParent = arr => {
   const parentArrangement = {}
   const parents = []
 
+  for(const el of arr) if(!el.parent) el.parent = ''
   for(const el of arr) parentArrangement[el.parent] = []
   for(const el of arr)
     if(el.parent) parentArrangement[el.parent].push(el)
@@ -994,7 +995,7 @@ export default function TempleteDetail() {
               {
                 accImageIndexes(product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => <CustomInputWithDropdown
                   containerStyle={{ display: product.categories.find(cat => cat.name == name)?.hidden ? "none" : undefined }}
-                  onClickButton={() => setChooseGenderModel({type: name, totalIndex, index: i, array: arrangeByParent(product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
+                  onClickButton={() => setChooseGenderModel({_: console.log("PARENT-ARRANGEMENT", ), type: name, totalIndex, index: i, array: arrangeByParent(product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
                     const giveni = findIndex(cat => cat.name == name,  product.categories)
                     const j = id
                     return {
