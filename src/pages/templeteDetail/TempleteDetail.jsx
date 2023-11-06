@@ -436,6 +436,8 @@ const screenshot = async ref => {
 
 const TitleComponent = ({ elementId, givenId, background, title, style }) => {
   const hiddentitleCentricEl = document.querySelector(`#${elementId} > div`)
+  const ogValue = hiddentitleCentricEl.innerHTML
+  hiddentitleCentricEl.innerHTML = title
   // const hiddentitleCentricEl = overlayTitleHidden?.current
   if(!hiddentitleCentricEl) return <></>
 
@@ -447,8 +449,10 @@ const TitleComponent = ({ elementId, givenId, background, title, style }) => {
   const computedLeftX = background.coordinateVariation.xText - widthHalf
   const computedMainX = background.coordinateVariation.xText
 
+  hiddentitleCentricEl.innerHTML = ogValue
+
   console.log("COMPUTED-AXIS", width, widthHalf, computedLeftX, computedMainX)
-  return <div id={givenId} style={{
+  return <div className={givenId} id={givenId} style={{
     // height: "500px", 
     // width: "500px", 
     whiteSpace: 'nowrap',
@@ -508,11 +512,25 @@ const NestedDescription = ({
   );
 }
 
+const splitByNumOfChars = (str, n) => {
+  console.log("ARROFSUBTITLE-str", str)
+  const chunks = [];
+  const charsLength = str.length
+  let current = ""
+
+  for (var i = 0; i < charsLength; i += n) {
+      chunks.push(str.substring(i, i + n));
+  }
+
+  return chunks
+}
+
 export default function TempleteDetail() {
   const navigate = useNavigate();
   const { product: JSONProduct, recents } = getAllParams()
   const ogProduct = Object.freeze(JSON.parse(JSONProduct))
   const overlayTitleHidden = useRef(null)
+  const overlaySubtitleHidden = useRef(null)
   const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
   const [distribution, setDistribution] = useState([])
 
@@ -566,6 +584,48 @@ export default function TempleteDetail() {
   const [offsets, setOffsets] = useState({})
   const [realOffsets, setRealOffsets] = useState({})
   const [selectedImage, setSelectedImage] = useState(null)
+
+  const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
+    const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
+    const subtitleHiddenEl = document.querySelector(`#${elementId} > div`)
+    if(!subtitleHiddenEl) return null
+    const { height } = subtitleHiddenEl.getBoundingClientRect()
+    console.log("ARROFSUBTITLEooo", subtitles, height)
+    const finalPosition = y
+    const subtitleSegments = [...subtitles].reverse().map((seg, i) => ({
+      text: seg,
+      position: finalPosition - i*height
+    }))
+
+    return subtitleSegments
+  }
+
+  const MultiText = ({ background }) => {
+
+    const titleSegments = getSegments(parseInt(background.coordinateVariation.yText), 50, title, "overlay-title-hidden")
+    const subtitleSegments = getSegments(parseInt(background.coordinateVariation.ySmallText), 50, subtitle, "overlay-subtitle-hidden")
+    if(!subtitleSegments) return <></>
+    if(!titleSegments) return <></>
+
+    return <>
+      <div id="title-container" style={{ position: "absolute" }}>
+        {titleSegments.map(({ text: title, position }) => <TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title" style={{ top: `${position}px` }}/>)}
+      </div>
+      <div id="subtitle-container">
+        {subtitleSegments.map(({ text: subtitle, position }) => <TitleComponent title={subtitle} background={background} elementId="overlay-subtitle-hidden" givenId="overlay-subtitle" style={{
+          whiteSpace: 'nowrap',
+          position: "absolute", 
+          // _: console.log("ARROFSUBTITLE-height", height, offset, background.coordinateVariation.ySmallText + offset),
+          left: `${background.coordinateVariation.xSmallText}px`, 
+          // top: `${parseInt(background.coordinateVariation.ySmallText) + offset}px`,
+          top: `${position}px`,
+          fontSize: `${background.coordinateVariation.smallTextSize}pt`,
+          fontFamily: background.smallFont,
+          color: background.coordinateVariation.smallColor,
+        }}/>)}
+      </div>
+    </>
+  }
 
   const editData = async () => {
     const ratios = new Set()
@@ -910,7 +970,7 @@ export default function TempleteDetail() {
                 left: "100px"
               }}/>}
               {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-                {(defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <div style={{
+                {<div style={{
                   // height: "500px", 
                   // width: "500px", 
                   whiteSpace: 'nowrap',
@@ -922,9 +982,8 @@ export default function TempleteDetail() {
                   color: background.coordinateVariation.color,
                 }}>{title}</div>}
               </div>}
-              {<TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title"/>}
-              {<div id="overlay-subtitle-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-                {(defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <div style={{
+              {<div id="overlay-subtitle-hidden" ref={overlaySubtitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+                {<div style={{
                   // height: "500px", 
                   // width: "500px", 
                   whiteSpace: 'nowrap',
@@ -936,15 +995,7 @@ export default function TempleteDetail() {
                   color: background.coordinateVariation.smallColor,
                 }}>{subtitle}</div>}
               </div>}
-              {<TitleComponent title={subtitle} background={background} elementId="overlay-subtitle-hidden" givenId="overlay-subtitle" style={{
-                whiteSpace: 'nowrap',
-                position: "absolute", 
-                left: `${background.coordinateVariation.xSmallText}px`, 
-                top: `${background.coordinateVariation.ySmallText}px`,
-                fontSize: `${background.coordinateVariation.smallTextSize}pt`,
-                fontFamily: background.smallFont,
-                color: background.coordinateVariation.smallColor,
-              }}/>}
+              {defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage ? <></> : <MultiText background={background}/>}
             </div>
             <div className="cactus-templete_poster-desc" style={{
               width: ratios.has(background.url) ? "350px" : "500px",
