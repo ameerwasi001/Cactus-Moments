@@ -528,7 +528,7 @@ export default function TempleteDetail() {
         ) 
       : product.backgrounds[product.defaultBackground]
     )
-
+  const [alternateBackground, setAlternateBackground] = useState(product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url))
   const [title, setTitle] = useState(product.name)
   const [subtitle, setSubtitle] = useState(product.subtitle)
   const [fontLoaded, setFontLoaded] = useState(false)
@@ -598,6 +598,10 @@ export default function TempleteDetail() {
   }, [title, subtitle, product, characters, distribution, background])
 
   useEffect(() => {
+    setAlternateBackground(product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url))
+  }, [background])
+
+  useEffect(() => {
     editData()
       .then(_ => {
         let cactusRecents = localStorage.getItem("cactus_recents") ?? "[]"
@@ -632,9 +636,7 @@ export default function TempleteDetail() {
   }, [product])
 
   useEffect(() => {
-    const sprites = characters
-    const positions = productPositions(ogProduct)
-    const distribution = background.positions.map((pos, i) => {
+    const processBg = background => background.positions.map((pos, i) => {
       return {
         x: pos[0],
         y: pos[1],
@@ -646,6 +648,12 @@ export default function TempleteDetail() {
         hidden: product.categories.find(cat => cat.name == positions[i]?.name?.[0])?.hidden
       }
     }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
+
+    const sprites = characters
+    const positions = productPositions(ogProduct)
+    const alternateBackgroundNow = alternateBackground ?? product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url)
+    let distribution = processBg(background)
+    if(distribution.length % 2 == 0 && alternateBackground) distribution = processBg(alternateBackgroundNow)
 
     // console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
     // middling algorithm
@@ -819,7 +827,7 @@ export default function TempleteDetail() {
       )}
       {chooseBackgroundModel && (
         <ChooseBackgroundModel
-          backgrounds={product.backgrounds}
+          backgrounds={product.backgrounds.filter(x => !!x.coordinateVariation.evenFor)}
           onClick={data => {
             if(data.image) setBackground(data.image)
             setChooseBackgroundModel(undefined)
