@@ -653,7 +653,7 @@ export default function TempleteDetail() {
     const positions = productPositions(ogProduct)
     const alternateBackgroundNow = alternateBackground ?? product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url)
     let distribution = processBg(background)
-    if(distribution.length % 2 == 0 && alternateBackground) distribution = processBg(alternateBackgroundNow)
+    if(distribution.length % 2 == 0 && alternateBackgroundNow) distribution = processBg(alternateBackgroundNow)
 
     // console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
     // middling algorithm
