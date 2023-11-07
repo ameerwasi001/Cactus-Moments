@@ -468,6 +468,7 @@ const TitleComponent = ({ elementId, givenId, background, title, style }) => {
 
   console.log("COMPUTED-AXIS", width, widthHalf, computedLeftX, computedMainX)
   return <div className={givenId} id={givenId} style={{
+    zIndex: 100000000,
     // height: "500px", 
     // width: "500px", 
     whiteSpace: 'nowrap',
