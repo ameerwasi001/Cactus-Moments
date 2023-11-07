@@ -887,7 +887,7 @@ export default function TempleteDetail() {
       )}
       {chooseBackgroundModel && (
         <ChooseBackgroundModel
-          backgrounds={product.backgrounds.filter(x => !!x.coordinateVariation.evenFor)}
+          backgrounds={product.backgrounds.filter(x => !x.coordinateVariation.evenFor)}
           onClick={data => {
             if(data.image) setBackground(data.image)
             setChooseBackgroundModel(undefined)
