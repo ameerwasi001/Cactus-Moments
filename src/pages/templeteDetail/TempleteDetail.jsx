@@ -337,6 +337,21 @@ const findIndex = (f, arr) => {
   return -1
 }
 
+function doElementsIntersect(element1, element2) {
+  const rect1 = element1.getBoundingClientRect();
+  const rect2 = element2.getBoundingClientRect();
+
+  // Check for intersection
+  const isIntersecting = !(
+    rect1.right < rect2.left ||
+    rect1.left > rect2.right ||
+    rect1.bottom < rect2.top ||
+    rect1.top > rect2.bottom
+  );
+
+  return isIntersecting;
+}
+
 const productPositions = product => {
   const productNMax = product.categories?.map(x => parseInt(x.max ?? 0) ?? 0)?.reduce((a, b) => a+b, 0)
   const arr = product.categories
@@ -595,21 +610,25 @@ export default function TempleteDetail() {
     const subtitleSegments = [...subtitles].reverse().map((seg, i) => ({
       text: seg,
       position: finalPosition - i*height
-    }))
+    })).reverse()
 
     return subtitleSegments
   }
 
   const MultiText = ({ background }) => {
 
-    const titleSegments = getSegments(parseInt(background.coordinateVariation.yText), 50, title, "overlay-title-hidden")
-    const subtitleSegments = getSegments(parseInt(background.coordinateVariation.ySmallText), 50, subtitle, "overlay-subtitle-hidden")
+    const titleSegments = getSegments(parseInt(background.coordinateVariation.yText), 100_000, title, "overlay-title-hidden")
+    const subtitleSegments = getSegments(parseInt(background.coordinateVariation.ySmallText), parseInt(background.coordinateVariation.smallTextMax ?? "0"), subtitle, "overlay-subtitle-hidden")
     if(!subtitleSegments) return <></>
     if(!titleSegments) return <></>
 
+    const dist = parseInt(background.coordinateVariation.ySmallText) - parseInt(background.coordinateVariation.yText)
+
+    console.log("DISTN", parseInt(background.coordinateVariation.ySmallText), parseInt(background.coordinateVariation.yText), dist)
+
     return <>
       <div id="title-container" style={{ position: "absolute" }}>
-        {titleSegments.map(({ text: title, position }) => <TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title" style={{ top: `${position}px` }}/>)}
+        {titleSegments.map(({ text: title, position }) => <TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title" style={{ top: `${subtitleSegments[0]?.position - dist}px` }}/>)}
       </div>
       <div id="subtitle-container" style={{ position: "absolute" }}>
         {subtitleSegments.map(({ text: subtitle, position }) => <TitleComponent title={subtitle} background={background} elementId="overlay-subtitle-hidden" givenId="overlay-subtitle" style={{
@@ -953,10 +972,10 @@ export default function TempleteDetail() {
                     width: "unset", 
                     position: "absolute", 
                     _: console.log("GVN", sprite.categoryName, sprite, sprite.fixedWidth, sprite.x),
-                    _: console.log(decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
+                    _: console.log("do we", product.alignBottom, "so now", decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
                     _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
                     left: `${((parseFloat(sprite.x) + parseInt(product.xAddition ?? "0") + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.fixedWidth)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)))}px`, 
-                    top: `${((parseFloat(sprite.y) + parseInt(product.yAddition ?? "0") + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? (sprite.offset ?? 0) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))))}px`,
+                    top: `${((parseFloat(sprite.y) + parseInt(product.yAddition ?? "0") + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? ((realOffsets[sprite.sprite]?.height ?? 1) ?? (sprite.offset ?? 0)) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))))}px`,
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)*(product.scaleAddition == 0 || !product.scaleAddition ? 1 : product.scaleAddition/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
