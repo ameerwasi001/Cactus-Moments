@@ -618,7 +618,7 @@ export default function TempleteDetail() {
   const MultiText = ({ background }) => {
 
     const titleSegments = getSegments(parseInt(background.coordinateVariation.yText), 100_000, title, "overlay-title-hidden")
-    const subtitleSegments = getSegments(parseInt(background.coordinateVariation.ySmallText), parseInt(background.coordinateVariation.smallTextMax ?? "0"), subtitle, "overlay-subtitle-hidden")
+    const subtitleSegments = getSegments(parseInt(background.coordinateVariation.ySmallText), parseInt(background.coordinateVariation.smallTextMax ?? "80"), subtitle, "overlay-subtitle-hidden")
     if(!subtitleSegments) return <></>
     if(!titleSegments) return <></>
 
