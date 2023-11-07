@@ -611,7 +611,7 @@ export default function TempleteDetail() {
       <div id="title-container" style={{ position: "absolute" }}>
         {titleSegments.map(({ text: title, position }) => <TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title" style={{ top: `${position}px` }}/>)}
       </div>
-      <div id="subtitle-container">
+      <div id="subtitle-container" style={{ position: "absolute" }}>
         {subtitleSegments.map(({ text: subtitle, position }) => <TitleComponent title={subtitle} background={background} elementId="overlay-subtitle-hidden" givenId="overlay-subtitle" style={{
           whiteSpace: 'nowrap',
           position: "absolute", 
