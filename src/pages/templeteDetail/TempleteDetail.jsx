@@ -1106,7 +1106,7 @@ export default function TempleteDetail() {
                 navigate(`/billingAddress?${setParam({ product: product._id })}`, {
                   state: { 
                     selections: {
-                      product, 
+                      product: { ...product, templeteArray: undefined }, 
                       distribution,
                       ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
                       background,
@@ -1114,7 +1114,7 @@ export default function TempleteDetail() {
                       subtitle,
                       characters,
                       realOffsets,
-                      templeteArray,
+                      // templeteArray,
                       offsets,
                       rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
                     }
