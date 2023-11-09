@@ -1028,7 +1028,7 @@ export default function TempleteDetail() {
             <h1>{title}</h1>
             <h2>{product.desc}</h2>
             {console.log("PRCNGOPT", selectedPricingOptions)}
-            <h3>{(product.price + parseFloat(Object.values(selectedPricingOptions).map(({price}) => parseFloat(price)).reduce((a, b) => a+b, 0))).toFixed(2)} €</h3>
+            <h3>{(0 + parseFloat(Object.values(selectedPricingOptions).map(({price}) => parseFloat(price)).reduce((a, b) => a+b, 0))).toFixed(2)} €</h3>
             {Object.entries(pricingObject).map(([section, prices]) => <DropdownModel
               _={console.log("RELAPRICE", prices)}
               name={selectedPricingOptions[section]?.name}
