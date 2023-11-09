@@ -55,6 +55,76 @@
   src: url("./assets/suprema-extrabold-italic.ttf");
 }
 
+@font-face {
+  font-family: "BanburyD";
+  src: url("./assets/BanburyD.otf");
+}
+
+@font-face {
+  font-family: "Castoro-Italic";
+  src: url("./assets/Castoro-Italic.ttf");
+}
+
+@font-face {
+  font-family: "Castoro-Regular";
+  src: url("./assets/Castoro-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Dmitrii-Chirkov-Moon-Time-Swashes";
+  src: url("./assets/Dmitrii-Chirkov-Moon-Time-Swashes.otf");
+}
+
+@font-face {
+  font-family: "EduTASBeginner-VariableFont_wght";
+  src: url("./assets/EduTASBeginner-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: "LibreBaskerville-Bold";
+  src: url("./assets/LibreBaskerville-Bold.ttf");
+}
+
+@font-face {
+  font-family: "LibreBaskerville-Italic";
+  src: url("./assets/LibreBaskerville-Italic.ttf");
+}
+
+@font-face {
+  font-family: "LibreBaskerville-Regular";
+  src: url("./assets/LibreBaskerville-Regular.ttf");
+}
+
+@font-face {
+  font-family: "LondonBetween";
+  src: url("./assets/LondonBetween.ttf");
+}
+
+@font-face {
+  font-family: "LondonMM";
+  src: url("./assets/LondonMM.ttf");
+}
+
+@font-face {
+  font-family: "LondonTwo";
+  src: url("./assets/LondonTwo.ttf");
+}
+
+@font-face {
+  font-family: "MoonTime-Regular-1";
+  src: url("./assets/MoonTime-Regular-1.otf");
+}
+
+@font-face {
+  font-family: "MoonTime-Regular-2";
+  src: url("./assets/MoonTime-Regular-2.ttf");
+}
+
+@font-face {
+  font-family: "Skia-Regular";
+  src: url("./assets/Skia-Regular.ttf");
+}
+
 :root {
   --font-family: 'K2D', sans-serif;
 }
