@@ -6,7 +6,9 @@ import { logo, search } from "../../assets";
 import { setParam } from '../../urlParams'
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import { req } from '../../requests'
+import { getKey, req, setKey } from '../../requests'
+
+const crossImg = "https://cdn-icons-png.flaticon.com/512/57/57165.png"
 
 const Navbar = (props) => {
   const navigate = useNavigate();
@@ -125,6 +127,42 @@ const Navbar = (props) => {
         >
           Contact
         </h1>
+      </div>
+      <div className="cactus__navbar-links_text_view">
+        <h1
+          onClick={() => {
+            setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...Object.entries(getKey("cart") ?? {}), [Object.entries(getKey("cart") ?? {}).length ? "check" : "nodata"]].map(
+              ([k, p]) => k == "check" ? <div className="cart-item">
+                <div></div>
+                <div className="cart-checkout-button" onClick={() => navigate("/billingAddress")}>Checkout</div>
+              </div> : k == "nodata" ? <div className="cart-item">There's nothing in your cart</div> : <div className="cart-item">
+                <p>{p?.selections?.product?.mainDesc}</p>
+                <img src={crossImg} className="cart-item-cross" onClick={ev => {
+                  ev.stopPropagation()
+                  const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
+                  const cart = getKey("cart") ?? {}
+                  delete cart[p?.selections?.product?._id]
+                  setKey("cart", cart)
+                  console.log("opendrop", cart)
+                  setOpenDropdown(openDropdown => ({
+                    // title: "cart",
+                    ...(openDropdown ?? {}),
+                    data
+                  }))
+                }}/>
+              </div>
+            ).map(mainDesc => ({ mainDesc })) })
+          }}
+          style={{
+            borderBottomStyle:
+              openDropdown?.title == "cart"
+                ? "solid"
+                : "none",
+          }}
+        >
+          Cart
+        </h1>
+        <DropDown title="cart" list={openDropdown}/>
       </div>
       <div
         onClick={() => navigate("/searchpage")}

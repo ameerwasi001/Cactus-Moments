@@ -60,3 +60,12 @@ export const authReq = async (method, endpoint, body=null, count=0) => {
         console.log(err)
     }
 }
+
+export function getKey(key) {
+    const value = localStorage.getItem(key)
+    return JSON.parse(value ?? "null")
+}
+
+export function setKey(key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
+}

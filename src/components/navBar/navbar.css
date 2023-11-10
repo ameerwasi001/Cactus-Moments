@@ -153,6 +153,29 @@
   font-weight: normal !important;
 }
 
+.cart-checkout-button {
+  color: black;
+  background: #ddd;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-right: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+.cart-item-cross {
+  width: 10px;
+  height: 10px;
+  margin-right: 1rem;
+  opacity: 0.5
+}
+
 .navbar-dropdown > p {
   width: 17rem;
   font-size: 16px;

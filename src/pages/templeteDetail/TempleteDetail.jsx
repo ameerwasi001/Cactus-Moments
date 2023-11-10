@@ -21,13 +21,14 @@ import {
   NavBar,
   TempleteView,
 } from "../../components";
-import { req } from '../../requests'
+import { req, getKey, setKey } from '../../requests'
 
 import { logo } from "../../assets";
 import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
 import html2canvas from 'html2canvas';
+import swal from "sweetalert";
 
 const CONSTANT_BOTTOM_OFFSET = 0
 let renderCanvas = true
@@ -1093,32 +1094,72 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 />))
               }
             </div>
-            <div
-              onClick={async () => {
-                // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
-                // console.log("imgs=>", img)
-                console.log("REWORD", )
-                navigate(`/billingAddress?${setParam({ product: product._id })}`, {
-                  state: { 
-                    selections: {
-                      product: { ...product, templeteArray: undefined }, 
-                      distribution,
-                      ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
-                      background,
-                      title,
-                      subtitle,
-                      characters,
-                      realOffsets,
-                      // templeteArray,
-                      offsets,
-                      rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
+            <div style={{ display: "flex" }}>
+              <div
+                onClick={async () => {
+                  // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
+                  // console.log("imgs=>", img)
+                  console.log("REWORD", )
+                  navigate(`/billingAddress?${setParam({ product: product._id })}`, {
+                    state: { 
+                      selections: {
+                        product: { ...product, templeteArray: undefined }, 
+                        distribution,
+                        ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
+                        background,
+                        title,
+                        subtitle,
+                        characters,
+                        realOffsets,
+                        // templeteArray,
+                        offsets,
+                        rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
+                      }
                     }
+                  })
+                }}
+                style={{ marginRight: "1.5rem" }}
+                className="cactus-templete_detail-order_button"
+              >
+                <h5>Commandez maintenant</h5>
+              </div>
+              <div className="cactus-templete_detail-order_button" onClick={() => {
+                const cartObj = getKey("cart") ?? {}
+                if(cartObj[product._id]) {
+                  swal({
+                    title: "Error",
+                    text: "The product is already in your cart",
+                    icon: "error",
+                    dangerMode: true,
+                  })
+                  return
+                }
+                const productData = {
+                  selections: {
+                    product: { ...product, templeteArray: undefined }, 
+                    distribution,
+                    ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
+                    background,
+                    title,
+                    subtitle,
+                    characters,
+                    realOffsets,
+                    // templeteArray,
+                    offsets,
+                    rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
                   }
+                }
+                cartObj[product._id] = productData
+                setKey("cart", cartObj)
+                swal({
+                  title: "Success",
+                  text: "The product has been added to your cart",
+                  icon: "success",
+                  // dangerMode: true,
                 })
-              }}
-              className="cactus-templete_detail-order_button"
-            >
-              <h5>Commandez maintenant</h5>
+              }}>
+                <h5>Add to Cart</h5>
+            </div>
             </div>
           </div>
         </div>

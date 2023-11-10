@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { creditCardBlack, radioFilled, radio, successGif } from "../../assets";
 import { NavBar, Footer } from "../../components";
-import { req } from "../../requests";
+import { getKey, req, setKey } from "../../requests";
 import { getAllParams, setParam } from "../../urlParams";
 import swal from 'sweetalert';
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import "./payment.css";
 
+const getPrice = () => Object.entries(getKey("cart") ?? {}).map(([_, order]) => order?.selections?.product?.price ?? 0).reduce((a, b) => a+b, 0)
+
 const Payment = () => {
-  const { state: { selections: {product, ...restProduct} } } = useLocation()
+  const { state } = useLocation()
+  // { selections: {product, ...restProduct} }
+  const { product, ...restProduct } = state?.selections ?? {}
+  const fromCart = !product
+  const price = fromCart ? getPrice() : product?.price
   const [selectedMethod, setSelectedMethod] = useState("card")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
@@ -78,7 +84,7 @@ const Payment = () => {
                 <h2>
                   Total <span style={{ color: "#666666" }}>Incl .Tax</span>
                 </h2>
-                <h2>${product.price ?? 10}</h2>
+                <h2>${price ?? 10}</h2>
               </div>
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
@@ -174,7 +180,53 @@ const Payment = () => {
                         if(code != "noel2023") return setError("Invalid code")
                       }
                       setLoading(true)
-                      await req('POST', '/user/order', {
+                      if(fromCart) {
+                        let ordered = 0
+                        const cartData = getKey("cart") ?? {}
+                        const promises = []
+                        for(const order of Object.values(cartData)) {
+                          const { product, ...restProduct } = order.selections
+                          promises.push(req('POST', '/user/order', {
+                            product: product._id,
+                            bill: {
+                              cardNumber,
+                              cvv,
+                              expiry,
+                              courtesyTitle,
+                              day,
+                              country,
+                              month,
+                              year,
+                              firstName,
+                              lastName,
+                              email,
+                              number,
+                              city,
+                              postCode,
+                              addressLine1,
+                              adults,
+                              children,
+                              addressLine2,
+                              selectedDimension,
+                              selectedFrame,
+                              code,
+                              ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
+                            },
+                            product: product._id,
+                            selections: {product, ...restProduct}
+                          }, err => {
+                            setLoading(false)
+                            setError(err)
+                          }, () => {
+                            ordered += 1
+                            if(ordered == Object.keys(cartData).length) {
+                              setLoading(false)
+                              setNext(false)
+                              setKey("cart", {})
+                            }
+                          }))
+                        }
+                      } else await req('POST', '/user/order', {
                         product: product._id,
                         bill: {
                           cardNumber,
@@ -212,7 +264,7 @@ const Payment = () => {
                     }}
                     className="payment-btn-main-container"
                   >
-                    {loading ? <ScaleLoader color="#fff" /> : <p>Pay ${product.price ?? 10}</p>}
+                    {loading ? <ScaleLoader color="#fff" /> : <p>Pay ${price ?? 10}</p>}
                   </div>
               </div>
             </>

@@ -49,7 +49,8 @@ const countryArr = [
 
 const BillingAdress = () => {
   const { product, adults, children } = getAllParams()
-  const { state: {selections} } = useLocation()
+  const { state } = useLocation()
+  const selections = state?.selections
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
@@ -269,7 +270,7 @@ const BillingAdress = () => {
                 addressLine2: address2,
               })}`, {
                 state: {
-                  selections
+                  ...(selections ? selections : {})
                 }
               })
             }}
