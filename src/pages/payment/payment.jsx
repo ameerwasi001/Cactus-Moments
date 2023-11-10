@@ -14,8 +14,9 @@ const getPrice = () => Object.entries(getKey("cart") ?? {}).map(([_, order]) => 
 const Payment = () => {
   const { state } = useLocation()
   // { selections: {product, ...restProduct} }
-  const { product, ...restProduct } = state?.selections ?? {}
+  const { product, ...restProduct } = state ?? {}
   const fromCart = !product
+  console.log("product-price", product, restProduct)
   const price = fromCart ? getPrice() : product?.price
   const [selectedMethod, setSelectedMethod] = useState("card")
   const [next, setNext] = useState(true);
