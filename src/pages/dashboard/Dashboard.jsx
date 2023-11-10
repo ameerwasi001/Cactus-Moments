@@ -105,6 +105,8 @@ export default function Dashboard() {
               <TempleteView
                 onClick={async () => {
                   setLoading(true)
+                  const el = document.getElementById("main-products")
+                  el?.scrollIntoView()
                   const { product } = await req("GET", `/user/product/${item._id}`)
                   setLoading(false)
                   navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
