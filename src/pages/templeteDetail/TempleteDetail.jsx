@@ -957,8 +957,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 zIndex: 100000000000000,
                 position: "absolute", 
                 top: 0,
-                left: -1,
-                height: "100%",
+                left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
+                height: "101%",
                 maxWidth: "500px",
                 width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
               }}/>}
