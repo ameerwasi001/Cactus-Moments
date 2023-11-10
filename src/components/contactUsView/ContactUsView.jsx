@@ -17,31 +17,31 @@ export default function ContactUsView(props) {
     {
       id: 1,
       title: "E-Mail",
-      des: "Cactusmpments@gmail.Com",
+      des: "info@cactusmoments.com",
       icon: emailIcon,
     },
     {
       id: 2,
       title: "Call",
-      des: "+1 202 555 0156",
+      des: "+352691 199 068",
       icon: phoneIcon,
     },
-    {
-      id: 3,
-      title: "Location",
-      des: "101 street 2714 California, Usa",
-      icon: locationIcon,
-    },
+    // {
+    //   id: 3,
+    //   title: "Location",
+    //   des: "101 street 2714 California, Usa",
+    //   icon: locationIcon,
+    // },
   ];
   return (
     <div className="cactus-dashboard-contact_us_top_view" style={props.style}>
       <div className="cactus-dashboard-contact_us_title_view">
-        <h1>Contact Us</h1>
-        <h2>You can contact us if you have any type of query for us </h2>
+        <h1>Contactez-nous </h1>
+        <h2>Vous pouvez nous contacter si  vous avez des questions pour nous. </h2>
       </div>
       <div className="cactus-dashboard-contact_us_forms_top_view">
         <div className="cactus-dashboard-contact_us_query_view">
-          <h3>You can contact us if you have any type of query for us </h3>
+          <h3>Vous pouvez nous contacter si  vous avez des questions pour nous. </h3>
           {queryArray.map((item) => {
             return (
               <div className="cactus-dashboard-contact_us_email_detail_view">

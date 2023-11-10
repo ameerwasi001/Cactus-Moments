@@ -21,6 +21,7 @@ import {
   NavBar,
   TempleteView,
 } from "../../components";
+import { req } from '../../requests'
 
 import { logo } from "../../assets";
 import { getAllParams, setParam } from "../../urlParams";
@@ -541,27 +542,18 @@ const splitByNumOfChars = (str, n) => {
   return chunks
 }
 
-export default function TempleteDetail() {
+function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const navigate = useNavigate();
-  const { product: JSONProduct, recents } = getAllParams()
-  const ogProduct = Object.freeze(JSON.parse(JSONProduct))
   const overlayTitleHidden = useRef(null)
   const overlaySubtitleHidden = useRef(null)
   const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
+  console.log("navi", product.mainDesc)
   const [distribution, setDistribution] = useState([])
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
 
-  const [background, setBackground] = useState(
-    recents == 'no' ? 
-      (dict[product._id] ? 
-        (
-          product.backgrounds.find(x => x.url == dict[product._id].url) ?? product.backgrounds[product.defaultBackground]) 
-          : product.backgrounds[product.defaultBackground]
-        ) 
-      : product.backgrounds[product.defaultBackground]
-    )
+  const [background, setBackground] = useState(product.backgrounds[product.defaultBackground])
   const [alternateBackground, setAlternateBackground] = useState(product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url))
   const [title, setTitle] = useState(product.name)
   const [subtitle, setSubtitle] = useState(product.subtitle)
@@ -888,7 +880,10 @@ export default function TempleteDetail() {
 
   return (
     <div className="cactus-dashboard-main_container">
-      {recents == 'no' ? <></> : <NavBar />}
+      {recents == 'no' ? <></> : <NavBar onProductClick={async (od, setLoading) => {
+          console.log("Navigating through custom function")
+          navigate(`/?productId=${od._id}`)
+      }} />}
       {selectedImage && <NestedDescription img={selectedImage} setShowModalDes={setSelectedImage}/>}
       {defaultModel && (
         <DefaultModel
@@ -1042,12 +1037,12 @@ export default function TempleteDetail() {
             />)}
             <div className="cactus-templete_detail-form_top_view">
               <div className="cactus-templete_detail-form_title">
-                <h4>Personalize</h4>
-                <h5>COMPOSITION OF THE FAMILY</h5>
+                <h4>Personnalisez</h4>
+                <h5>Composition de la famille</h5>
               </div>
               <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', width: "200px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
-                    <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "2rem" }}>Edit Characters</h3>
+                <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', width: "350px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
+                    <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "2rem" }}>Modifier le nombre de personnages</h3>
                 </button>
               </div>
               <CustomInputWithDropdown
@@ -1123,7 +1118,7 @@ export default function TempleteDetail() {
               }}
               className="cactus-templete_detail-order_button"
             >
-              <h5>Order Now</h5>
+              <h5>Commandez maintenant</h5>
             </div>
           </div>
         </div>
@@ -1134,6 +1129,7 @@ export default function TempleteDetail() {
               return (
                 <TempleteView
                   onClick={() => {
+                    ogProduct = {...Object.freeze(item)}
                     setProduct({...Object.freeze(item)})
                       // navigate(`/templetedetail?${setParam({
                       //     product: JSON.stringify(item)
@@ -1150,4 +1146,16 @@ export default function TempleteDetail() {
       </div>
     </div>
   );
+}
+
+export default function TempleteDetailWrapper() {
+  const { product: JSONProductFromURL, recents } = getAllParams()
+  const [JSONProduct, setJSONProduct] = useState(JSONProductFromURL)
+  const [ogProduct, setOgProduct] = useState(Object.freeze(JSON.parse(JSONProductFromURL)))
+
+  return <TempleteDetail ogProduct={ogProduct} setOgProduct={x => {
+    console.log("naviX", x.mainDesc)
+    setOgProduct(x)
+    setJSONProduct(JSON.stringify(x))
+  }} JSONProduct={JSONProduct} recents={recents}/>
 }

@@ -16,9 +16,9 @@ export default function ContactUs() {
       <div className="cactus-dashboard-container">
         <div className="cactus-about_us-banner_top_view">
           <div className="cactus-about_us-banner_title_view">
-            <h1>Contact Us</h1>
+            <h1>Contactez-nous</h1>
             <img src={aboutUsBorder} style={{ width: 320 }} />
-            <h2>{'Home > Contact Us'}</h2>
+            <h2>{'Home -> Contactez-nous'}</h2>
           </div>
           <div className="cactus-about_us-banner_image_view">
             <img src={contactUsBanner} />

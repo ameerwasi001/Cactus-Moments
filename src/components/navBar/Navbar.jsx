@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./navbar.css";
 import close from "../../assets/close.png";
 import menu from "../../assets/menu.png";
 import { logo, search } from "../../assets";
+import { setParam } from '../../urlParams'
 import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
+import { req } from '../../requests'
 
-const Navbar = () => {
+const Navbar = (props) => {
   const navigate = useNavigate();
   const [toggleMenu, setToggleMenu] = useState(false);
+  const [templateArray, setTemplateArray] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState(null)
+
+  useEffect(() => {
+    req('GET', `/user/product?select=-categories`)
+      .then(({products}) => {
+        setLoading(false)
+        setTemplateArray(products?.filter(prod => prod.backgrounds.length)?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: p.defaultIllustration ? {url: p.defaultIllustration} : p.backgrounds[p.defaultBackground]} }))
+      })
+  }, [])
+
+  const DropDown = ({ title, list: openDropdown, onClick }) => {
+    return <div className="navbar-dropdown-container">
+      {openDropdown?.title == title && <div className="navbar-dropdown">
+        {loading ? <ClipLoader color="black" /> : openDropdown?.data?.map(od => <p className={onClick ? "" : "important-font-weight"} style={{ cursor: onClick ? "pointer" : "default" }} onClick={() => onClick ? onClick(od) : null}>{od.mainDesc}</p>)}
+      </div>}
+    </div>
+  }
+
   const Menu = () => (
     <>
       <div className="cactus__navbar-links_text_view">
@@ -15,7 +38,7 @@ const Navbar = () => {
           onClick={() => navigate("/")}
           style={{
             borderBottomStyle:
-              window.location.href === "http://localhost:3000/"
+              window.location.pathname === "/"
                 ? "solid"
                 : "none",
           }}
@@ -25,42 +48,59 @@ const Navbar = () => {
       </div>
       <div className="cactus__navbar-links_text_view">
         <h1
-          onClick={() => navigate("/poster")}
+          onClick={() => {
+            setOpenDropdown(openDropdown?.title == "poster" ? null : { title: "poster", data: templateArray })
+            // navigate("/poster")
+          }}
           style={{
             borderBottomStyle:
-              window.location.href === "http://localhost:3000/poster"
+              openDropdown?.title == "poster" 
                 ? "solid"
                 : "none",
           }}
         >
           Poster
         </h1>
+        <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
+          setLoading(true)
+          const { product } = await req("GET", `/user/product/${od._id}`)
+          setLoading(false)
+          navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+        }}/>
       </div>
       <div className="cactus__navbar-links_text_view">
         <h1
+          onClick={() => {
+            setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasse", "Gourde", "Sac"].map(mainDesc => ({ mainDesc })) })
+          }}
           style={{
             borderBottomStyle:
-              window.location.href === "http://localhost:3000/mug"
+              openDropdown?.title == "accessories"
                 ? "solid"
                 : "none",
           }}
         >
-          Mug
+          Accessories
         </h1>
+        <DropDown title="accessories" list={openDropdown}/>
       </div>
       <div className="cactus__navbar-links_text_view">
         <h1
+          onClick={() => {
+            setOpenDropdown(openDropdown?.title == "giftIdea" ? null : { title: "giftIdea", data: ["Anniversaire", "Fête des mères", "Fêtes des pères", "EGV", "Enfant"].map(mainDesc => ({ mainDesc })) })
+          }}
           style={{
             borderBottomStyle:
-              window.location.href === "http://localhost:3000/giftidea"
+              openDropdown?.title == "giftIdea"
                 ? "solid"
                 : "none",
           }}
         >
           Gift Idea
         </h1>
+        <DropDown title="giftIdea" list={openDropdown}/>
       </div>
-      <div className="cactus__navbar-links_text_view">
+      {/* <div className="cactus__navbar-links_text_view">
         <h1
           onClick={() => navigate("/aboutus")}
           style={{
@@ -72,7 +112,7 @@ const Navbar = () => {
         >
           About us
         </h1>
-      </div>
+      </div> */}
       <div className="cactus__navbar-links_text_view">
         <h1
           onClick={() => navigate("/contactus")}
@@ -83,7 +123,7 @@ const Navbar = () => {
                 : "none",
           }}
         >
-          Contact Us
+          Contact
         </h1>
       </div>
       <div

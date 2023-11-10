@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   aboutUsImage,
   banner,
@@ -30,6 +30,24 @@ export default function Dashboard() {
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("poster")
+  const { search } = useLocation()
+
+  console.log("PRODID", search)
+
+  useEffect(() => {
+    const f = async () => {
+      const productId = search?.split("productId=")?.[1]
+      if(productId) {
+        const el = document.getElementById("main-products")
+        el?.scrollIntoView()
+        setLoading(true)
+        const { product } = await req("GET", `/user/product/${productId}`)
+        setLoading(false)
+        navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+      }
+    }
+    f()
+  }, [search])
 
   useEffect(() => {
     req('GET', `/user/product?select=-categories`)
@@ -51,31 +69,28 @@ export default function Dashboard() {
           <div className="cactus-dashboard-banner_text_view">
             {/* <h5>Welcome to Cactus Moments</h5> */}
             <h1>
-              Get your favorite{" "}
-              <span style={{ color: "#2B453E" }}>Illustration</span> template
+            Choisissez et personnalisez votre{" "}
+              <span style={{ color: "#2B453E" }}>illustration</span> !
             </h1>
             <h5>
-              Lorem ipsum dolor sit amet consectetur. A diam elit pulvinar nunc
-              condimentum donec. Ultricies dolor lacus gravida congue quam
-              ultrices id lectus. Tempus luctus aenean massa velit duis
-              phasellus .
+            Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
             </h5>
             <div className="cactus-dashboard-banner_buttons_view">
               <div className="cactus-dashboard-banner_see_more_view">
-                <h2>See More</h2>
+                <h2>Voir plus</h2>
               </div>
-              <div className="cactus-dashboard-banner_contact_button">
+              {/* <div className="cactus-dashboard-banner_contact_button">
                 <h3>Contact Us</h3>
-              </div>
+              </div> */}
             </div>
             <div className="cactus-dashboard-banner_counter_top_view">
               <div className="cactus-dasboard-banner_counter_view">
-                <h4>100+</h4>
-                <h6>Templates</h6>
+                <h4>30+</h4>
+                <h6>affiches</h6>
               </div>
               <div className="cactus-dasboard-banner_counter_view">
-                <h4>1200+</h4>
-                <h6>Happy Customers</h6>
+                <h4>70+</h4>
+                <h6>idées cadeaux</h6>
               </div>
             </div>
           </div>
@@ -84,7 +99,7 @@ export default function Dashboard() {
           </div>
         </div>
         <TempleteSliderView title={"Popular Templates"} viewAll setSelectedCategory={setSelectedCategory}/>
-        <div className="cactus-dashboard-templete_top_view">
+        <div id="main-products" className="cactus-dashboard-templete_top_view">
         {loading ? <ClipLoader color="black" /> : templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).map((item) => {
             return (
               <TempleteView
@@ -99,31 +114,29 @@ export default function Dashboard() {
             );
           })}
         </div>
-        <ContactUsView fullName={name} setFullName={setName} setEmail={setEmail} email={email} message={message} setMessage={setMessage} onClick={() => alert("Hi!")}/>
+        {/* <ContactUsView fullName={name} setFullName={setName} setEmail={setEmail} email={email} message={message} setMessage={setMessage} onClick={() => alert("Hi!")}/> */}
         <div className="cactus-dashboard-about_us_top_view">
           <div className="cactus-dashboard-about_us_main_image">
             <img src={aboutUsImage} />
           </div>
 
           <div className="cactus-dashboard-about_us_detail_view">
-            <h2>ABOUT US</h2>
+            <h2>À propos de nous</h2>
             <h1>Cactus Moments</h1>
-            <h3>
+            {/* <h3>
               Cactus moment is a Customize able illustration providesof family
               trips, outing, couple trips etc
-            </h3>
+            </h3> */}
             <h4>
-              Lorem ipsum dolor sit amet consectetur. Convallis nunc turpis
-              consectetur purus felis et non. Blandit a sed cursus massa feugiat
-              ut consectetur ornare diam.{" "}
+              Nous sommes Robin et Ann, le duo derrière Cactus Moments. Passionnés par le sport et l'art, nous sommes dévoués à transformer vos moments sportifs, familiaux et entre amis en souvenirs personnalisés.{" "}
             </h4>
             <div className="cactus-dashboard-contact_us_form_button_view-container">
-              <div
+              {/* <div
                 className="cactus-dashboard-contact_us_form_button_view"
                 style={{ alignSelf: "flex-start" }}
               >
                 <h6 onClick={() => navigate("/aboutus")}>See More</h6>
-              </div>
+              </div> */}
               <div className="cactus-dashboard-contact_us_form_button_view-shape">
                 <img src={shape} alt="shape.png" />
               </div>

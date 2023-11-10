@@ -44,7 +44,7 @@
 
 .cactus__navbar-links_text_view {
   padding-right: 5rem;
-  display: flex;
+  /* display: flex; */
 }
 
 .cactus__navbar-links_text_view h1 {
@@ -134,6 +134,35 @@
   min-width: 30rem;
   border-radius: 5px;
   box-shadow: 0 0 5 rgba(0, 0, 0, 0.2);
+}
+
+.navbar-dropdown-container {
+  position: relative;
+}
+
+.navbar-dropdown {
+  position: absolute;
+  background-color: white;
+  padding-top: 1rem;
+  box-shadow: -3px 4px 5px -1px rgba(0,0,0,0.23);
+  -webkit-box-shadow: -3px 4px 5px -1px rgba(0,0,0,0.23);
+  -moz-box-shadow: -3px 4px 5px -1px rgba(0,0,0,0.23);
+}
+
+.important-font-weight {
+  font-weight: normal !important;
+}
+
+.navbar-dropdown > p {
+  width: 17rem;
+  font-size: 16px;
+  margin-bottom: 1.1rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.navbar-dropdown > p:hover {
+  font-weight: bold;
 }
 
 @media screen and (max-width: 1160px) {
