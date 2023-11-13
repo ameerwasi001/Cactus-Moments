@@ -1167,7 +1167,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
             </div>
           </div>
         </div>
-        <div style={{ display: recents == 'no' ? 'none' : 'undefined' }} className="cactus-templet_detail_bottom_view">
+        {/* <div style={{ display: recents == 'no' ? 'none' : 'undefined' }} className="cactus-templet_detail_bottom_view">
           <h1>Recently Viewed</h1>
           <div className="cactus-dashboard-templete_top_view">
             {templeteArray.slice(-4).map((item) => {
@@ -1186,7 +1186,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               );
             })}
           </div>
-        </div>
+        </div> */}
         { recents == 'no' ? <></> : <Footer /> }
       </div>
     </div>
