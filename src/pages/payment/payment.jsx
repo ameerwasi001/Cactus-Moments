@@ -9,7 +9,7 @@ import TextInputBilling from "../../components/textInputBilling/textInputBilling
 import ScaleLoader from "react-spinners/ScaleLoader";
 import "./payment.css";
 
-const getPrice = () => Object.entries(getKey("cart") ?? {}).map(([_, order]) => order?.selections?.product?.price ?? 0).reduce((a, b) => a+b, 0)
+const getPrice = () => (getKey("cart") ?? []).map(order => order?.selections?.product?.price ?? 0).reduce((a, b) => a+b, 0)
 
 const Payment = () => {
   const { state } = useLocation()
@@ -163,7 +163,7 @@ const Payment = () => {
                         onChange={ev => setCode(ev.target.value)}
                         type={"text"}
                         title={"Code"}
-                        placeholder={"noel2023"}
+                        placeholder={""}
                       />
                     </div>
                 </div>}
@@ -178,14 +178,14 @@ const Payment = () => {
                         if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
                       }
                       if(selectedMethod == "code") {
-                        if(code != "noel2023") return setError("Invalid code")
+                        if(code != "Noel") return setError("Invalid code")
                       }
                       setLoading(true)
                       if(fromCart) {
                         let ordered = 0
-                        const cartData = getKey("cart") ?? {}
+                        const cartData = getKey("cart") ?? []
                         const promises = []
-                        for(const order of Object.values(cartData)) {
+                        for(const order of cartData) {
                           const { product, ...restProduct } = order.selections
                           promises.push(req('POST', '/user/order', {
                             product: product._id,
@@ -220,10 +220,10 @@ const Payment = () => {
                             setError(err)
                           }, () => {
                             ordered += 1
-                            if(ordered == Object.keys(cartData).length) {
+                            if(ordered == cartData.length) {
                               setLoading(false)
                               setNext(false)
-                              setKey("cart", {})
+                              setKey("cart", [])
                             }
                           }))
                         }

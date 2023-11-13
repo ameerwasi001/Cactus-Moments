@@ -543,6 +543,8 @@ const splitByNumOfChars = (str, n) => {
   return chunks
 }
 
+let firstLoad = true
+
 function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const navigate = useNavigate();
   const overlayTitleHidden = useRef(null)
@@ -588,6 +590,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const [sideTempleArray, setSideTempleArray] = useState((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }));
   const [templeteArray, setTemplateArray] = useState([]);
   const [autoSelect, setAutoSelect] = useState(true)
+  const [chosen, setChosen] = useState(false)
 
   const [ratios, setRatios] = useState(new Set())
   const [offsets, setOffsets] = useState({})
@@ -690,7 +693,12 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
         // Setting the required states
         // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
-        setCharacters(getCategoryCharacters(product))
+        console.log("SPRITES-NOW", characters)
+        let newChars = getCategoryCharacters(product)
+          // .slice(0, newChars.length - diff - 1)
+          .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
+        firstLoad = false
+        setCharacters(newChars)
       })
   }, [product])
 
@@ -709,6 +717,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   }, [product])
 
   useEffect(() => {
+    if(!chosen) return
+
     const processBg = background => background.positions.map((pos, i) => {
       return {
         x: pos[0],
@@ -731,6 +741,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
     // console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
     // middling algorithm
+    console.log("SPRITES", sprites)
     const spritedDistribution = distribution.map((x, i) => {
       const sprite = sprites[i]
       const { product: JSONProduct } = getAllParams()
@@ -801,8 +812,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
     console.log("DIST01", sprites, finalDistribution)
-    setDistribution(finalDistribution)
-  }, [product, characters, background])
+    if(sprites.length != 0) setDistribution(finalDistribution)
+  }, [chosen, product, characters, background])
 
   useEffect(() => {
     // setInterval(() => {
@@ -894,6 +905,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
           hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={product => {
             setProduct(Object.freeze(product))
+            setChosen(true)
             setAutoSelect(false)
             setDefaultModel(false)
           }}
@@ -1015,7 +1027,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               {defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage ? <></> : <MultiText background={background}/>}
             </div>
             <div className="cactus-templete_poster-desc" style={{
-              width: ratios.has(background.url) ? "350px" : "500px",
+              // width: ratios.has(background.url) ? "350px" : "500px",
+              width: "500px",
             }}>
               <p>{product.posterDesc}</p>
             </div>
@@ -1124,16 +1137,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 <h5>Commandez maintenant</h5>
               </div>
               <div className="cactus-templete_detail-order_button" onClick={() => {
-                const cartObj = getKey("cart") ?? {}
-                if(cartObj[product._id]) {
-                  swal({
-                    title: "Error",
-                    text: "The product is already in your cart",
-                    icon: "error",
-                    dangerMode: true,
-                  })
-                  return
-                }
+                const cartObj = getKey("cart") ?? []
                 const productData = {
                   selections: {
                     product: { ...product, templeteArray: undefined }, 
@@ -1149,7 +1153,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                     rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
                   }
                 }
-                cartObj[product._id] = productData
+                cartObj.push(productData)
                 setKey("cart", cartObj)
                 swal({
                   title: "Success",

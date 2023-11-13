@@ -18,13 +18,13 @@ export default function CustomInputWithDropdown(props) {
                     <>
                         <h5>Surname</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
-                            <input placeholder="Enter title" ref={title} value={props.title} onChange={ev => props.onChangeTitle(ev.target.value)} />
+                            <input placeholder="Enter title" ref={title} value={props.title} onChange={ev => props.onChangeTitle(ev.target.value)} onClick={() => props.onChangeTitle("")}/>
                             <img src={edit} onClick={() => title.current.focus()} />
                         </div>
                         <div className="cactus-templete_detail-form_dropdown_title_divider" />
                         <h5>Family Name</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
-                            <input ref={subtitle} placeholder="Enter sub title" value={props.subtitle} onChange={ev => props.onChangeSubtitle(ev.target.value)} />
+                            <input ref={subtitle} placeholder="Enter sub title" value={props.subtitle} onClick={() => props.onChangeSubtitle("")} onChange={ev => props.onChangeSubtitle(ev.target.value)} />
                             <img src={edit} onClick={() => subtitle.current.focus()} />
                         </div>
                         <div className="cactus-templete_detail-form_dropdown_title_divider" />

@@ -131,17 +131,17 @@ const Navbar = (props) => {
       <div className="cactus__navbar-links_text_view">
         <h1
           onClick={() => {
-            setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...Object.entries(getKey("cart") ?? {}), [Object.entries(getKey("cart") ?? {}).length ? "check" : "nodata"]].map(
-              ([k, p]) => k == "check" ? <div className="cart-item">
+            setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
+              (p, i) => p == "check" ? <div className="cart-item">
                 <div></div>
                 <div className="cart-checkout-button" onClick={() => navigate("/billingAddress")}>Checkout</div>
-              </div> : k == "nodata" ? <div className="cart-item">There's nothing in your cart</div> : <div className="cart-item">
+              </div> : p == "nodata" ? <div className="cart-item">There's nothing in your cart</div> : <div className="cart-item">
                 <p>{p?.selections?.product?.mainDesc}</p>
                 <img src={crossImg} className="cart-item-cross" onClick={ev => {
                   ev.stopPropagation()
                   const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
-                  const cart = getKey("cart") ?? {}
-                  delete cart[p?.selections?.product?._id]
+                  const cart = (getKey("cart") ?? []).filter((_, j) => j != i)
+                  // delete cart[p?.selections?.product?._id]
                   setKey("cart", cart)
                   console.log("opendrop", cart)
                   setOpenDropdown(openDropdown => ({
