@@ -956,7 +956,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               {defaultModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
                 zIndex: 100000000000000,
                 position: "absolute", 
-                top: 0,
+                top: -1,
                 left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
                 height: "101%",
                 maxWidth: "500px",

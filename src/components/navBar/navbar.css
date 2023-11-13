@@ -147,6 +147,8 @@
   box-shadow: -3px 4px 5px -1px rgba(0,0,0,0.23);
   -webkit-box-shadow: -3px 4px 5px -1px rgba(0,0,0,0.23);
   -moz-box-shadow: -3px 4px 5px -1px rgba(0,0,0,0.23);
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .important-font-weight {
