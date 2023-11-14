@@ -103,7 +103,11 @@ export default function DefaultModel(props) {
                         <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: getMax(categories) > ogProduct.max ? "0.5" : undefined, pointer: getMax(categories) > ogProduct.max ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
                             if(getMax(categories) > ogProduct.max) return
                             const newProduct = {...product}
-                            if(hasStaticPositions) newProduct.categories = ogProduct.categories.map(cat => ({...cat, hidden: !categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)}))
+                            if(hasStaticPositions) newProduct.categories = ogProduct.categories.map(cat => ({
+                                ...cat, 
+                                modifiedMax: categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)?.max,
+                                hidden: !categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)
+                            }))
                             else newProduct.categories = categories
                             props.onClick(newProduct)
                         }}>

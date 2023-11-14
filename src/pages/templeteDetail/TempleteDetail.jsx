@@ -700,7 +700,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         console.log("SPRITES-NOW", characters)
         let newChars = getCategoryCharacters(product)
           // .slice(0, newChars.length - diff - 1)
-          .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
+          // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
         firstLoad = false
         setCharacters(newChars)
       })
@@ -723,8 +723,15 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   useEffect(() => {
     if(!chosen) return
 
+    let staticSeenCounters = {}
     const processBg = background => background.positions.map((pos, i) => {
-      return {
+      const cat = product.categories.find(cat => cat.name == positions[i]?.name?.[0])
+      const hasSeen = staticSeenCounters[cat?.name] >= parseInt((cat?.modifiedMax ?? cat?.max) ?? '0')
+      staticSeenCounters[cat?.name] = staticSeenCounters[cat?.name] ?? 0
+
+      console.log("DIST01-PROTO", cat?.name, cat?.hidden, parseInt(cat?.modifiedMax ?? '0'), staticSeenCounters[cat?.name])
+
+      const ret = {
         x: pos[0],
         y: pos[1],
         ogSubcategoryName: product?.ogSubcats?.[`${pos[0]},${pos[1]}`],
@@ -732,8 +739,13 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         rectWidth: product?.positionalWidths?.[`${pos[0]},${pos[1]}`],
         layer: pos[2],
         scale: pos[3],
-        hidden: product.categories.find(cat => cat.name == positions[i]?.name?.[0])?.hidden
+        hidden: hasSeen && hasStaticPositions(ogProduct) ? true : cat?.hidden,
       }
+
+      if(staticSeenCounters[cat?.name]) staticSeenCounters[cat?.name] += 1
+      else staticSeenCounters[cat?.name] = 1
+
+      return ret
     }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
 
     const sprites = characters
@@ -745,7 +757,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
     // console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
     // middling algorithm
-    console.log("SPRITES", sprites)
+    console.log("SPRITES", distribution)
     const spritedDistribution = distribution.map((x, i) => {
       const sprite = sprites[i]
       const { product: JSONProduct } = getAllParams()
@@ -815,7 +827,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
-    console.log("DIST01", sprites, finalDistribution)
+    console.log("DIST01", sprites, finalDistribution.filter(d => !d.hidden))
     if(sprites.length != 0) setDistribution(finalDistribution)
   }, [chosen, product, characters, background])
 
