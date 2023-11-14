@@ -18,6 +18,7 @@ import {
   Footer,
   GenderModel,
   DefaultModel,
+  PaymentModel,
   NavBar,
   TempleteView,
 } from "../../components";
@@ -597,6 +598,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const [realOffsets, setRealOffsets] = useState({})
   const [selectedImage, setSelectedImage] = useState(null)
 
+  const [showPaymentModel, setShowPaymentModel] = useState(null)
+  const [withCard, setWithCard] = useState(false)
+
   const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
     const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
     const subtitleHiddenEl = document.querySelector(`#${elementId} > div`)
@@ -897,6 +901,39 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
           navigate(`/?productId=${od._id}`)
       }} />}
       {selectedImage && <NestedDescription img={selectedImage} setShowModalDes={setSelectedImage}/>}
+      {showPaymentModel && (
+        <PaymentModel
+          autoSelect={autoSelect}
+          additionalData={showPaymentModel}
+          ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
+          product={product}
+          hasStaticPositions={hasStaticPositions(ogProduct)}
+          onClick={(selectedCardPayment, {rects}) => {
+            console.log("HERE, NAV")
+            setWithCard(selectedCardPayment)
+            setShowPaymentModel(null)
+            navigate(`/billingAddress?${setParam({ product: product._id })}`, {
+              state: { 
+                selections: {
+                  product: { ...product, templeteArray: undefined }, 
+                  distribution,
+                  ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
+                  background,
+                  title,
+                  subtitle,
+                  characters,
+                  realOffsets,
+                  withCard: selectedCardPayment,
+                  // templeteArray,
+                  offsets,
+                  rects,
+                }
+              }
+            })
+            // }, 1500)
+          }}
+        />
+      )}
       {defaultModel && (
         <DefaultModel
           autoSelect={autoSelect}
@@ -965,7 +1002,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
             </div>
             <div style={JSON.parse(JSON.stringify({ height: '500px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
               <canvas id="canvas" height={"500px"} width={"500px"} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-              {defaultModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
+              {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
                 zIndex: 100000000000000,
                 position: "absolute", 
                 top: -1,
@@ -977,7 +1014,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
-                  (defaultModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.sprite} style={{
+                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.sprite} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
@@ -994,7 +1031,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 }
               </>)}
               {console.log("LOGO COMP", ratios.has(background.url))}
-              {(defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
+              {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
                 top: "74px",
                 left: "100px"
               }}/>}
@@ -1024,7 +1061,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                   color: background.coordinateVariation.smallColor,
                 }}>{subtitle}</div>}
               </div>}
-              {defaultModel || chooseBackgroundModel || chooseGenderModel || selectedImage ? <></> : <MultiText background={background}/>}
+              {defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage ? <></> : <MultiText background={background}/>}
             </div>
             <div className="cactus-templete_poster-desc" style={{
               // width: ratios.has(background.url) ? "350px" : "500px",
@@ -1112,24 +1149,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 onClick={async () => {
                   // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
                   // console.log("imgs=>", img)
-                  console.log("REWORD", )
-                  navigate(`/billingAddress?${setParam({ product: product._id })}`, {
-                    state: { 
-                      selections: {
-                        product: { ...product, templeteArray: undefined }, 
-                        distribution,
-                        ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
-                        background,
-                        title,
-                        subtitle,
-                        characters,
-                        realOffsets,
-                        // templeteArray,
-                        offsets,
-                        rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
-                      }
-                    }
-                  })
+                  setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))])) })
                 }}
                 style={{ marginRight: "1.5rem" }}
                 className="cactus-templete_detail-order_button"

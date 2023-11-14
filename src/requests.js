@@ -63,7 +63,7 @@ export const authReq = async (method, endpoint, body=null, count=0) => {
 
 export function getKey(key) {
     const value = localStorage.getItem(key)
-    return JSON.parse(value ?? "null")
+    return JSON.parse(value == "{}" ? "[]" : (value ?? null))
 }
 
 export function setKey(key, value) {

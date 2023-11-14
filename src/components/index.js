@@ -10,4 +10,4 @@ export { default as CompositionModel } from './compositionModel/CompositionModel
 export { default as ChooseBackgroundModel } from './chooseBackgroundModel/ChooseBackgroundModel'
 export { default as GenderModel } from './genderModel/GenderModel'
 export { default as DefaultModel } from './genderModel/defaultModel'
-
+export { default as PaymentModel } from './genderModel/paymentModel'

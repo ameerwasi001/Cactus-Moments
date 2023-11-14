@@ -3,6 +3,7 @@ import "./navbar.css";
 import close from "../../assets/close.png";
 import menu from "../../assets/menu.png";
 import { logo, search } from "../../assets";
+import { PaymentModel } from "../../components";
 import { setParam } from '../../urlParams'
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
@@ -16,6 +17,8 @@ const Navbar = (props) => {
   const [templateArray, setTemplateArray] = useState([])
   const [loading, setLoading] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(null)
+  const [showPaymentModel, setShowPaymentModel] = useState(null)
+  const [withCard, setWithCard] = useState(false)
 
   useEffect(() => {
     req('GET', `/user/product?select=-categories`)
@@ -35,146 +38,156 @@ const Navbar = (props) => {
 
   const Menu = () => (
     <>
-      <div className="cactus__navbar-links_text_view">
-        <h1
-          onClick={() => navigate("/")}
-          style={{
-            borderBottomStyle:
-              window.location.pathname === "/"
-                ? "solid"
-                : "none",
+      {showPaymentModel ? (
+        <PaymentModel
+          autoSelect={true}
+          containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
+          additionalData={showPaymentModel}
+          ogProduct={{}}
+          product={{}}
+          hasStaticPositions={true}
+          onClick={selectedCardPayment => {
+            console.log("HERE, NAV")
+            setWithCard(selectedCardPayment)
+            setShowPaymentModel(null)
+            navigate('/billingAddress', {
+              state: {
+                selections: { withCard: selectedCardPayment }
+              }
+            })
           }}
+        />
+      ) : <>
+        <div className="cactus__navbar-links_text_view">
+          <h1
+            onClick={() => navigate("/")}
+            style={{
+              borderBottomStyle:
+                window.location.pathname === "/"
+                  ? "solid"
+                  : "none",
+            }}
+          >
+            Home
+          </h1>
+        </div>
+        <div className="cactus__navbar-links_text_view">
+          <h1
+            onClick={() => {
+              setOpenDropdown(openDropdown?.title == "poster" ? null : { title: "poster", data: templateArray })
+              // navigate("/poster")
+            }}
+            style={{
+              borderBottomStyle:
+                openDropdown?.title == "poster" 
+                  ? "solid"
+                  : "none",
+            }}
+          >
+            Poster
+          </h1>
+          {/* <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
+            setLoading(true)
+            const { product } = await req("GET", `/user/product/${od._id}`)
+            setLoading(false)
+            navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+          }}/> */}
+        </div>
+        <div className="cactus__navbar-links_text_view">
+          <h1
+            onClick={() => {
+              setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasse", "Gourde", "Sac"].map(mainDesc => ({ mainDesc })) })
+            }}
+            style={{
+              borderBottomStyle:
+                openDropdown?.title == "accessories"
+                  ? "solid"
+                  : "none",
+            }}
+          >
+            Accessories
+          </h1>
+          <DropDown title="accessories" list={openDropdown}/>
+        </div>
+        <div className="cactus__navbar-links_text_view">
+          <h1
+            onClick={() => {
+              setOpenDropdown(openDropdown?.title == "giftIdea" ? null : { title: "giftIdea", data: ["Anniversaire", "Fête des mères", "Fêtes des pères", "EGV", "Enfant"].map(mainDesc => ({ mainDesc })) })
+            }}
+            style={{
+              borderBottomStyle:
+                openDropdown?.title == "giftIdea"
+                  ? "solid"
+                  : "none",
+            }}
+          >
+            Gift Idea
+          </h1>
+          <DropDown title="giftIdea" list={openDropdown}/>
+        </div>
+        <div className="cactus__navbar-links_text_view">
+          <h1
+            onClick={() => navigate("/contactus")}
+            style={{
+              borderBottomStyle:
+                window.location.href === "http://localhost:3000/contactus"
+                  ? "solid"
+                  : "none",
+            }}
+          >
+            Contact
+          </h1>
+        </div>
+        <div className="cactus__navbar-links_text_view">
+          <h1
+            onClick={() => {
+              setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
+                (p, i) => p == "check" ? <div className="cart-item">
+                  <div></div>
+                  <div className="cart-checkout-button" onClick={() => {
+                    setShowPaymentModel(true)
+                  }}>Checkout</div>
+                </div> : p == "nodata" ? <div className="cart-item">There's nothing in your cart</div> : <div className="cart-item">
+                  <p>{p?.selections?.product?.mainDesc}</p>
+                  <img src={crossImg} className="cart-item-cross" onClick={ev => {
+                    ev.stopPropagation()
+                    const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
+                    const cart = (getKey("cart") ?? []).filter((_, j) => j != i)
+                    // delete cart[p?.selections?.product?._id]
+                    setKey("cart", cart)
+                    console.log("opendrop", cart)
+                    setOpenDropdown(openDropdown => ({
+                      // title: "cart",
+                      ...(openDropdown ?? {}),
+                      data
+                    }))
+                  }}/>
+                </div>
+              ).map(mainDesc => ({ mainDesc })) })
+            }}
+            style={{
+              borderBottomStyle:
+                openDropdown?.title == "cart"
+                  ? "solid"
+                  : "none",
+            }}
+          >
+            Cart
+          </h1>
+          <DropDown title="cart" list={openDropdown}/>
+        </div>
+        <div
+          onClick={() => navigate("/searchpage")}
+          className="cactus__navbar-links_input_view"
         >
-          Home
-        </h1>
-      </div>
-      <div className="cactus__navbar-links_text_view">
-        <h1
-          onClick={() => {
-            setOpenDropdown(openDropdown?.title == "poster" ? null : { title: "poster", data: templateArray })
-            // navigate("/poster")
-          }}
-          style={{
-            borderBottomStyle:
-              openDropdown?.title == "poster" 
-                ? "solid"
-                : "none",
-          }}
-        >
-          Poster
-        </h1>
-        <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
-          setLoading(true)
-          const { product } = await req("GET", `/user/product/${od._id}`)
-          setLoading(false)
-          navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
-        }}/>
-      </div>
-      <div className="cactus__navbar-links_text_view">
-        <h1
-          onClick={() => {
-            setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasse", "Gourde", "Sac"].map(mainDesc => ({ mainDesc })) })
-          }}
-          style={{
-            borderBottomStyle:
-              openDropdown?.title == "accessories"
-                ? "solid"
-                : "none",
-          }}
-        >
-          Accessories
-        </h1>
-        <DropDown title="accessories" list={openDropdown}/>
-      </div>
-      <div className="cactus__navbar-links_text_view">
-        <h1
-          onClick={() => {
-            setOpenDropdown(openDropdown?.title == "giftIdea" ? null : { title: "giftIdea", data: ["Anniversaire", "Fête des mères", "Fêtes des pères", "EGV", "Enfant"].map(mainDesc => ({ mainDesc })) })
-          }}
-          style={{
-            borderBottomStyle:
-              openDropdown?.title == "giftIdea"
-                ? "solid"
-                : "none",
-          }}
-        >
-          Gift Idea
-        </h1>
-        <DropDown title="giftIdea" list={openDropdown}/>
-      </div>
-      {/* <div className="cactus__navbar-links_text_view">
-        <h1
-          onClick={() => navigate("/aboutus")}
-          style={{
-            borderBottomStyle:
-              window.location.href === "http://localhost:3000/aboutus"
-                ? "solid"
-                : "none",
-          }}
-        >
-          About us
-        </h1>
-      </div> */}
-      <div className="cactus__navbar-links_text_view">
-        <h1
-          onClick={() => navigate("/contactus")}
-          style={{
-            borderBottomStyle:
-              window.location.href === "http://localhost:3000/contactus"
-                ? "solid"
-                : "none",
-          }}
-        >
-          Contact
-        </h1>
-      </div>
-      <div className="cactus__navbar-links_text_view">
-        <h1
-          onClick={() => {
-            setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
-              (p, i) => p == "check" ? <div className="cart-item">
-                <div></div>
-                <div className="cart-checkout-button" onClick={() => navigate("/billingAddress")}>Checkout</div>
-              </div> : p == "nodata" ? <div className="cart-item">There's nothing in your cart</div> : <div className="cart-item">
-                <p>{p?.selections?.product?.mainDesc}</p>
-                <img src={crossImg} className="cart-item-cross" onClick={ev => {
-                  ev.stopPropagation()
-                  const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
-                  const cart = (getKey("cart") ?? []).filter((_, j) => j != i)
-                  // delete cart[p?.selections?.product?._id]
-                  setKey("cart", cart)
-                  console.log("opendrop", cart)
-                  setOpenDropdown(openDropdown => ({
-                    // title: "cart",
-                    ...(openDropdown ?? {}),
-                    data
-                  }))
-                }}/>
-              </div>
-            ).map(mainDesc => ({ mainDesc })) })
-          }}
-          style={{
-            borderBottomStyle:
-              openDropdown?.title == "cart"
-                ? "solid"
-                : "none",
-          }}
-        >
-          Cart
-        </h1>
-        <DropDown title="cart" list={openDropdown}/>
-      </div>
-      <div
-        onClick={() => navigate("/searchpage")}
-        className="cactus__navbar-links_input_view"
-      >
-        <input disabled placeholder="Search" />
-        <img alt="" src={search} />
-      </div>
+          <input disabled placeholder="Search" />
+          <img alt="" src={search} />
+        </div>
+      </>}
     </>
   );
 
-  return (
+  return showPaymentModel ? <Menu/> : (
     <div className="cactus__navbar">
       <div className="cactus__navbar-links_logo">
         <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>

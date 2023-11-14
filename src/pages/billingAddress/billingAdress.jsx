@@ -51,6 +51,7 @@ const BillingAdress = () => {
   const { product, adults, children } = getAllParams()
   const { state } = useLocation()
   const selections = state?.selections
+  const withCard = selections?.withCard
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
@@ -114,111 +115,139 @@ const BillingAdress = () => {
               ))}
             </div>
           </div>
-          <div className="billing-address-add-billing-container">
-            <div className="billing-address-input-container1">
-              <TextInputBilling
-                inputStyle={{ width: "70%" }}
-                title={"First Name*"}
-                value={firstName}
-                onChange={ev => setFirstName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
-                type={"text"}
-              />
-              <TextInputBilling
-                inputStyle={{ width: "70%" }}
-                title={"Last Name*"}
-                value={lastName}
-                onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
-                type={"text"}
-              />
-              <TextInputBilling
-                inputStyle={{ width: "65%" }}
-                title={"Email Address*"}
-                type={"email"}
-                value={email}
-                onChange={ev => setEmail(ev.target.value)}
-              />
-              <TextInputBilling
-                inputStyle={{ width: "75%" }}
-                title={"Mobile*"}
-                type={"number"}
-                value={number}
-                onChange={ev => setNumber(ev.target.value)}
-              />
-              <div className="text-input-billing-main-container">
-                <div className="text-input-billing-divider-container">
-                  <h3>Date of Birth*</h3>
-                  <div className="text-input-billing-input-divider"></div>
+          <div className="billing-address-add-billing-container" style={{ justifyContent: withCard ? "space-between" : "center" }}>
+            {
+              withCard ? <>
+                <div className="billing-address-input-container1">
+                  <TextInputBilling
+                    inputStyle={{ width: "70%" }}
+                    title={"First Name*"}
+                    value={firstName}
+                    onChange={ev => setFirstName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
+                    type={"text"}
+                  />
+                  <TextInputBilling
+                    inputStyle={{ width: "70%" }}
+                    title={"Last Name*"}
+                    value={lastName}
+                    onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
+                    type={"text"}
+                  />
+                  <TextInputBilling
+                    inputStyle={{ width: "65%" }}
+                    title={"Email Address*"}
+                    type={"email"}
+                    value={email}
+                    onChange={ev => setEmail(ev.target.value)}
+                  />
+                  <TextInputBilling
+                    inputStyle={{ width: "75%" }}
+                    title={"Mobile*"}
+                    type={"number"}
+                    value={number}
+                    onChange={ev => setNumber(ev.target.value)}
+                  />
+                  <div className="text-input-billing-main-container">
+                    <div className="text-input-billing-divider-container">
+                      <h3>Date of Birth*</h3>
+                      <div className="text-input-billing-input-divider"></div>
+                    </div>
+                    <DropDownDate
+                      options={dayArr}
+                      selected={dayselect}
+                      setSelected={setDaySelected}
+                      bg={{ width: "10rem" }}
+                    />
+                    <div className="text-input-billing-input-divider"></div>
+                    <DropDownDate
+                      options={monthArr}
+                      selected={monthSelect}
+                      setSelected={setMonthSelected}
+                      bg={{ width: "15rem" }}
+                    />
+                    <div className="text-input-billing-input-divider"></div>
+                    <DropDownDate
+                      options={yearArr}
+                      selected={yearSelect}
+                      setSelected={setYearSelect}
+                      bg={{ width: "10rem" }}
+                    />
+                  </div>
                 </div>
-                <DropDownDate
-                  options={dayArr}
-                  selected={dayselect}
-                  setSelected={setDaySelected}
-                  bg={{ width: "10rem" }}
-                />
-                <div className="text-input-billing-input-divider"></div>
-                <DropDownDate
-                  options={monthArr}
-                  selected={monthSelect}
-                  setSelected={setMonthSelected}
-                  bg={{ width: "15rem" }}
-                />
-                <div className="text-input-billing-input-divider"></div>
-                <DropDownDate
-                  options={yearArr}
-                  selected={yearSelect}
-                  setSelected={setYearSelect}
-                  bg={{ width: "10rem" }}
-                />
-              </div>
-            </div>
-            <div className="billing-address-input-container2">
-              <div
-                style={{ width: "100%" }}
-                className="text-input-billing-main-container"
-              >
-                <div className="text-input-billing-divider-container">
-                  <h3>Country*</h3>
-                  <div className="text-input-billing-input-divider"></div>
+                <div className="billing-address-input-container2">
+                  <div
+                    style={{ width: "100%" }}
+                    className="text-input-billing-main-container"
+                  >
+                    <div className="text-input-billing-divider-container">
+                      <h3>Country*</h3>
+                      <div className="text-input-billing-input-divider"></div>
+                    </div>
+                    <DropDownDate
+                      options={countryArr}
+                      selected={countryselect}
+                      setSelected={setCountrySelected}
+                      bg={{ width: "40rem" }}
+                    />
+                  </div>
+                  <TextInputBilling
+                    inputStyle={{ width: "80%" }}
+                    title={"City*"}
+                    type={"text"}
+                    value={city}
+                    onChange={ev => setCity(ev.target.value)}
+                  />
+                  <TextInputBilling
+                    inputStyle={{ width: "75%" }}
+                    title={"Post Code*"}
+                    extraDividerStyles={{ marginRight: "1rem" }}
+                    type={"text"}
+                    value={postCode}
+                    onChange={ev => {
+                      setPostCode(ev.target.value.split("").map(ch => [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => x.toString()).includes(ch) ? ch : "").join(""))
+                    }}
+                  />
+                  <TextInputBilling
+                    inputStyle={{ width: "75%" }}
+                    title={"Address"}
+                    type={"text"}
+                    value={address1}
+                    onChange={ev => setAddres1(ev.target.value)}
+                  />
+                  <TextInputBilling
+                    inputStyle={{ width: "65%" }}
+                    title={"Address line 2"}
+                    type={"text"}
+                    value={address2}
+                    onChange={ev => setAddres2(ev.target.value)}
+                  />
                 </div>
-                <DropDownDate
-                  options={countryArr}
-                  selected={countryselect}
-                  setSelected={setCountrySelected}
-                  bg={{ width: "40rem" }}
-                />
-              </div>
-              <TextInputBilling
-                inputStyle={{ width: "80%" }}
-                title={"City*"}
-                type={"text"}
-                value={city}
-                onChange={ev => setCity(ev.target.value)}
-              />
-              <TextInputBilling
-                inputStyle={{ width: "75%" }}
-                title={"Post Code*"}
-                extraDividerStyles={{ marginRight: "1rem" }}
-                type={"text"}
-                value={postCode}
-                onChange={ev => {
-                  setPostCode(ev.target.value.split("").map(ch => [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => x.toString()).includes(ch) ? ch : "").join(""))
-                }}
-              />
-              <TextInputBilling
-                inputStyle={{ width: "75%" }}
-                title={"Address"}
-                type={"text"}
-                value={address1}
-                onChange={ev => setAddres1(ev.target.value)}
-              />
-              <TextInputBilling
-                inputStyle={{ width: "65%" }}
-                title={"Address line 2"}
-                type={"text"}
-                value={address2}
-                onChange={ev => setAddres2(ev.target.value)}
-              />
-            </div>
+              </> : <>
+                  <div className="billing-address-input-container3">
+                    <TextInputBilling
+                      inputStyle={{ width: "70%" }}
+                      title={"Nom de famille*"}
+                      value={lastName}
+                      onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
+                      type={"text"}
+                    />
+                    <TextInputBilling
+                      inputStyle={{ width: "70%" }}
+                      title={"Email*"}
+                      value={email}
+                      onChange={ev => setEmail(ev.target.value)}
+                      type={"text"}
+                    />
+                    <TextInputBilling
+                      inputStyle={{ width: "75%" }}
+                      title={"Téléphone*"}
+                      type={"number"}
+                      value={number}
+                      onChange={ev => setNumber(ev.target.value)}
+                    />
+                  </div>
+              </>
+            }
           </div>
         </div>
         <div className="billing-address-move-next-main-container">
@@ -236,17 +265,29 @@ const BillingAdress = () => {
             </p>
           </div>
           <div
-            style={{ opacity: ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true) ? 1 : 0.5 }}
+            style={{ opacity: 
+              (
+                (withCard && (ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))) ||
+                (!withCard && ischecked && email.includes("@") && Object.entries({lastName, number, email}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))
+              ) ? 
+                1 : 
+                0.5 
+            }}
             onClick={() => {
               console.log("SELECTECTIONSS", selections)
               if(!ischecked) return setError("Agreement with the terms and conditions is requred")
               let error = ""
               const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
+              const notEmptyForCode = {lastName, number, email}
               if(!email.includes("@")) return 
-              Object.entries(notEmpty).forEach(([f, x]) => {
+              if(withCard) Object.entries(notEmpty).forEach(([f, x]) => {
                 if(!x) error = `${f} is required`
                 window.scrollTo(0, 0)
-              })
+              }) 
+              else Object.entries(notEmptyForCode).forEach(([f, x]) => {
+                if(!x) error = `${f} is required`
+                window.scrollTo(0, 0)
+              }) 
               if(error) {
                 window.scrollTo(0, 0)
                 return setError(error)

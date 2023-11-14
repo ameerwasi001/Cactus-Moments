@@ -71,6 +71,12 @@
   flex-direction: column;
 }
 
+.billing-address-input-container3 {
+  width: 100rem;
+  display: flex;
+  flex-direction: column;
+}
+
 .billing-address-move-next-main-container {
   width: 84%;
   height: 10rem;

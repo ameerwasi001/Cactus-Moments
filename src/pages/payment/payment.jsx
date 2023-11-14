@@ -14,11 +14,11 @@ const getPrice = () => (getKey("cart") ?? []).map(order => order?.selections?.pr
 const Payment = () => {
   const { state } = useLocation()
   // { selections: {product, ...restProduct} }
-  const { product, ...restProduct } = state ?? {}
+  const { product, withCard, ...restProduct } = state ?? {}
   const fromCart = !product
   console.log("product-price", product, restProduct)
   const price = fromCart ? getPrice() : product?.price
-  const [selectedMethod, setSelectedMethod] = useState("card")
+  const [selectedMethod, setSelectedMethod] = useState(withCard ? "card" : "code")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
   const [cvv, setCvv] = useState("")
@@ -89,13 +89,12 @@ const Payment = () => {
               </div>
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
-                  <div className="paymwnt-methood-credit-card-img-container">
-                    <img src={selectedMethod == "card" ? radioFilled : radio} alt="img" onClick={() => setSelectedMethod(selectedMethod == "card" ? "code" : "card")} />
+                  {selectedMethod == "card" && <div className="paymwnt-methood-credit-card-img-container">
                     <div className="payment-method-credit-card-img">
                       <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
                     </div>
                     <h2>Credit card</h2>
-                  </div>
+                  </div>}
                   <div></div>
                 </div>
                 {selectedMethod == "card" && <div className="payment-text-input-main-container">
@@ -146,13 +145,12 @@ const Payment = () => {
                   </div>
                 </div>}
                 <div className="payment-method-credit-card-title-container">
-                  <div className="paymwnt-methood-credit-card-img-container">
-                    <img src={selectedMethod == "card" ? radio : radioFilled} alt="img" onClick={() => setSelectedMethod(selectedMethod == "code" ? "card" : "code")} />
+                  {selectedMethod == "code" && <div className="paymwnt-methood-credit-card-img-container">
                     <div className="payment-method-credit-card-img">
                       <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
                     </div>
                     <h2>Code</h2>
-                  </div>
+                  </div>}
                   <div></div>
                 </div>
                 {selectedMethod == "code" && <div className="payment-text-input-main-container">
@@ -211,6 +209,7 @@ const Payment = () => {
                               selectedDimension,
                               selectedFrame,
                               code,
+                              withCard,
                               ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
                               orderDate: new Date().toLocaleDateString(),
                             },
