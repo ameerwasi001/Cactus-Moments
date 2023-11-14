@@ -46,17 +46,18 @@ const minCategoryGivenStatics = product => {
 const getCategoryMaxes = (max, categories, ogProduct) => {
     const staicsDict = minCategoryGivenStatics(ogProduct)
     categories?.forEach(cat => cat.min = staicsDict[cat.name])
-    console.log(staicsDict, categories)
+    console.log("MAX-START", max, staicsDict, categories)
     const maxDict = Object.fromEntries(categories.map(cat => [cat.name, cat.min]))
     let runningMax = 0
     for(const cat of categories) {
-        console.log(cat.max, maxDict[cat.name]+1)
+        console.log("MAX-I", categories.length, runningMax)
         if(maxDict[cat.name] + 1 > parseInt(cat.max)) continue
         if(runningMax >= max) break
+        if(Object.values(maxDict).reduce((a, b) => a+b, 0) + 1 > max) break
         maxDict[cat.name] += 1
         runningMax += 1
     }
-    // console.log(maxDict, runningMax, max)
+    console.log("MAX-S", maxDict, runningMax, max)
     const newCategories = categories.map(cat => ({ ...cat, max: maxDict[cat.name] }))
     return newCategories
 }
@@ -71,7 +72,8 @@ export default function DefaultModel(props) {
     ogProduct.max = parseInt(ogProduct.max)
     const mins = Object.fromEntries(Object.entries(minCategoryGivenStatics(ogProduct)).map(([k, _]) => [k, 0]))
     console.log("MINSSSS", mins)
-    const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : props.product.categories)
+    // const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : props.product.categories)
+    const [categories, setCategories] = useState(getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct))
     const [overSelected, setOverselected] = useState(false)
 
     useEffect(() => console.log("MODAL PRODUCT", product), [product])
