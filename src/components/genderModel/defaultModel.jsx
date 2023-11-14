@@ -39,7 +39,8 @@ const minCategoryGivenStatics = product => {
         if(p.isStatic) {
             console.log("P", p.staticAssociation)
             dict[p.staticAssociation[0]] += 1
-        }}
+        }
+    }
     return dict
 }
 
@@ -47,11 +48,12 @@ const getCategoryMaxes = (max, categories, ogProduct) => {
     const staicsDict = minCategoryGivenStatics(ogProduct)
     categories?.forEach(cat => cat.min = staicsDict[cat.name])
     console.log("MAX-START", max, staicsDict, categories)
-    const maxDict = Object.fromEntries(categories.map(cat => [cat.name, cat.min]))
+    const maxDict = Object.fromEntries(categories.map(cat => [cat.name, 0]))    
     let runningMax = 0
     for(const cat of categories) {
         console.log("MAX-I", categories.length, runningMax)
-        if(maxDict[cat.name] + 1 > parseInt(cat.max)) continue
+        const cmax = parseInt(cat.archiveMax ? cat.archiveMax : (cat.max ? cat.max : '0'))
+        if(maxDict[cat.name] + 1 > cmax) continue
         if(runningMax >= max) break
         if(Object.values(maxDict).reduce((a, b) => a+b, 0) + 1 > max) break
         maxDict[cat.name] += 1
@@ -62,18 +64,18 @@ const getCategoryMaxes = (max, categories, ogProduct) => {
     return newCategories
 }
 
-const getMax = categories => categories.map(cat => cat.max).map(x => parseInt(x)).reduce((a, b) => a+b, 0)
+const getMax = categories => categories.map(cat => cat.archiveMax ?? cat.max).map(x => parseInt(x)).reduce((a, b) => a+b, 0)
+const processMaxes = categories => categories.map(cat => ({...cat, max: parseInt(cat.archiveMax ?? cat.max)}))
 
 export default function DefaultModel(props) {
     const product = props.product
     const hasStaticPositions = props.hasStaticPositions
-                            console.log("STATICITY", hasStaticPositions, props.ogProduct)
     const ogProduct = props.ogProduct
     ogProduct.max = parseInt(ogProduct.max)
     const mins = Object.fromEntries(Object.entries(minCategoryGivenStatics(ogProduct)).map(([k, _]) => [k, 0]))
-    console.log("MINSSSS", mins)
-    // const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : props.product.categories)
-    const [categories, setCategories] = useState(getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct))
+    console.log("_PRODUCT111", product)
+    const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : processMaxes(props.product.categories))
+    // const [categories, setCategories] = useState(getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct))
     const [overSelected, setOverselected] = useState(false)
 
     useEffect(() => console.log("MODAL PRODUCT", product), [product])
@@ -104,13 +106,15 @@ export default function DefaultModel(props) {
                         </div>)}
                         <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: getMax(categories) > ogProduct.max ? "0.5" : undefined, pointer: getMax(categories) > ogProduct.max ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
                             if(getMax(categories) > ogProduct.max) return
-                            const newProduct = {...product}
+                            const newProduct = JSON.parse(JSON.stringify(product))
                             if(hasStaticPositions) newProduct.categories = ogProduct.categories.map(cat => ({
                                 ...cat, 
                                 modifiedMax: categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)?.max,
+                                archiveMax: categories.find(cat2 => cat2.name == cat.name)?.max,
                                 hidden: !categories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)
                             }))
                             else newProduct.categories = categories
+                            console.log("_PRODUCT111_2", categories, newProduct)
                             props.onClick(newProduct)
                         }}>
                             <h3>Select</h3>
