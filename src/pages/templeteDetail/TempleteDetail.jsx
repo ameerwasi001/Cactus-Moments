@@ -650,8 +650,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
       const ratio = height/width
       if(ratio >= 1.1 && ratio <= 1.5) ratios.add(background.url)
     }
-    setTitle(product.name)
-    setSubtitle(product.subtitle)
+    // setTitle(product.name)
+    // setSubtitle(product.subtitle)
     console.log("PREVIEWS", product.previews)
     setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url:x} } }))
     setRatios(ratios)

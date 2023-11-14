@@ -212,6 +212,7 @@ const Payment = () => {
                               selectedFrame,
                               code,
                               ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
+                              orderDate: new Date().toLocaleDateString(),
                             },
                             product: product._id,
                             selections: {product, ...restProduct}
@@ -252,6 +253,7 @@ const Payment = () => {
                           selectedFrame,
                           code,
                           ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
+                          orderDate: new Date().toLocaleDateString(),
                         },
                         product: product._id,
                         selections: {product, ...restProduct}
