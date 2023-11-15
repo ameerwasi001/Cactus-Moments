@@ -86,12 +86,12 @@ const Navbar = (props) => {
           >
             Poster
           </h1>
-          {/* <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
+          <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
             setLoading(true)
             const { product } = await req("GET", `/user/product/${od._id}`)
             setLoading(false)
             navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
-          }}/> */}
+          }}/>
         </div>
         <div className="cactus__navbar-links_text_view">
           <h1
