@@ -21,6 +21,9 @@ import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
 
+const getS3Url = id => `https://drivebuddyz.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
+const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => JSON.parse(decodeURIComponent(x)))
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
@@ -50,11 +53,16 @@ export default function Dashboard() {
   }, [search])
 
   useEffect(() => {
-    req('GET', `/user/product?select=-categories`)
+    req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry mainDesc defaultIllustration backgrounds price")}`)
       .then(({products}) => {
         console.log(products)
-        setTemplateArray(products?.filter(prod => prod.backgrounds.length)?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: p.defaultIllustration ? {url: p.defaultIllustration} : p.backgrounds[p.defaultBackground]} }))
+        console.log("setting")
+        const mappedProducts = products?.filter(prod => prod.backgrounds.length)?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: p.defaultIllustration ? {url: p.defaultIllustration} : p.backgrounds[p.defaultBackground]} })
+        setTemplateArray(mappedProducts)
+        console.log("done setting", mappedProducts)
+        setLoading(false)
       })
+      .catch(e => console.error(e))
   }, [])
 
   useEffect(() => {
@@ -107,7 +115,7 @@ export default function Dashboard() {
                   setLoading(true)
                   const el = document.getElementById("main-products")
                   el?.scrollIntoView()
-                  const { product } = await req("GET", `/user/product/${item._id}`)
+                  const product = await fetchObejct(item._id)
                   setLoading(false)
                   navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
                 }}
