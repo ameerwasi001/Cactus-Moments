@@ -5,7 +5,7 @@ import menu from "../../assets/menu.png";
 import { logo, search } from "../../assets";
 import { PaymentModel } from "../../components";
 import { setParam } from '../../urlParams'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { getKey, req, setKey } from '../../requests'
 
@@ -74,8 +74,9 @@ const Navbar = (props) => {
         <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => {
-              setOpenDropdown(openDropdown?.title == "poster" ? null : { title: "poster", data: templateArray })
-              // navigate("/poster")
+              // document?.getElementById("main-templates")?.scrollIntoView()
+              // setOpenDropdown(openDropdown?.title == "poster" ? null : { title: "poster", data: templateArray })
+              navigate("/?category=poster")
             }}
             style={{
               borderBottomStyle:
@@ -86,17 +87,17 @@ const Navbar = (props) => {
           >
             Poster
           </h1>
-          <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
+          {/* <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
             setLoading(true)
             const { product } = await req("GET", `/user/product/${od._id}`)
             setLoading(false)
             navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
-          }}/>
+          }}/> */}
         </div>
         <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => {
-              setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasse", "Gourde", "Sac"].map(mainDesc => ({ mainDesc })) })
+              setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasse", "Sac"].map(mainDesc => ({ mainDesc })) })
             }}
             style={{
               borderBottomStyle:
@@ -107,9 +108,16 @@ const Navbar = (props) => {
           >
             Accessories
           </h1>
-          <DropDown title="accessories" list={openDropdown}/>
+          <DropDown title="accessories" list={openDropdown} onClick={item => {
+            const category = item.mainDesc
+            console.log("HERE, NAV ITEM", )
+            // setWithCard(selectedCardPayment)
+            // setShowPaymentModel(null)
+            setOpenDropdown(null)
+            navigate(`/?category=${category}`)
+          }}/>
         </div>
-        <div className="cactus__navbar-links_text_view">
+        {/* <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => {
               setOpenDropdown(openDropdown?.title == "giftIdea" ? null : { title: "giftIdea", data: ["Anniversaire", "Fête des mères", "Fêtes des pères", "EGV", "Enfant"].map(mainDesc => ({ mainDesc })) })
@@ -124,7 +132,7 @@ const Navbar = (props) => {
             Gift Idea
           </h1>
           <DropDown title="giftIdea" list={openDropdown}/>
-        </div>
+        </div> */}
         <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => navigate("/contactus")}

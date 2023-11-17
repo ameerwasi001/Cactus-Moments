@@ -16,7 +16,7 @@ export default function TempleteSliderView(props) {
     }, [])
 
     return (
-        <div className="cactus-dashboard-slider_top_view">
+        <div id="main-templates" className="cactus-dashboard-slider_top_view">
             <div className="cactus-dashboard-slider_title_view" style={props.style}>
                 <h1>{props.title}</h1>
                 {props.viewAll &&

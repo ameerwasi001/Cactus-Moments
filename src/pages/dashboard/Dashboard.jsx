@@ -40,6 +40,7 @@ export default function Dashboard() {
   useEffect(() => {
     const f = async () => {
       const productId = search?.split("productId=")?.[1]
+      const categoryName = search?.split("category=")?.[1]
       if(productId) {
         const el = document.getElementById("main-products")
         el?.scrollIntoView()
@@ -47,6 +48,9 @@ export default function Dashboard() {
         const { product } = await req("GET", `/user/product/${productId}`)
         setLoading(false)
         navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+      } else if(categoryName) {
+        setSelectedCategory(categoryName)
+        document?.getElementById("main-templates")?.scrollIntoView()
       }
     }
     f()
@@ -106,7 +110,10 @@ export default function Dashboard() {
             <img alt="" src={homeImage2} />
           </div>
         </div>
-        <TempleteSliderView title={"Popular Templates"} viewAll setSelectedCategory={setSelectedCategory}/>
+        <TempleteSliderView title={"Popular Templates"} viewAll setSelectedCategory={x => {
+          setSelectedCategory(x)
+          navigate(`/?category=${x}`)
+        }}/>
         <div id="main-products" className="cactus-dashboard-templete_top_view">
         {loading ? <ClipLoader color="black" /> : templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).map((item) => {
             return (
