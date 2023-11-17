@@ -1111,6 +1111,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               <CustomInputWithDropdown
                 type={"name"}
                 value={"Edit Name"}
+                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
                 subtitle={subtitle}
                 onChangeSubtitle={setSubtitle}
                 title={title}
@@ -1124,6 +1125,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 onClickButton={() => setChooseBackgroundModel(true)}
                 type={"background"}
                 value={"Edit Background"}
+                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
                 dropdownValue={showEditBackgroundDropdown}
                 dropdownData={{image: product.backgrounds[product.defaultBackground]}}
                 onClickEditNameDropdown={() =>
@@ -1146,6 +1148,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                   }))})}
                   type={"adult"}
                   categoryName={name}
+                  modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
                   value={`Edit ${name} ${i+1}`}
                   dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
                   dropdownData={{ image: characters[totalIndex] }}
