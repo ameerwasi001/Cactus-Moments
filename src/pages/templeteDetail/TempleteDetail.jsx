@@ -779,8 +779,10 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
       let categoryScale = foundSubcategory?.categoryScale
       let fixedOffset = foundSubcategory?.fixedOffset
       let fixedWidth = foundSubcategory?.fixedWidth
+      let categoryLayer = foundSubcategory?.layer
 
       if(!categoryScale) categoryScale = foundParent?.categoryScale
+      if(!categoryLayer) categoryLayer = foundParent?.layer
       if(!fixedOffset) fixedOffset = foundParent?.fixedOffset
       if(!fixedWidth) fixedWidth = foundParent?.fixedWidth
 
@@ -796,6 +798,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         ...x, 
         ogscat: foundSubcategory,
         ogparent: foundParent,
+        categoryLayer,
         subcategoryName: foundSubcategory?.name, 
         fixedOffset,
         fixedWidth,
@@ -1026,7 +1029,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
-                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.sprite} style={{
+                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.sprite} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
@@ -1038,7 +1041,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                     scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)*(product.scaleAddition == 0 || !product.scaleAddition ? 1 : product.scaleAddition/100)}`,
                     maxWidth: "500px",
                     transformOrigin: "0 0",
-                    zIndex: 100*(sprite.layer+1)
+                    zIndex: 100*(sprite.layer+1)+((sprite?.categoryLayer ?? 0)*1000)
                   }}/>)
                 }
               </>)}
