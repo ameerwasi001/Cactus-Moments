@@ -33,6 +33,14 @@ export default function GenderModel(props) {
                     {genderArray.filter(cat => cat.parent == selectedParent || !cat.parent).map((item) => {
                         return (
                             <div key={item.id} onClick={() => {
+                                console.log("cbox", item.id, selectedGender.id, selectedParent, item?.title)
+                                if(item.id == selectedGender.id) {
+                                    setEverSelects(false)
+                                    // setSelectedData({ index: -1, index: props.index })
+                                    setSelectedGender({ id: 0 })
+                                    setSelectedParent("none")
+                                    return
+                                }
                                 if(!item.parent)setSelectedParent(item.title)
                                 setSelectedGender(item)
                                 setEverSelects(true)
