@@ -383,7 +383,7 @@ const hasStaticPositions = product => {
 }
 
 
-const accImageIndexes = (arg) => {
+const accImageIndexes = (hiddenCats, arg) => {
   let i = 0
   const newArr = arg.map(([cat, images]) => {
     return [
@@ -600,6 +600,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
   const [showPaymentModel, setShowPaymentModel] = useState(null)
   const [withCard, setWithCard] = useState(false)
+  const [hiddenCentralCategories, setHiddenCentralCategories] = useState({})
 
   const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
     const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
@@ -697,12 +698,13 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
         // Setting the required states
         // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
-        console.log("SPRITES-NOW", characters)
+        console.log("SPRITES-NOW", distribution, characters)
         let newChars = getCategoryCharacters(product)
           // .slice(0, newChars.length - diff - 1)
-          // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
+          .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
         firstLoad = false
-        setCharacters(newChars)
+        if(hasStaticPositions(product)) setCharacters(getCategoryCharacters(product))
+        else setCharacters(newChars)
       })
   }, [product])
 
@@ -724,13 +726,19 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     if(!chosen) return
 
     let staticSeenCounters = {}
+    const hiddenCentralCategories = {}
+    const categoryCounters = {}
     const processBg = background => background.positions.map((pos, i) => {
       const cat = product.categories.find(cat => cat.name == positions[i]?.name?.[0])
       const hasSeen = staticSeenCounters[cat?.name] >= parseInt((cat?.modifiedMax ?? cat?.max) ?? '0')
       staticSeenCounters[cat?.name] = staticSeenCounters[cat?.name] ?? 0
+      const hidden = hasSeen && hasStaticPositions(ogProduct) ? true : cat?.hidden
 
       console.log("DIST01-PROTO", cat?.name, cat?.hidden, parseInt(cat?.modifiedMax ?? '0'), staticSeenCounters[cat?.name])
 
+      const catCounter = categoryCounters[`${cat?.name}`] ?? 0
+      hiddenCentralCategories[`${cat?.name} ${(categoryCounters[`${cat?.name}`] ?? 0) + 1}`] = hidden
+      categoryCounters[`${cat?.name}`] = catCounter + 1
       const ret = {
         x: pos[0],
         y: pos[1],
@@ -739,7 +747,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         rectWidth: product?.positionalWidths?.[`${pos[0]},${pos[1]}`],
         layer: pos[2],
         scale: pos[3],
-        hidden: hasSeen && hasStaticPositions(ogProduct) ? true : cat?.hidden,
+        hidden,
       }
 
       if(staticSeenCounters[cat?.name]) staticSeenCounters[cat?.name] += 1
@@ -792,7 +800,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
       console.log(
         "FINDCATEGORY-urix",
-        foundSubcategory
+        hiddenCentralCategories
       )
       return { 
         ...x, 
@@ -832,6 +840,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
     console.log("DIST01", sprites, finalDistribution.filter(d => !d.hidden))
     if(sprites.length != 0) setDistribution(finalDistribution)
+    setHiddenCentralCategories(hiddenCentralCategories)
   }, [chosen, product, characters, background])
 
   useEffect(() => {
@@ -1136,7 +1145,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 }
               />
               {
-                accImageIndexes(product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => <CustomInputWithDropdown
+                accImageIndexes(hiddenCentralCategories, product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => (hiddenCentralCategories[`${name} ${i+1}`] && hasStaticPositions(product)) ? <></> : <CustomInputWithDropdown
                   containerStyle={{ display: product.categories.find(cat => cat.name == name)?.hidden ? "none" : undefined }}
                   onClickButton={() => setChooseGenderModel({_: console.log("PARENT-ARRANGEMENT", ), type: name, totalIndex, index: i, array: arrangeByParent(product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
                     const giveni = findIndex(cat => cat.name == name,  product.categories)
