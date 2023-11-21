@@ -701,7 +701,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         console.log("SPRITES-NOW", distribution, characters)
         let newChars = getCategoryCharacters(product)
           // .slice(0, newChars.length - diff - 1)
-          .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
+          // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
         firstLoad = false
         if(hasStaticPositions(product)) setCharacters(getCategoryCharacters(product))
         else setCharacters(newChars)
