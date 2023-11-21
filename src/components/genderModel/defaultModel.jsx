@@ -117,9 +117,11 @@ export default function DefaultModel(props) {
                             console.log("_PRODUCT111_2", categories, newProduct)
                             props.onClick(newProduct)
                         }}>
-                            <h3>Select</h3>
+                            <h3>Choisir</h3>
                         </button>
-                        {getMax(categories) > ogProduct.max && <div style={{ color: "red", maxWidth: "20rem", marginTop: "2rem" }}>Only {ogProduct.max} characters are allowed, you have selected {getMax(categories)} characters</div>}
+                        {getMax(categories) > ogProduct.max && <div style={{ color: "red", maxWidth: "20rem", marginTop: "2rem" }}>
+                            Seulement {ogProduct.max} caractères sont autorisés, vous avez sélectionné {getMax(categories)} caractères.
+                        </div>}
                     </div>
                 </div>
                

@@ -140,6 +140,26 @@
   flex-direction: column;
 }
 
+.after-payment-text-main-container > h3 {
+  font-family: "K2D";
+  font-size: 15px;
+  color: #263238;
+}
+
+.after-payment-text-main-container > h6 {
+  font-family: "K2D";
+  font-size: 12px;
+  color: #263238;
+}
+
+.after-payment-text-main-container > ol {
+  margin-left: 2rem;
+  font-family: "K2D";
+  font-size: 12px;
+  color: #263238;
+  margin-bottom: 2rem;
+}
+
 /* -----------Media Query------------ */
 
 @media screen and (max-width: 720px) {

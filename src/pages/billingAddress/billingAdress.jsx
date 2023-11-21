@@ -15,7 +15,7 @@ const mrArr = [
   },
   {
     id: 1,
-    title: "Mrs",
+    title: "Mme",
   },
 ];
 
@@ -52,6 +52,8 @@ const BillingAdress = () => {
   const { state } = useLocation()
   const selections = state?.selections
   const withCard = selections?.withCard
+  const minorBilling = selections?.minorBilling
+  console.log("FSELECT", selections)
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
@@ -95,7 +97,7 @@ const BillingAdress = () => {
       <Navbar />
       <div className="billing-address-main-container">
         <div className="billing-address-add-billing-main-container">
-          <h1>Billing Address</h1>
+          <h1>{minorBilling ? 'Adresse de facturation' : `Adresse d'envoi`}</h1>
 
           <div id="err" style={{ display: error ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>
           <div className="billing-address-select-mr-container">
@@ -117,39 +119,39 @@ const BillingAdress = () => {
           </div>
           <div className="billing-address-add-billing-container" style={{ justifyContent: withCard ? "space-between" : "center" }}>
             {
-              withCard ? <>
+              <>
                 <div className="billing-address-input-container1">
                   <TextInputBilling
                     inputStyle={{ width: "70%" }}
-                    title={"First Name*"}
+                    title={"Prénom*"}
                     value={firstName}
                     onChange={ev => setFirstName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
                     type={"text"}
                   />
                   <TextInputBilling
                     inputStyle={{ width: "70%" }}
-                    title={"Last Name*"}
+                    title={"Nom de famille*"}
                     value={lastName}
                     onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
                     type={"text"}
                   />
                   <TextInputBilling
                     inputStyle={{ width: "65%" }}
-                    title={"Email Address*"}
+                    title={"Adresse mail*"}
                     type={"email"}
                     value={email}
                     onChange={ev => setEmail(ev.target.value)}
                   />
                   <TextInputBilling
                     inputStyle={{ width: "75%" }}
-                    title={"Mobile*"}
+                    title={"Numéro de téléphone*"}
                     type={"number"}
                     value={number}
                     onChange={ev => setNumber(ev.target.value)}
                   />
                   <div className="text-input-billing-main-container">
                     <div className="text-input-billing-divider-container">
-                      <h3>Date of Birth*</h3>
+                      <h3>Date de naissance*</h3>
                       <div className="text-input-billing-input-divider"></div>
                     </div>
                     <DropDownDate
@@ -180,7 +182,7 @@ const BillingAdress = () => {
                     className="text-input-billing-main-container"
                   >
                     <div className="text-input-billing-divider-container">
-                      <h3>Country*</h3>
+                      <h3>Pays{minorBilling ? '' : '*'}</h3>
                       <div className="text-input-billing-input-divider"></div>
                     </div>
                     <DropDownDate
@@ -192,14 +194,14 @@ const BillingAdress = () => {
                   </div>
                   <TextInputBilling
                     inputStyle={{ width: "80%" }}
-                    title={"City*"}
+                    title={`Ville${minorBilling ? '' : '*'}`}
                     type={"text"}
                     value={city}
                     onChange={ev => setCity(ev.target.value)}
                   />
                   <TextInputBilling
                     inputStyle={{ width: "75%" }}
-                    title={"Post Code*"}
+                    title={`Code postal${minorBilling ? '' : '*'}`}
                     extraDividerStyles={{ marginRight: "1rem" }}
                     type={"text"}
                     value={postCode}
@@ -209,43 +211,19 @@ const BillingAdress = () => {
                   />
                   <TextInputBilling
                     inputStyle={{ width: "75%" }}
-                    title={"Address"}
+                    title={"Adresse"}
                     type={"text"}
                     value={address1}
                     onChange={ev => setAddres1(ev.target.value)}
                   />
                   <TextInputBilling
                     inputStyle={{ width: "65%" }}
-                    title={"Address line 2"}
+                    title={"Adresse line 2"}
                     type={"text"}
                     value={address2}
                     onChange={ev => setAddres2(ev.target.value)}
                   />
                 </div>
-              </> : <>
-                  <div className="billing-address-input-container3">
-                    <TextInputBilling
-                      inputStyle={{ width: "70%" }}
-                      title={"Nom de famille*"}
-                      value={lastName}
-                      onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
-                      type={"text"}
-                    />
-                    <TextInputBilling
-                      inputStyle={{ width: "70%" }}
-                      title={"Email*"}
-                      value={email}
-                      onChange={ev => setEmail(ev.target.value)}
-                      type={"text"}
-                    />
-                    <TextInputBilling
-                      inputStyle={{ width: "75%" }}
-                      title={"Téléphone*"}
-                      type={"number"}
-                      value={number}
-                      onChange={ev => setNumber(ev.target.value)}
-                    />
-                  </div>
               </>
             }
           </div>
@@ -275,7 +253,7 @@ const BillingAdress = () => {
             }}
             onClick={() => {
               console.log("SELECTECTIONSS", selections)
-              if(!ischecked) return setError("Agreement with the terms and conditions is requred")
+              if(!ischecked) return setError("L'accord avec les termes et conditions est requis.")
               let error = ""
               const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
               const notEmptyForCode = {lastName, number, email}
@@ -317,7 +295,7 @@ const BillingAdress = () => {
             }}
             className="billing-address-move-next-btn-container"
           >
-            <p>Next</p>
+            <p>Suivant</p>
           </div>
         </div>
       </div>

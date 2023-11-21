@@ -145,7 +145,7 @@ export default function Dashboard() {
               trips, outing, couple trips etc
             </h3> */}
             <h4>
-              Nous sommes Robin et Ann, le duo derrière Cactus Moments. Passionnés par le sport et l'art, nous sommes dévoués à transformer vos moments sportifs, familiaux et entre amis en souvenirs personnalisés.{" "}
+            Nous sommes Robin et Ann, le duo derrière Cactus Moments. Passionnés par le sport et la création artistique, nous sommes dévoués à transformer vos moments sportifs, familiaux et entre amis en souvenirs personnalisés.{" "}
             </h4>
             <div className="cactus-dashboard-contact_us_form_button_view-container">
               {/* <div

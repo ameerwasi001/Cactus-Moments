@@ -64,43 +64,37 @@ const getCategoryMaxes = (max, categories, ogProduct) => {
 const getMax = categories => categories.map(cat => cat.max).map(x => parseInt(x)).reduce((a, b) => a+b, 0)
 
 export default function DefaultModel(props) {
-    const options = [
-        {
-            id: 1,
-            text: "Paiement par carte bancaire avec livraison à domicile (livraison gratuite à partir de 50 euros) "
-        },
-        {
-            id: 2,
-            text: "Paiement par carte et récupération de l'achat au marché de Noël d'Arras 2023 (sans frais de livraison)"
-        },
-        {
-            id: 3,
-            text: "Achat au marché de Noël d'Arras 2023 avec code"
-        },
-    ]
+
+    const options = Object.entries(props?.additionalData?.selections ?? {})
+        .filter(([k]) => k.startsWith("pricing-"))
+        .map(([k, answer]) => ({ question: k.replace("pricing-", ""), answer }))
+
     const [selectedOption, setSelectedOption] = useState(null)
 
     return (
-        <div style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
-            <div style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
+        <div onClick={() => props.closeModal()} style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
+            <div onClick={ev => ev.stopPropagation()} style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
-                        {options.map(opt => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
-                            <div style={{ display: 'flex', width: '30rem', alignItems: 'center', fontFamily: "K2D" }}>
-                                <img src={opt.id == selectedOption ? radioFilled : radio} style={{ marginRight: "1rem", cursor: "pointer" }} onClick={() => setSelectedOption(selectedOption == opt.id ? null : opt.id)} />
-                                <h2>{opt?.text}</h2>
+                        {options.map((option, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
+                            <div style={{ display: 'flex', width: '20rem', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <h2>{option?.question}</h2>
+                                <Select disabled className='option-disabled' style={{ width: "15rem" }} value={option.answer}>
+                                    {/* {console.log("CNAME", category?.name, -mins[category?.name])} */}
+                                    <Option value={option.answer}>{option.answer}</Option>
+                                </Select>
                             </div>
                         </div>)}
-                        <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: selectedOption === null ? "0.5" : undefined, pointer: selectedOption === null ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
-                            props.onClick(selectedOption, props.additionalData)
+                        {/* <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: selectedOption === null ? "0.5" : undefined, pointer: selectedOption === null ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
+                            props.onClick(selectedOption == 1, props.additionalData)
                         }}>
                             <h3>Choisir</h3>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
                
             </div>
-        </div >
+        </div>
     )
 }
 

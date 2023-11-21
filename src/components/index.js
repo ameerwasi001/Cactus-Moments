@@ -11,3 +11,4 @@ export { default as ChooseBackgroundModel } from './chooseBackgroundModel/Choose
 export { default as GenderModel } from './genderModel/GenderModel'
 export { default as DefaultModel } from './genderModel/defaultModel'
 export { default as PaymentModel } from './genderModel/paymentModel'
+export { default as DetailModal } from './genderModel/detailModal'

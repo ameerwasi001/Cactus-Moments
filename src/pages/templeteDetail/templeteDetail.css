@@ -254,6 +254,10 @@
   overflow-y: hidden;
 }
 
+.swal-modal {
+  z-index: 100000 !important;
+}
+
 /* -------------Media Query--------------- */
 
 @media screen and (max-width: 980px) {

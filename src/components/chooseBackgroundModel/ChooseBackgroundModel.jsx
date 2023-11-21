@@ -25,7 +25,7 @@ export default function ChooseBackgroundModel(props) {
                     })}
                 </div>
                 <div onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
-                    <h3>Select</h3>
+                    <h3>Choisir</h3>
                 </div>
             </div>
         </div >

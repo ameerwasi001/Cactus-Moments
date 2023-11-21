@@ -3,7 +3,7 @@ import "./navbar.css";
 import close from "../../assets/close.png";
 import menu from "../../assets/menu.png";
 import { logo, search } from "../../assets";
-import { PaymentModel } from "../../components";
+import { PaymentModel, DetailModal } from "../../components";
 import { setParam } from '../../urlParams'
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
@@ -19,6 +19,7 @@ const Navbar = (props) => {
   const [openDropdown, setOpenDropdown] = useState(null)
   const [showPaymentModel, setShowPaymentModel] = useState(null)
   const [withCard, setWithCard] = useState(false)
+  const [detailModal, setDetailModal] = useState(null)
 
   useEffect(() => {
     req('GET', `/user/product?select=-categories`)
@@ -38,21 +39,45 @@ const Navbar = (props) => {
 
   const Menu = () => (
     <>
-      {showPaymentModel ? (
-        <PaymentModel
+      {showPaymentModel || detailModal ? (
+        detailModal ? <DetailModal
+          autoSelect={true}
+          containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
+          additionalData={detailModal}
+          ogProduct={{}}
+          product={{}}
+          closeModal={() => setDetailModal(null)}
+          hasStaticPositions={true}
+          onClick={selectedCardPayment => {
+            console.log("HERE, NAV")
+            setWithCard(selectedCardPayment)
+            setDetailModal(null)
+            navigate('/billingAddress', {
+              state: {
+                selections: { withCard: selectedCardPayment }
+              }
+            })
+          }}
+          /> : <PaymentModel
           autoSelect={true}
           containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
           additionalData={showPaymentModel}
           ogProduct={{}}
           product={{}}
           hasStaticPositions={true}
-          onClick={selectedCardPayment => {
-            console.log("HERE, NAV")
+          onClick={optionId => {
+            const selectedCardPayment = optionId != 3
+            const showBillingScreenForCard = optionId == 1
+            const minorBilling = optionId == 2
+            console.log("HERE, NAV  props", optionId, showBillingScreenForCard, selectedCardPayment)
             setWithCard(selectedCardPayment)
             setShowPaymentModel(null)
-            navigate('/billingAddress', {
+            navigate(showBillingScreenForCard || minorBilling ? '/billingAddress' : '/payment', {
               state: {
-                selections: { withCard: selectedCardPayment }
+                selections: {
+                  withCard: selectedCardPayment,
+                  minorBilling,
+                }
               }
             })
           }}
@@ -85,7 +110,7 @@ const Navbar = (props) => {
                   : "none",
             }}
           >
-            Poster
+            Posters
           </h1>
           {/* <DropDown title="poster" list={openDropdown} onClick={props.onProductClick ? (od => props.onProductClick(od, setLoading)) : async (od) => {
             setLoading(true)
@@ -106,7 +131,7 @@ const Navbar = (props) => {
                   : "none",
             }}
           >
-            Accessories
+            Accessoires
           </h1>
           <DropDown title="accessories" list={openDropdown} onClick={item => {
             const category = item.mainDesc
@@ -154,9 +179,11 @@ const Navbar = (props) => {
                   <div></div>
                   <div className="cart-checkout-button" onClick={() => {
                     setShowPaymentModel(true)
-                  }}>Checkout</div>
-                </div> : p == "nodata" ? <div className="cart-item">There's nothing in your cart</div> : <div className="cart-item">
-                  <p>{p?.selections?.product?.mainDesc}</p>
+                  }}>Voir panier</div>
+                </div> : p == "nodata" ? <div className="cart-item-none">There's nothing in your cart</div> : <div className="cart-item">
+                  <p onClick={() => {
+                    setDetailModal(p)
+                  }}>{p?.selections?.product?.mainDesc} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
                   <img src={crossImg} className="cart-item-cross" onClick={ev => {
                     ev.stopPropagation()
                     const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
@@ -180,7 +207,7 @@ const Navbar = (props) => {
                   : "none",
             }}
           >
-            Cart
+            Painer
           </h1>
           <DropDown title="cart" list={openDropdown}/>
         </div>
@@ -195,7 +222,7 @@ const Navbar = (props) => {
     </>
   );
 
-  return showPaymentModel ? <Menu/> : (
+  return showPaymentModel || detailModal ? <Menu/> : (
     <div className="cactus__navbar">
       <div className="cactus__navbar-links_logo">
         <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>
