@@ -165,10 +165,21 @@
   cursor: pointer;
 }
 
+.cart-item-none {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
 .cart-item {
   display: flex;
   justify-content: space-between;
   align-items: center
+}
+
+.cart-item:hover {
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .cart-item-cross {

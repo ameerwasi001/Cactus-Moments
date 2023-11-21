@@ -14,9 +14,9 @@ const getPrice = () => (getKey("cart") ?? []).map(order => order?.selections?.pr
 const Payment = () => {
   const { state } = useLocation()
   // { selections: {product, ...restProduct} }
-  const { product, withCard, ...restProduct } = state ?? {}
+  const { product, withCard, minorBilling, ...restProduct } = state ?? {}
   const fromCart = !product
-  console.log("product-price", product, restProduct)
+  console.log("product-price", fromCart, product, restProduct)
   const price = fromCart ? getPrice() : product?.price
   const [selectedMethod, setSelectedMethod] = useState(withCard ? "card" : "code")
   const [next, setNext] = useState(true);
@@ -83,7 +83,7 @@ const Payment = () => {
             <>
               <div className="payment-method-price-main-container">
                 <h2>
-                  Total <span style={{ color: "#666666" }}>Incl .Tax</span>
+                  Total <span style={{ color: "#666666" }}> TTC</span>
                 </h2>
                 <h2>${price ?? 10}</h2>
               </div>
@@ -93,7 +93,7 @@ const Payment = () => {
                     <div className="payment-method-credit-card-img">
                       <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
                     </div>
-                    <h2>Credit card</h2>
+                    <h2>Carte de crédit</h2>
                   </div>}
                   <div></div>
                 </div>
@@ -110,7 +110,7 @@ const Payment = () => {
                         setCardNumber(ev.target.value)
                       }}
                       type={"text"}
-                      title={"Card Number"}
+                      title={"Numéro de carte"}
                       placeholder={"4358 5495 3262 4637"}
                     />
                   </div>
@@ -129,7 +129,7 @@ const Payment = () => {
                           return `/${x}`
                         })?.join(''))
                       }}
-                      title={"Expiry"}
+                      title={"Date d'expiration "}
                       placeholder={"MM/YY"}
                     />
                     <TextInputBilling
@@ -168,6 +168,7 @@ const Payment = () => {
                 <div
                     style={{ marginRight: "1rem", marginLeft: "1rem", opacity: selectedMethod == "card" ? (getN() != 16 || expiry.length != 5 || cvv.length != 3 ? 0.5 : 1) : (code == "" ? 0.5 : 1) }}
                     onClick={async () => {
+                      console.log("LOADING-X", loading, selectedMethod, fromCart)
                       if(loading) return
                       if(selectedMethod == "card") {
                         let n = getN()
@@ -266,23 +267,67 @@ const Payment = () => {
                     }}
                     className="payment-btn-main-container"
                   >
-                    {loading ? <ScaleLoader color="#fff" /> : <p>Pay ${price ?? 10}</p>}
+                    {loading ? <ScaleLoader color="#fff" /> : <p>Payer €{price ?? 10}</p>}
                   </div>
               </div>
             </>
           ) : (
             <div className="after-payment-main-container">
               <img src={successGif} alt="gif" />
-              <div className="after-payment-text-main-container">
+              {minorBilling ? <div className="after-payment-text-main-container">
+                <h1>Your Order placed Succesfully</h1>
+                <h3>Votre commande a été confirmée avec succès et est en cours de traitement. Nous tenons à vous remercier de votre confiance.</h3>
+                <br />
+                <h3>Vous avez choisi de récupérer votre colis à notre stand au marché de Noël d'Arras (<span style={{ fontWeight: "bolder" }}>du vendredi 24 novembre au vendredi 30 décembre 2023</span>). Prévoyez environ deux heures pour que votre commande soit prête. </h3>
+                <br />
+                <br />
+                <h6>Heure d'ouverture du marché :  </h6>
+                <h6>De lundi à jeudi de 12 h à 20h30</h6>
+                <h6>Les vendredis de 12h à 22h</h6>
+                <h6>Les samedis de 10h à 22h</h6>
+                <h6>Les dimanches de 10h à 20h30</h6>
+                <br />
+                <br />
+                <h6>Voici un récapitulatif de votre commande :</h6>
+                <h6>Numéro de commande : {product?._id}</h6>
+                <h6>Montant total payé : {product?.price}€</h6>
+                <h6>À bientôt, </h6>
+                <h6>L'équipe Cactus Moments</h6>
+              </div> : (!withCard) ? <div className="after-payment-text-main-container">
+                <h1>Cher(e) client(e),</h1>
+                <br />
+                <h1>Nous vous remercions pour votre commande. </h1>
+                <h3>
+                  Votre commande a bien été enregistrée dans notre système, et nous sommes prêts à commencer le processus de personnalisation. Avant d'imprimer votre produit, nous vous prions de bien vouloir passer en caisse pour effectuer le paiement nécessaire.
+                </h3>
+                <br />
+                <br />
+                <h3>Voici les étapes à suivre pour finaliser votre commande :</h3>
+                <ol>
+                  <li>Rendez-vous à la caisse de notre stand située au marché de Noël d'Arras.</li>
+                  <li>Indiquez votre numéro de commande lors du paiement.</li>
+                  <li>Une fois le paiement confirmé, nous commencerons immédiatement à préparer votre commande.</li>
+                </ol>
+                <h6>Voici un récapitulatif de votre commande :</h6>
+                <h6>Numéro de commande : {product?._id}</h6>
+                <h6>Montant total payé : {product?.price}€</h6>
+                <h6>À bientôt, </h6>
+                <h6>L'équipe Cactus Moments</h6>
+              </div> : <div className="after-payment-text-main-container">
                 <h1>Your Order placed Succesfully</h1>
                 <h3>
-                  Your order Number is{" "}
-                  <span style={{ color: "#333333" }}>#545734</span> .We send an
-                  email to you and You will received your Order with in 5 to 7
-                  working days thanks.
+                  Votre commande a été confirmée avec succès et est en cours de traitement. Nous tenons à vous remercier de votre confiance. Veuillez prévoir 4 jours ouvrables pour la réception de votre colis.
                 </h3>
-                <p></p>
-              </div>
+                <br />
+                <br />
+                <h6>Voici un récapitulatif de votre commande :</h6>
+                <h6>Numéro de commande : {product?._id}</h6>
+                <h6>Montant total payé : {product?.price}€</h6>
+                <h6>À bientôt, </h6>
+                <h6>L'équipe Cactus Moments</h6>
+              </div>}
+              <br />
+              <br />
             </div>
           )}
         </div>

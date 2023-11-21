@@ -58,7 +58,7 @@ export default function GenderModel(props) {
                     </div>
                     <div className='cactus-gender_model_detail_images_top_view'>
                         {selectedGender.id === 0 || (!selectedGender.parent && hasChildren(selectedGender, genderArray)) ?
-                            <h1>Select a theme to Display Design</h1>
+                            <h1>Sélectionnez une catégorie pour que les personnages apparaissent.</h1>
                             :
                             <div className='cactus-gender_model_detail_images_view'>
                                 {selectedGender.array.map((item) => {
@@ -73,7 +73,7 @@ export default function GenderModel(props) {
                     </div>
                     <div onClick={() => props.onClick(selectedData, everSelects)} style={{ position: 'fixed', bottom: 0, width: '64%', display: 'flex', justifyContent: 'center', background: 'white' }}>
                         <div className='cactus-composition_model_button_view'>
-                            <h3>Select</h3>
+                            <h3>Choisir</h3>
                         </div>
                     </div>
                 </div>

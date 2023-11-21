@@ -22,7 +22,7 @@ export default function ContactUsView(props) {
     },
     {
       id: 2,
-      title: "Call",
+      title: "Téléphone",
       des: "+352691 199 068",
       icon: phoneIcon,
     },
@@ -37,7 +37,7 @@ export default function ContactUsView(props) {
     <div className="cactus-dashboard-contact_us_top_view" style={props.style}>
       <div className="cactus-dashboard-contact_us_title_view">
         <h1>Contactez-nous </h1>
-        <h2>Vous pouvez nous contacter si  vous avez des questions pour nous. </h2>
+        <h2>Vous pouvez nous contacter si vous avez des questions.</h2>
       </div>
       <div className="cactus-dashboard-contact_us_forms_top_view">
         <div className="cactus-dashboard-contact_us_query_view">
@@ -78,7 +78,7 @@ export default function ContactUsView(props) {
             else if(!validateEmail(props.email)) setError('Invalid Email')
             else setSubmitted(true)
           }} style={{ cursor: 'pointer' }} className="cactus-dashboard-contact_us_form_button_view">
-            <h6>Send</h6>
+            <h6>Envoyer</h6>
           </div>
         </div>}
       </div>

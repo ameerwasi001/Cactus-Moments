@@ -550,6 +550,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const navigate = useNavigate();
   const overlayTitleHidden = useRef(null)
   const overlaySubtitleHidden = useRef(null)
+  const [errorModal, setErrorModal] = useState(null)
   const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
   console.log("navi", product.mainDesc)
   const [distribution, setDistribution] = useState([])
@@ -932,27 +933,38 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
           ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
           product={product}
           hasStaticPositions={hasStaticPositions(ogProduct)}
-          onClick={(selectedCardPayment, {rects}) => {
+          onClick={(optionId, {rects}) => {
+            const selectedCardPayment = optionId != 3
+            const showBillingScreenForCard = optionId == 1
+            const minorBilling = optionId == 2
+            console.log("HERE, NAV  props", optionId, showBillingScreenForCard, selectedCardPayment)
             console.log("HERE, NAV")
             setWithCard(selectedCardPayment)
             setShowPaymentModel(null)
-            navigate(`/billingAddress?${setParam({ product: product._id })}`, {
-              state: { 
-                selections: {
-                  product: { ...product, templeteArray: undefined }, 
-                  distribution,
-                  ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
-                  background,
-                  title,
-                  subtitle,
-                  characters,
-                  realOffsets,
-                  withCard: selectedCardPayment,
-                  // templeteArray,
-                  offsets,
-                  rects,
-                }
-              }
+            const selectionObject = {
+              product: {
+                ...product, 
+                price: Object.entries(selectedPricingOptions).map(([_, obj]) => parseFloat(obj.price ?? '0')).reduce((a, b) => a+b, 0), 
+                templeteArray: undefined
+              }, 
+              distribution,
+              ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
+              background,
+              title,
+              subtitle,
+              characters,
+              realOffsets,
+              showBillingScreenForCard,
+              withCard: selectedCardPayment,
+              minorBilling,
+              // templeteArray,
+              offsets,
+              rects,
+            }
+            navigate(showBillingScreenForCard || minorBilling ? `/billingAddress?${setParam({ product: product._id })}` : `/payment?${setParam({ product: product._id })}`, {
+              state: showBillingScreenForCard || minorBilling ? { 
+                selections: selectionObject
+              } : selectionObject
             })
             // }, 1500)
           }}
@@ -1112,8 +1124,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
             />)}
             <div className="cactus-templete_detail-form_top_view">
               <div className="cactus-templete_detail-form_title">
-                <h4>Personnalisez</h4>
-                <h5>Composition de la famille</h5>
+                <h4>Personnalisez l'affiche</h4>
+                {/* <h4>Personnalisez</h4>
+                <h5>Composition de la famille</h5> */}
               </div>
               <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
                 <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', width: "350px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
@@ -1122,8 +1135,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               </div>
               <CustomInputWithDropdown
                 type={"name"}
-                value={"Edit Name"}
-                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
+                value={"Modifier le nom"}
+                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage || errorModal}
                 subtitle={subtitle}
                 onChangeSubtitle={setSubtitle}
                 title={title}
@@ -1136,8 +1149,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               <CustomInputWithDropdown
                 onClickButton={() => setChooseBackgroundModel(true)}
                 type={"background"}
-                value={"Edit Background"}
-                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
+                value={"Modifier l'arrière-plan"}
+                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage || errorModal}
                 dropdownValue={showEditBackgroundDropdown}
                 dropdownData={{image: product.backgrounds[product.defaultBackground]}}
                 onClickEditNameDropdown={() =>
@@ -1161,7 +1174,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                   type={"adult"}
                   categoryName={name}
                   modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
-                  value={`Edit ${name} ${i+1}`}
+                  value={`Modifier ${name} ${i+1}`}
                   dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
                   dropdownData={{ image: characters[totalIndex] }}
                   onClickEditNameDropdown={() => {
@@ -1189,6 +1202,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                   selections: {
                     product: { ...product, templeteArray: undefined }, 
                     distribution,
+                    ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [`pricing-${k}`, obj.name])),
                     ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [k, obj.name])),
                     background,
                     title,
@@ -1202,14 +1216,15 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 }
                 cartObj.push(productData)
                 setKey("cart", cartObj)
+                setErrorModal("show")
                 swal({
-                  title: "Success",
-                  text: "The product has been added to your cart",
+                  title: "Succès",
+                  text: "Le produit a été ajouté à votre panier.",
                   icon: "success",
                   // dangerMode: true,
-                })
+                }).then(_ => setErrorModal(null))
               }}>
-                <h5>Add to Cart</h5>
+                <h5>Ajouter au panier</h5>
             </div>
             </div>
           </div>
