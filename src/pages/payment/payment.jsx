@@ -85,7 +85,7 @@ const Payment = () => {
                 <h2>
                   Total <span style={{ color: "#666666" }}> TTC</span>
                 </h2>
-                <h2>${price ?? 10}</h2>
+                <h2>€{price ?? 10}</h2>
               </div>
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
@@ -267,7 +267,7 @@ const Payment = () => {
                     }}
                     className="payment-btn-main-container"
                   >
-                    {loading ? <ScaleLoader color="#fff" /> : <p>Payer €{price ?? 10}</p>}
+                    {loading ? <ScaleLoader color="#fff" /> : <p>Commander €{price ?? 10}</p>}
                   </div>
               </div>
             </>
