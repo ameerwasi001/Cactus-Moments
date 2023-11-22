@@ -961,10 +961,10 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               offsets,
               rects,
             }
-            navigate(showBillingScreenForCard || minorBilling ? `/billingAddress?${setParam({ product: product._id })}` : `/payment?${setParam({ product: product._id })}`, {
-              state: showBillingScreenForCard || minorBilling ? { 
+            navigate(`/billingAddress?${setParam({ product: product._id })}`, {
+              state: { 
                 selections: selectionObject
-              } : selectionObject
+              }
             })
             // }, 1500)
           }}

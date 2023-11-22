@@ -4,12 +4,15 @@ import { creditCardBlack, radioFilled, radio, successGif } from "../../assets";
 import { NavBar, Footer } from "../../components";
 import { getKey, req, setKey } from "../../requests";
 import { getAllParams, setParam } from "../../urlParams";
+import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import swal from 'sweetalert';
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import "./payment.css";
 
 const getPrice = () => (getKey("cart") ?? []).map(order => order?.selections?.product?.price ?? 0).reduce((a, b) => a+b, 0)
+const stripePromise = loadStripe('pk_test_51OEy34JbX5shavtnRw9BYssQ15U99rbotRxJ4APBjUFWlFjO0g6tZ69xgoACDmr6QQg1R4aQwensQVjvLEx6yzFu00JaXlObsZ');
 
 const Payment = () => {
   const { state } = useLocation()
@@ -23,10 +26,10 @@ const Payment = () => {
   const [cardNumber, setCardNumber] = useState("")
   const [cvv, setCvv] = useState("")
   const [expiry, setExpiry] = useState("")
-  const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [lastExpiryLength, setLastExpiryLength] = useState(0)
   const [error, setError] = useState("")
+  const [stripeOptions, setStripeOptions] = useState(null)
 
   const {
     courtesyTitle,
@@ -72,6 +75,202 @@ const Payment = () => {
     }
   }, [error])
 
+  useEffect(() => {
+    if(selectedMethod != "code") req('POST', '/user/stripe', { amount: 1000 })
+      .then(res => setStripeOptions({
+        clientSecret: res.paymentIntent,
+        appearance: {
+          theme: 'flat',
+          variables: { colorPrimaryText: '#262626' }
+        }
+      }))
+  }, [])
+
+  const paymentDone = async (code) => {
+    console.log("LOADING-X", loading, selectedMethod, fromCart)
+    if(loading) return
+    if(selectedMethod == "card") {
+      // let n = getN()
+      // if(n != 16) return setError("The card must have the format XXXX XXXX XXXX XXXX")
+      // if(expiry.length != 5) return setError("The expiry formst must be MM/YY")
+      // if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
+    }
+    if(selectedMethod == "code") {
+      if(code != "Noel") return setError("Invalid code")
+    }
+    setLoading(true)
+    if(fromCart) {
+      let ordered = 0
+      const cartData = getKey("cart") ?? []
+      const promises = []
+      for(const order of cartData) {
+        const { product, ...restProduct } = order.selections
+        promises.push(req('POST', '/user/order', {
+          product: product._id,
+          bill: {
+            cardNumber,
+            cvv,
+            expiry,
+            courtesyTitle,
+            day,
+            country,
+            month,
+            year,
+            firstName,
+            lastName,
+            email,
+            number,
+            city,
+            postCode,
+            addressLine1,
+            adults,
+            children,
+            addressLine2,
+            selectedDimension,
+            selectedFrame,
+            code,
+            withCard,
+            ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
+            orderDate: new Date().toLocaleDateString(),
+          },
+          product: product._id,
+          selections: {product, ...restProduct}
+        }, err => {
+          setLoading(false)
+          setError(err)
+        }, () => {
+          ordered += 1
+          if(ordered == cartData.length) {
+            setLoading(false)
+            setNext(false)
+            setKey("cart", [])
+          }
+        }))
+      }
+    } else await req('POST', '/user/order', {
+      product: product._id,
+      bill: {
+        cardNumber,
+        cvv,
+        expiry,
+        courtesyTitle,
+        day,
+        country,
+        month,
+        year,
+        firstName,
+        lastName,
+        email,
+        number,
+        city,
+        postCode,
+        addressLine1,
+        adults,
+        children,
+        addressLine2,
+        selectedDimension,
+        selectedFrame,
+        code,
+        ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
+        orderDate: new Date().toLocaleDateString(),
+      },
+      product: product._id,
+      selections: {product, ...restProduct}
+    }, err => {
+      setLoading(false)
+      setError(err)
+    }, () => {
+      setLoading(false)
+      setNext(false)
+    })
+  }
+
+  const CheckOutForm = () => {
+    const stripe = useStripe()
+    const elements = useElements()
+  
+    return <>
+      {selectedMethod == "card" && <div className="payment-text-input-main-container">
+        <div style={{ marginBottom: "2rem" }}></div>
+        {stripeOptions &&  <PaymentElement />}
+      </div>}
+      <div className="payment-method-credit-card-title-container">
+        {selectedMethod == "code" && <div className="paymwnt-methood-credit-card-img-container">
+          <div className="payment-method-credit-card-img">
+            <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
+          </div>
+          <h2>Code</h2>
+        </div>}
+        <div></div>
+      </div>
+      <div
+        style={{ marginRight: "1rem", marginLeft: "1rem", opacity: false }}
+        className="payment-btn-main-container"
+        onClick={async () => {
+          if(selectedMethod != "code") {
+            const {error: submitError} = await elements.submit();
+            if(submitError) return setError(submitError.message)
+  
+            const {error} = await stripe.confirmPayment({
+              elements,
+              clientSecret: stripeOptions.clientSecret,
+              confirmParams: {
+                return_url: 'https://example.com/order/123/complete',
+              },
+              redirect: 'if_required'
+            });
+            if(error) return setError(error.message)
+          }
+          await paymentDone()
+        }}
+      >
+        {loading ? <ScaleLoader color="#fff" /> : <p>Commander €{price ?? 10}</p>}
+      </div>
+    </>
+  }
+
+  const CheckOutFormCode = () => {
+    const [code, setCode] = useState("")
+
+    return <>
+      {selectedMethod == "card" && <div className="payment-text-input-main-container">
+        <div style={{ marginBottom: "2rem" }}></div>
+        {stripeOptions &&  <PaymentElement />}
+      </div>}
+      <div className="payment-method-credit-card-title-container">
+        {selectedMethod == "code" && <div className="paymwnt-methood-credit-card-img-container">
+          <div className="payment-method-credit-card-img">
+            <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
+          </div>
+          <h2>Code</h2>
+        </div>}
+        <div></div>
+      </div>
+      {selectedMethod == "code" && <div className="payment-text-input-main-container">
+        <div style={{ marginTop: "5rem" }}>
+            <TextInputBilling
+              flag={true}
+              value={code}
+              onChange={ev => setCode(ev.target.value)}
+              type={"text"}
+              title={"Code"}
+              placeholder={""}
+            />
+          </div>
+      </div>}
+      <div
+        style={{ marginRight: "1rem", marginLeft: "1rem", opacity: selectedMethod == "card" ? false : (code == "" ? 0.5 : 1) }}
+        className="payment-btn-main-container"
+        onClick={async () => {
+          await paymentDone(code)
+        }}
+      >
+        {loading ? <ScaleLoader color="#fff" /> : <p>Commander €{price ?? 10}</p>}
+      </div>
+    </>
+  }
+
+
   return (
     null,
     (
@@ -85,7 +284,7 @@ const Payment = () => {
                 <h2>
                   Total <span style={{ color: "#666666" }}> TTC</span>
                 </h2>
-                <h2>${price ?? 10}</h2>
+                <h2>€{price ?? 10}</h2>
               </div>
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
@@ -97,178 +296,9 @@ const Payment = () => {
                   </div>}
                   <div></div>
                 </div>
-                {selectedMethod == "card" && <div className="payment-text-input-main-container">
-                  <div style={{ marginTop: "5rem" }}>
-                    <TextInputBilling
-                      flag={true}
-                      value={cardNumber?.split(" ")?.join("").split("")?.map((x, i) => (i+1)%4 == 0 ? `${x} ` : `${x}`)?.join('')?.trim()}
-                      onChange={ev => {
-                        let n = 0
-                        for(const ch of ev.target.value)
-                          if([1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map(x => `${x}`).includes(ch)) n += 1
-                        if(n > 16) return
-                        setCardNumber(ev.target.value)
-                      }}
-                      type={"text"}
-                      title={"Numéro de carte"}
-                      placeholder={"4358 5495 3262 4637"}
-                    />
-                  </div>
-                  <div className="payment-input-value-card-info-container">
-                    <TextInputBilling
-                      mainWidth={{ width: "47%" }}
-                      inputStyle={{ mainWidth: "40%" }}
-                      type={"text"}
-                      value={expiry}
-                      onChange={ev => {
-                        const erasing = expiry.split('/').join('').length > ev.target.value.split('/').join('').length
-                        if(ev.target.value.length > 5) return
-                        setExpiry(ev.target.value?.split("/")?.join("")?.split("")?.map((x, i) => {
-                          if(erasing && ev.target.value.length == 3) return `${x}`
-                          if(i !== 2) return `${x}`
-                          return `/${x}`
-                        })?.join(''))
-                      }}
-                      title={"Date d'expiration "}
-                      placeholder={"MM/YY"}
-                    />
-                    <TextInputBilling
-                      mainWidth={{ width: "47%" }}
-                      inputStyle={{ mainWidth: "40%", marginLeft: "0.5rem" }}
-                      flag={true}
-                      value={cvv}
-                      onChange={ev => ev.target.value.length < 4 && setCvv(ev.target.value)}
-                      type={"number"}
-                      title={"CCV"}
-                      placeholder={"3 digit"}
-                    />
-                  </div>
-                </div>}
-                <div className="payment-method-credit-card-title-container">
-                  {selectedMethod == "code" && <div className="paymwnt-methood-credit-card-img-container">
-                    <div className="payment-method-credit-card-img">
-                      <img src={creditCardBlack} alt="img" style={{ cursor: "pointer" }} />
-                    </div>
-                    <h2>Code</h2>
-                  </div>}
-                  <div></div>
-                </div>
-                {selectedMethod == "code" && <div className="payment-text-input-main-container">
-                  <div style={{ marginTop: "5rem" }}>
-                      <TextInputBilling
-                        flag={true}
-                        value={code}
-                        onChange={ev => setCode(ev.target.value)}
-                        type={"text"}
-                        title={"Code"}
-                        placeholder={""}
-                      />
-                    </div>
-                </div>}
-                <div
-                    style={{ marginRight: "1rem", marginLeft: "1rem", opacity: selectedMethod == "card" ? (getN() != 16 || expiry.length != 5 || cvv.length != 3 ? 0.5 : 1) : (code == "" ? 0.5 : 1) }}
-                    onClick={async () => {
-                      console.log("LOADING-X", loading, selectedMethod, fromCart)
-                      if(loading) return
-                      if(selectedMethod == "card") {
-                        let n = getN()
-                        if(n != 16) return setError("The card must have the format XXXX XXXX XXXX XXXX")
-                        if(expiry.length != 5) return setError("The expiry formst must be MM/YY")
-                        if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
-                      }
-                      if(selectedMethod == "code") {
-                        if(code != "Noel") return setError("Invalid code")
-                      }
-                      setLoading(true)
-                      if(fromCart) {
-                        let ordered = 0
-                        const cartData = getKey("cart") ?? []
-                        const promises = []
-                        for(const order of cartData) {
-                          const { product, ...restProduct } = order.selections
-                          promises.push(req('POST', '/user/order', {
-                            product: product._id,
-                            bill: {
-                              cardNumber,
-                              cvv,
-                              expiry,
-                              courtesyTitle,
-                              day,
-                              country,
-                              month,
-                              year,
-                              firstName,
-                              lastName,
-                              email,
-                              number,
-                              city,
-                              postCode,
-                              addressLine1,
-                              adults,
-                              children,
-                              addressLine2,
-                              selectedDimension,
-                              selectedFrame,
-                              code,
-                              withCard,
-                              ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
-                              orderDate: new Date().toLocaleDateString(),
-                            },
-                            product: product._id,
-                            selections: {product, ...restProduct}
-                          }, err => {
-                            setLoading(false)
-                            setError(err)
-                          }, () => {
-                            ordered += 1
-                            if(ordered == cartData.length) {
-                              setLoading(false)
-                              setNext(false)
-                              setKey("cart", [])
-                            }
-                          }))
-                        }
-                      } else await req('POST', '/user/order', {
-                        product: product._id,
-                        bill: {
-                          cardNumber,
-                          cvv,
-                          expiry,
-                          courtesyTitle,
-                          day,
-                          country,
-                          month,
-                          year,
-                          firstName,
-                          lastName,
-                          email,
-                          number,
-                          city,
-                          postCode,
-                          addressLine1,
-                          adults,
-                          children,
-                          addressLine2,
-                          selectedDimension,
-                          selectedFrame,
-                          code,
-                          ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
-                          orderDate: new Date().toLocaleDateString(),
-                        },
-                        product: product._id,
-                        selections: {product, ...restProduct}
-                      }, err => {
-                        setLoading(false)
-                        setError(err)
-                      }, () => {
-                        setLoading(false)
-                        setNext(false)
-                      })
-                    }}
-                    className="payment-btn-main-container"
-                  >
-                    {loading ? <ScaleLoader color="#fff" /> : <p>Payer €{price ?? 10}</p>}
-                  </div>
+                {stripeOptions ? <Elements options={stripeOptions} stripe={stripePromise}>
+                  <CheckOutForm/>
+                </Elements> : selectedMethod == "code" ? <CheckOutFormCode /> : <ScaleLoader color="#2b453e" />}
               </div>
             </>
           ) : (

@@ -90,6 +90,8 @@ const BillingAdress = () => {
     }
   }, []);
 
+  const mostRequired = minorBilling || !withCard
+
   const isCharacter = ch => 'abcdefghijklmnopqrstuvwxyz'.split("").map(x => [x, x.toLocaleUpperCase()]).reduce((a, b) => [...a, ...b], []).includes(ch)
 
   return (
@@ -97,7 +99,7 @@ const BillingAdress = () => {
       <Navbar />
       <div className="billing-address-main-container">
         <div className="billing-address-add-billing-main-container">
-          <h1>{minorBilling ? 'Adresse de facturation' : `Adresse d'envoi`}</h1>
+          <h1>{mostRequired ? 'Adresse de facturation' : `Adresse d'envoi`}</h1>
 
           <div id="err" style={{ display: error ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>
           <div className="billing-address-select-mr-container">
@@ -117,7 +119,7 @@ const BillingAdress = () => {
               ))}
             </div>
           </div>
-          <div className="billing-address-add-billing-container" style={{ justifyContent: withCard ? "space-between" : "center" }}>
+          <div className="billing-address-add-billing-container" style={{ justifyContent: "space-between" }}>
             {
               <>
                 <div className="billing-address-input-container1">
@@ -182,7 +184,7 @@ const BillingAdress = () => {
                     className="text-input-billing-main-container"
                   >
                     <div className="text-input-billing-divider-container">
-                      <h3>Pays{minorBilling ? '' : '*'}</h3>
+                      <h3>Pays{mostRequired ? '' : '*'}</h3>
                       <div className="text-input-billing-input-divider"></div>
                     </div>
                     <DropDownDate
@@ -194,14 +196,14 @@ const BillingAdress = () => {
                   </div>
                   <TextInputBilling
                     inputStyle={{ width: "80%" }}
-                    title={`Ville${minorBilling ? '' : '*'}`}
+                    title={`Ville${mostRequired ? '' : '*'}`}
                     type={"text"}
                     value={city}
                     onChange={ev => setCity(ev.target.value)}
                   />
                   <TextInputBilling
                     inputStyle={{ width: "75%" }}
-                    title={`Code postal${minorBilling ? '' : '*'}`}
+                    title={`Code postal${mostRequired ? '' : '*'}`}
                     extraDividerStyles={{ marginRight: "1rem" }}
                     type={"text"}
                     value={postCode}
@@ -245,8 +247,8 @@ const BillingAdress = () => {
           <div
             style={{ opacity: 
               (
-                (withCard && (ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))) ||
-                (!withCard && ischecked && email.includes("@") && Object.entries({lastName, number, email}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))
+                (!mostRequired && (ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))) ||
+                (mostRequired && ischecked && email.includes("@") && Object.entries({lastName, number, email}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))
               ) ? 
                 1 : 
                 0.5 
@@ -258,7 +260,7 @@ const BillingAdress = () => {
               const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
               const notEmptyForCode = {lastName, number, email}
               if(!email.includes("@")) return 
-              if(withCard) Object.entries(notEmpty).forEach(([f, x]) => {
+              if(!mostRequired) Object.entries(notEmpty).forEach(([f, x]) => {
                 if(!x) error = `${f} is required`
                 window.scrollTo(0, 0)
               }) 

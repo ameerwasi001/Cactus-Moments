@@ -72,10 +72,11 @@ const Navbar = (props) => {
             console.log("HERE, NAV  props", optionId, showBillingScreenForCard, selectedCardPayment)
             setWithCard(selectedCardPayment)
             setShowPaymentModel(null)
-            navigate(showBillingScreenForCard || minorBilling ? '/billingAddress' : '/payment', {
+            navigate('/billingAddress', {
               state: {
                 selections: {
                   withCard: selectedCardPayment,
+                  showBillingScreenForCard,
                   minorBilling,
                 }
               }
@@ -122,7 +123,7 @@ const Navbar = (props) => {
         <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => {
-              setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasse", "Sac"].map(mainDesc => ({ mainDesc })) })
+              setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasses", "Sacs"].map(mainDesc => ({ mainDesc })) })
             }}
             style={{
               borderBottomStyle:
@@ -207,7 +208,7 @@ const Navbar = (props) => {
                   : "none",
             }}
           >
-            Painer
+            Panier
           </h1>
           <DropDown title="cart" list={openDropdown}/>
         </div>
