@@ -76,7 +76,7 @@ const Payment = () => {
   }, [error])
 
   useEffect(() => {
-    if(selectedMethod != "code") req('POST', '/user/stripe', { amount: 1000 })
+    if(selectedMethod != "code") req('POST', '/user/stripe', { amount: parseFloat(price)*100 })
       .then(res => setStripeOptions({
         clientSecret: res.paymentIntent,
         appearance: {
