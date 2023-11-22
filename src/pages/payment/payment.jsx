@@ -12,7 +12,7 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import "./payment.css";
 
 const getPrice = () => (getKey("cart") ?? []).map(order => order?.selections?.product?.price ?? 0).reduce((a, b) => a+b, 0)
-const stripePromise = loadStripe('pk_test_51OEy34JbX5shavtnRw9BYssQ15U99rbotRxJ4APBjUFWlFjO0g6tZ69xgoACDmr6QQg1R4aQwensQVjvLEx6yzFu00JaXlObsZ');
+const stripePromise = loadStripe('pk_live_51OEy34JbX5shavtnvHumbLoNAoDYgQl7QYTSa6eN4uiyopxogrzJJPnKacaLVq6UKXWJAAKsqIZfaidfW1g3BJGy00WbYEtGiE');
 
 const Payment = () => {
   const { state } = useLocation()
