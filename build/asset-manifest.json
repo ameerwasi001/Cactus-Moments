@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.e4ba161a.css",
-    "main.js": "/static/js/main.9477b5b2.js",
+    "main.css": "/static/css/main.89111d26.css",
+    "main.js": "/static/js/main.b8f795e5.js",
     "static/media/dummyFive.png": "/static/media/dummyFive.e3e4442b304b843ed59f.png",
     "static/media/home-image2.png": "/static/media/home-image2.847dcd225ea4a6e018bd.png",
     "static/media/dummyFour.png": "/static/media/dummyFour.2680424b7f8983a6bbbe.png",
@@ -20,28 +20,42 @@
     "static/media/banner.png": "/static/media/banner.d6de2610eb28329950c7.png",
     "static/media/Montserrat-ExtraBoldItalic.ttf": "/static/media/Montserrat-ExtraBoldItalic.c28b8c5ae1c07628dfb3.ttf",
     "static/media/FontsFree-Net-Montserrat-BlackItalic.ttf": "/static/media/FontsFree-Net-Montserrat-BlackItalic.e656be392bac6a4aed4d.ttf",
-    "static/media/dummyRoundOne.png": "/static/media/dummyRoundOne.23a6587a6f1278c72f95.png",
+    "static/media/Skia-Regular.ttf": "/static/media/Skia-Regular.b6284fb9f82eb71f4ea8.ttf",
+    "static/media/LibreBaskerville-Italic.ttf": "/static/media/LibreBaskerville-Italic.3cbbed9ea170d3b9e426.ttf",
+    "static/media/LibreBaskerville-Bold.ttf": "/static/media/LibreBaskerville-Bold.6e5f70731aeed7c6e895.ttf",
+    "static/media/LibreBaskerville-Regular.ttf": "/static/media/LibreBaskerville-Regular.715e9cea90f54d5a4093.ttf",
     "static/media/dummyRoundThree.png": "/static/media/dummyRoundThree.2dd2aa8ef6b5f95f0404.png",
     "static/media/BeautyGadish.otf": "/static/media/BeautyGadish.74af7ee0e508d9910b39.otf",
+    "static/media/Castoro-Italic.ttf": "/static/media/Castoro-Italic.fc02dfa2197b88b6cf41.ttf",
+    "static/media/Castoro-Regular.ttf": "/static/media/Castoro-Regular.77659aede573b2186056.ttf",
     "static/media/dummyRoundTwo.png": "/static/media/dummyRoundTwo.c0563daf009b3fbe9b68.png",
     "static/media/FontsFree-Net-MYRIADPRO-REGULAR.ttf": "/static/media/FontsFree-Net-MYRIADPRO-REGULAR.3e5c30ff8f7f6c3464f5.ttf",
+    "static/media/dummyRoundOne.png": "/static/media/dummyRoundOne.9128e0a9cb55ef3b5368.png",
     "static/media/machiarge.ttf": "/static/media/machiarge.61a71cd76f9109317996.ttf",
+    "static/media/BanburyD.otf": "/static/media/BanburyD.6164f482d24500f30c03.otf",
     "static/media/success-gif.gif": "/static/media/success-gif.d5db6c1e7b8d02187a8c.gif",
     "static/media/NuevaStd-Bold.otf": "/static/media/NuevaStd-Bold.01aacea0531c23544e20.otf",
     "static/media/maleDummy.png": "/static/media/maleDummy.96909af874923ba4d358.png",
+    "static/media/MoonTime-Regular-2.ttf": "/static/media/MoonTime-Regular-2.b83db42eb10b3fc7bd0f.ttf",
+    "static/media/Dmitrii-Chirkov-Moon-Time-Swashes.otf": "/static/media/Dmitrii-Chirkov-Moon-Time-Swashes.975273303a1a0f3888e6.otf",
     "static/media/BagdollDisplay-Regular.otf": "/static/media/BagdollDisplay-Regular.777fe7a54d2aef67bab7.otf",
     "static/media/BeautyDemo.otf": "/static/media/BeautyDemo.9f71153c5220dd7942ca.otf",
     "static/media/SinkinSans-300Light.otf": "/static/media/SinkinSans-300Light.3cfcac476bf2b074a01b.otf",
+    "static/media/LondonMM.ttf": "/static/media/LondonMM.d36b2da8ede031d52bee.ttf",
+    "static/media/MoonTime-Regular-1.otf": "/static/media/MoonTime-Regular-1.a420eaa4638d6143b3cc.otf",
+    "static/media/EduTASBeginner-VariableFont_wght.ttf": "/static/media/EduTASBeginner-VariableFont_wght.d7d21e081f7f219af05f.ttf",
+    "static/media/LondonBetween.ttf": "/static/media/LondonBetween.a8734c5f9ce82d9d081e.ttf",
+    "static/media/LondonTwo.ttf": "/static/media/LondonTwo.cb02fe64481638860ce6.ttf",
     "static/media/GoboldBold.otf": "/static/media/GoboldBold.3e7fc4fdce676f66f60c.otf",
     "static/media/female.png": "/static/media/female.158a76c5703bc85b6711.png",
     "static/media/logo.png": "/static/media/logo.39e178a24ac4f9c0ca3a.png",
     "static/media/male.png": "/static/media/male.8efe1ac46adf8ba26d83.png",
     "index.html": "/index.html",
-    "main.e4ba161a.css.map": "/static/css/main.e4ba161a.css.map",
-    "main.9477b5b2.js.map": "/static/js/main.9477b5b2.js.map"
+    "main.89111d26.css.map": "/static/css/main.89111d26.css.map",
+    "main.b8f795e5.js.map": "/static/js/main.b8f795e5.js.map"
   },
   "entrypoints": [
-    "static/css/main.e4ba161a.css",
-    "static/js/main.9477b5b2.js"
+    "static/css/main.89111d26.css",
+    "static/js/main.b8f795e5.js"
   ]
 }
