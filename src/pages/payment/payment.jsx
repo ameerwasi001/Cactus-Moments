@@ -17,10 +17,11 @@ const stripePromise = loadStripe('pk_live_51OEy34JbX5shavtnvHumbLoNAoDYgQl7QYTSa
 const Payment = () => {
   const { state } = useLocation()
   // { selections: {product, ...restProduct} }
-  const { product, withCard, minorBilling, ...restProduct } = state ?? {}
+  const { product, withCard, minorBilling, showBillingScreenForCard, ...restProduct } = state ?? {}
   const fromCart = !product
   console.log("product-price", fromCart, product, restProduct)
-  const price = fromCart ? getPrice() : product?.price
+  const _price = parseFloat(fromCart ? getPrice() : product?.price)
+  const price = showBillingScreenForCard ? _price < 50 ? _price + 6 : _price : _price
   const [selectedMethod, setSelectedMethod] = useState(withCard ? "card" : "code")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
@@ -126,6 +127,7 @@ const Payment = () => {
             adults,
             children,
             addressLine2,
+            extraDeliveryCharge: showBillingScreenForCard,
             selectedDimension,
             selectedFrame,
             code,
@@ -168,6 +170,7 @@ const Payment = () => {
         adults,
         children,
         addressLine2,
+        extraDeliveryCharge: showBillingScreenForCard,
         selectedDimension,
         selectedFrame,
         code,
