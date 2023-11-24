@@ -53,6 +53,7 @@ const BillingAdress = () => {
   const selections = state?.selections
   const withCard = selections?.withCard
   const minorBilling = selections?.minorBilling
+  const showBillingScreenForCard = selections?.showBillingScreenForCard
   console.log("FSELECT", selections)
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
