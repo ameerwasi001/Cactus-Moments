@@ -684,29 +684,17 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   }, [background])
 
   useEffect(() => {
-    editData()
-      .then(_ => {
-        let cactusRecents = localStorage.getItem("cactus_recents") ?? "[]"
-        if(cactusRecents.length == 0) localStorage.setItem("cactus_recents", "")
-        const parsedRecents = JSON.parse(cactusRecents)
-        const newRecents = []
-        for(const recent of parsedRecents) 
-          if(recent._id == product._id) newRecents.push(product)
-          else newRecents.push(recent)
-        setTemplateArray(newRecents)
-        if(!parsedRecents.find(p => p._id == product._id)) newRecents.push(product)
-        localStorage.setItem("cactus_recents", JSON.stringify(newRecents))
+    editData().then(_ => console.log(_))
 
-        // Setting the required states
-        // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
-        console.log("SPRITES-NOW", distribution, characters)
-        let newChars = getCategoryCharacters(product)
-          // .slice(0, newChars.length - diff - 1)
-          // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
-        firstLoad = false
-        if(hasStaticPositions(product)) setCharacters(getCategoryCharacters(product))
-        else setCharacters(newChars)
-      })
+    // Setting the required states
+    // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
+    console.log("SPRITES-NOW", distribution, characters)
+    let newChars = getCategoryCharacters(product)
+      // .slice(0, newChars.length - diff - 1)
+      // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
+    firstLoad = false
+    if(hasStaticPositions(product)) setCharacters(getCategoryCharacters(product))
+    else setCharacters(newChars)
   }, [product])
 
   useEffect(() => {

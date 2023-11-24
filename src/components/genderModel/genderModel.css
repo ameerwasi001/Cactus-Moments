@@ -4,7 +4,7 @@
   overflow: scroll;
   padding-top: 2rem;
   width: 100vw;
-  z-index: 999;
+  z-index: 100000000000000000;
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.6);
