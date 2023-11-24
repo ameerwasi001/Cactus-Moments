@@ -140,7 +140,7 @@ const Navbar = (props) => {
             // setWithCard(selectedCardPayment)
             // setShowPaymentModel(null)
             setOpenDropdown(null)
-            navigate(`/?category=${category}`)
+            navigate(`/?category=${category?.slice(0, -1)}`)
           }}/>
         </div>
         {/* <div className="cactus__navbar-links_text_view">

@@ -3,6 +3,7 @@
   flex-direction: row;
   padding: 5rem;
   background-color: white;
+  z-index: 100;
 }
 
 .cactus-templete_detail_side_templetes_view {
