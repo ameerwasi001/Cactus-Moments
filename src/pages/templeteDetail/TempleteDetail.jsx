@@ -922,6 +922,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         <PaymentModel
           autoSelect={autoSelect}
           additionalData={showPaymentModel}
+          closeModal={() => setShowPaymentModel(null)}
           ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
           product={product}
           hasStaticPositions={hasStaticPositions(ogProduct)}

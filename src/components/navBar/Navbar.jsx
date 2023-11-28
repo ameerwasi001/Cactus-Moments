@@ -62,6 +62,7 @@ const Navbar = (props) => {
           autoSelect={true}
           containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
           additionalData={showPaymentModel}
+          closeModal={() => setShowPaymentModel(null)}
           ogProduct={{}}
           product={{}}
           hasStaticPositions={true}

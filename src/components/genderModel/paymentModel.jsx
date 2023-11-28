@@ -67,7 +67,7 @@ export default function DefaultModel(props) {
     const options = [
         {
             id: 1,
-            text: "Paiement par carte bancaire avec livraison à domicile (livraison gratuite à partir de 50 euros) "
+            text: "Paiement par carte bancaire avec livraison à domicile. Frais d’envoi : France 6€, autre pays européen : 10€. Livraison gratuite à partir de 50€."
         },
         {
             id: 2,
@@ -81,8 +81,8 @@ export default function DefaultModel(props) {
     const [selectedOption, setSelectedOption] = useState(null)
 
     return (
-        <div style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
-            <div style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
+        <div onClick={() => props.closeModal()} style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
+            <div onClick={ev => ev.stopPropagation()} style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
                         {options.map(opt => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
