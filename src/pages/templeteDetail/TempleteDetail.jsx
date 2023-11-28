@@ -546,6 +546,8 @@ const splitByNumOfChars = (str, n) => {
 
 let firstLoad = true
 
+// const findCharacterPositi
+
 function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const navigate = useNavigate();
   const overlayTitleHidden = useRef(null)
@@ -578,6 +580,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [defaultModel, setDefaultModel] = useState(true);
   const [characters, setCharacters] = useState([])
+  const [characterCategoryObject, setCharacterCategoryObject] = useState({})
   const [selectedFrame, setSelectedFrame] = useState({
     id: 1,
     name: `Sans Cadre ${product.frame1Price ? `(${product.frame1Price} €)` : ""}`,
@@ -691,10 +694,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     console.log("SPRITES-NOW", distribution, characters)
     let newChars = getCategoryCharacters(product)
       // .slice(0, newChars.length - diff - 1)
-      // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
+      .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
     firstLoad = false
-    if(hasStaticPositions(product)) setCharacters(getCategoryCharacters(product))
-    else setCharacters(newChars)
+    setCharacters(newChars)
   }, [product])
 
   useEffect(() => {
