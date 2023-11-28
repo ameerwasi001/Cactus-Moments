@@ -692,11 +692,13 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     // Setting the required states
     // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
     console.log("SPRITES-NOW", distribution, characters)
+    const containsStatic = hasStaticPositions(product)
     let newChars = getCategoryCharacters(product)
       // .slice(0, newChars.length - diff - 1)
       .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
     firstLoad = false
-    setCharacters(newChars)
+    if(containsStatic) setCharacters(getCategoryCharacters(product))
+    else setCharacters(newChars)
   }, [product])
 
   useEffect(() => {
