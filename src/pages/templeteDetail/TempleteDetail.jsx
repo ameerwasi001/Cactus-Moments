@@ -70,6 +70,9 @@ const shuffleSeed = (seed) => (n, array) => {
 const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).fit(0, parseInt(cat.max))
 const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).fit(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
 
+const getCharactersGivenStatic = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).fit(0, parseInt(cat.modifiedMax ?? cat.max))
+const getCategoryCharactersGivenStatic = product => product.categories.map(cat => getCharactersGivenStatic(cat)).reduce((a, b) => a.concat(b), []).fit(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
+
 const groupPricing = pricings_ => {
   let pricings = pricings_ ?? []
   const pricingSections = {}
@@ -560,6 +563,27 @@ function paginate(array, page_size, page_number) {
 
 let firstLoad = true
 
+// const getInitialCategoryObject = product => {
+//   const positionObject = {}
+//   for
+// }
+
+const getCategoryOfCharacter = (product, sprite) => {
+  const foundCategory = product?.categories?.find(
+    cat => 
+      cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
+      cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(sprite)) ||
+      cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(sprite))
+  )
+  const foundSubcategory = product?.subcategories?.find(
+    sub => sub?.characters?.includes(sprite) || 
+      sub?.characters?.includes(encodeURIComponent(sprite)) ||
+      sub?.characters?.includes(makeSpriteModification(sprite))
+  )
+
+  return [foundCategory, foundSubcategory]
+}
+
 // const findCharacterPositi
 
 function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
@@ -707,13 +731,27 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
     console.log("SPRITES-NOW", distribution, characters)
     const containsStatic = hasStaticPositions(product)
-    let newChars = getCategoryCharacters(product)
+
+    const charPositions = {}
+    const ogChars = getCategoryCharacters(product)
+    let newChars = ogChars
       // .slice(0, newChars.length - diff - 1)
-      // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
-    firstLoad = false
+      .map((ch, i) => {
+        const [cat] = getCategoryOfCharacter(product, ch)
+        const catName = cat.name
+        const curr = charPositions[catName] ?? 0
+        const catDists = distribution.filter(cat => cat.categoryName == catName)
+        const currDist = catDists[curr]
+        charPositions[catName] = curr + 1
+        if(!currDist) return ch
+        return currDist?.sprite
+      })
+      console.log("chs", charPositions)
     // if(containsStatic) setCharacters(getCategoryCharacters(product))
     // else setCharacters(newChars)
-    setCharacters(newChars)
+    console.log("CHs", firstLoad, characters, newChars)
+    if(containsStatic) setCharacters(ogChars)
+    else setCharacters(newChars)
   }, [product])
 
   useEffect(() => {
@@ -985,6 +1023,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
           product={product}
           hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={product => {
+            console.log("chs2", firstLoad)
+            firstLoad = false
             setProduct(Object.freeze(product))
             setChosen(true)
             setAutoSelect(false)
@@ -1009,6 +1049,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
           if(data.type) return setChooseGenderModel(undefined)
           if(!data.image) data.image = undefined
           console.log("EMPTY >>>>>", chooseGenderModel)
+          // const [cat, scat] = getCategoryOfCharacter(product, data.image)
+          // setCharacterCategoryObject({ ...characterCategoryObject, [cat.categoryName]: [...(characterCategoryObject[cat] ?? []), data.image] })
           setCharacters(characters.map((ch, i) => i == chooseGenderModel.totalIndex ? data.image : ch))
           setChooseGenderModel(undefined)
         }} />
