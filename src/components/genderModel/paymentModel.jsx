@@ -5,11 +5,6 @@ import './genderModel.css'
 
 const { Option } = Select
 
-const findIndex = (f, arr) => {
-    for(let i = 0; i < arr.length; i++)
-      if(f(arr[i])) return i
-    return -1
-}
 
 const productPositions = product => {
     const productNMax = product.categories?.map(x => parseInt(x.max ?? 0) ?? 0)?.reduce((a, b) => a+b, 0)

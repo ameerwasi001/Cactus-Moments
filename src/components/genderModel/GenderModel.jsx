@@ -8,6 +8,7 @@ const rem = x => x * parseFloat(getComputedStyle(document.documentElement).fontS
 const hasChildren = (cat, genderArray) => !!genderArray.find(xcat => {console.log("xcc", xcat, cat.title); return xcat.parent == cat.title})
 
 export default function GenderModel(props) {
+    const isPhone = props.isPhone
     const [selectedGender, setSelectedGender] = useState({ id: 0 })
     const [selectedParent, setSelectedParent] = useState("none")
     const [everSelects, setEverSelects] = useState(false)
@@ -26,6 +27,7 @@ export default function GenderModel(props) {
     }, [])
 
     console.log("GARRAY", genderArray)
+
     return (
         <div className="cactus-gender-model_top_view">
             <div className='cactus-gender_model_view'>
@@ -41,9 +43,10 @@ export default function GenderModel(props) {
                                     setSelectedParent("none")
                                     return
                                 }
-                                if(!item.parent)setSelectedParent(item.title)
+                                if(!item.parent) setSelectedParent(item.title)
                                 setSelectedGender(item)
                                 setEverSelects(true)
+                                if(isPhone && !hasChildren(item, genderArray)) document.getElementById("category-characters")?.scrollIntoView()
                             }} style={{ borderWidth: item.id === selectedGender.id ? 2 : 0, marginLeft: item.parent ? '4rem' : '0px' }} className='cactus-gender_model_side_gender_view'>
                                 <img src={item.icon} />
                                 <h2>{item.title}</h2>
@@ -51,7 +54,7 @@ export default function GenderModel(props) {
                         )
                     })}
                 </div>
-                <div className='cactus-gender_model_divider' />
+                <div id='category-characters' className='cactus-gender_model_divider' />
                 <div className='cactus-gender_model_detail_top_view'>
                     <div className='cactus-gender_model_detail_cross_image'>
                         <img onClick={props.onClick} src={closeBox} />

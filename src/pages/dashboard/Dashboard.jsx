@@ -24,6 +24,20 @@ import { ClipLoader } from "react-spinners";
 const getS3Url = id => `https://drivebuddyz.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
 const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => JSON.parse(decodeURIComponent(x)))
 
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
+const isPhone = () => getWindowDimensions().width < 421  
+
+function paginate(array, page_size, page_number) {
+  return array.slice((page_number - 1) * page_size, page_number * page_size);
+}
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
@@ -33,6 +47,8 @@ export default function Dashboard() {
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("poster")
+  const [currPage, setCurrPage] = useState(1)
+  const recordsPerPage = 10
   const { search } = useLocation()
 
   console.log("PRODID", search)
@@ -87,15 +103,15 @@ export default function Dashboard() {
             <h5>
             Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
             </h5>
-            <div className="cactus-dashboard-banner_buttons_view">
+            {isPhone() ? <div style={{ marginTop: "2rem" }}></div> : <div className="cactus-dashboard-banner_buttons_view">
               <div className="cactus-dashboard-banner_see_more_view">
                 <h2>Voir plus</h2>
               </div>
               {/* <div className="cactus-dashboard-banner_contact_button">
                 <h3>Contact Us</h3>
               </div> */}
-            </div>
-            <div className="cactus-dashboard-banner_counter_top_view">
+            </div>}
+            {!isPhone() && <div className="cactus-dashboard-banner_counter_top_view">
               <div className="cactus-dasboard-banner_counter_view">
                 <h4>30+</h4>
                 <h6>affiches</h6>
@@ -104,7 +120,7 @@ export default function Dashboard() {
                 <h4>70+</h4>
                 <h6>idées cadeaux</h6>
               </div>
-            </div>
+            </div>}
           </div>
           <div className="cactus-dashboard-banner_image_view">
             <img alt="" src={homeImage2} />
@@ -115,21 +131,35 @@ export default function Dashboard() {
           navigate(`/?category=${x}`)
         }}/>
         <div id="main-products" className="cactus-dashboard-templete_top_view">
-        {loading ? <ClipLoader color="black" /> : templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).map((item) => {
-            return (
-              <TempleteView
-                onClick={async () => {
-                  setLoading(true)
-                  const el = document.getElementById("main-products")
-                  el?.scrollIntoView()
-                  const product = await fetchObejct(item._id)
-                  setLoading(false)
-                  navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
-                }}
-                item={item}
-              />
-            );
+          {loading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
+              return (
+                <TempleteView
+                  onClick={async () => {
+                    setLoading(true)
+                    const el = document.getElementById("main-products")
+                    el?.scrollIntoView()
+                    const product = await fetchObejct(item._id)
+                    setLoading(false)
+                    navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+                  }}
+                  item={item}
+                />
+              );
           })}
+        </div>
+        <div>
+          {
+            isPhone() && <div className="template-pagination">
+              {
+                new Array(Math.ceil(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).length/recordsPerPage))
+                  .fill(0)
+                  .map((_, i) => <p onClick={() => {
+                    setCurrPage(i+1)
+                    document.getElementById("main-products")?.scrollIntoView()
+                  }} style={{ color: currPage == i+1? "grey" : "blue", cursor: currPage == i+1? "default" : "pointer" }}>{i+1}</p>)
+              }
+            </div>
+          }
         </div>
         {/* <ContactUsView fullName={name} setFullName={setName} setEmail={setEmail} email={email} message={message} setMessage={setMessage} onClick={() => alert("Hi!")}/> */}
         <div className="cactus-dashboard-about_us_top_view">
