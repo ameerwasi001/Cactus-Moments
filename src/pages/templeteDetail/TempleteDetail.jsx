@@ -695,10 +695,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     const containsStatic = hasStaticPositions(product)
     let newChars = getCategoryCharacters(product)
       // .slice(0, newChars.length - diff - 1)
-      .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
+      // .map((ch, i) => firstLoad ? ch : distribution[i] ? distribution[i]?.sprite : ch)
     firstLoad = false
-    if(containsStatic) setCharacters(getCategoryCharacters(product))
-    else setCharacters(newChars)
+    // if(containsStatic) setCharacters(getCategoryCharacters(product))
+    // else setCharacters(newChars)
+    setCharacters(newChars)
   }, [product])
 
   useEffect(() => {
