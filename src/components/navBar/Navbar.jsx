@@ -104,7 +104,7 @@ const Navbar = (props) => {
                   : "none",
             }}
           >
-            Home
+            Acceuil
           </h1>
         </div>
         <div className="cactus__navbar-links_text_view">
@@ -188,12 +188,12 @@ const Navbar = (props) => {
               setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
                 (p, i) => p == "check" ? <div className="cart-item">
                   <div></div>
+                  <div className="cart-checkout-button" style={{ marginRight: "auto" }} onClick={() => {
+                    setCommanderModel(true)
+                  }}>Voir Panier</div>
                   <div className="cart-checkout-button" onClick={() => {
                     setShowPaymentModel(true)
-                  }}>Voir panier</div>
-                  <div className="cart-checkout-button" onClick={() => {
-                    setCommanderModel(true)
-                  }}>Commander</div>
+                  }}>Payer</div>
                 </div> : p == "nodata" ? <div className="cart-item-none">There's nothing in your cart</div> : <div className="cart-item">
                   <p onClick={() => {
                     setDetailModal(p)
