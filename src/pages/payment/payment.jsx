@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { creditCardBlack, radioFilled, radio, successGif } from "../../assets";
 import { NavBar, Footer } from "../../components";
-import { getKey, req, setKey } from "../../requests";
+import { getKey, req, setKey, getCountry } from "../../requests";
 import { getAllParams, setParam } from "../../urlParams";
 import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -21,7 +21,9 @@ const Payment = () => {
   const fromCart = !product
   console.log("product-price", fromCart, product, restProduct)
   const _price = parseFloat(fromCart ? getPrice() : product?.price)
-  const price = showBillingScreenForCard ? _price < 50 ? _price + 6 : _price : _price
+  const deliveryIncrement = getCountry() == "France" ? 10 : 6
+  console.log(deliveryIncrement)
+  const price = showBillingScreenForCard ? _price < 50 ? (_price + deliveryIncrement) : _price : _price
   const [selectedMethod, setSelectedMethod] = useState(withCard ? "card" : "code")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
