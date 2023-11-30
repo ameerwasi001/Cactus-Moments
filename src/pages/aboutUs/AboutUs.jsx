@@ -18,7 +18,7 @@ export default function AboutUs() {
           <div className="cactus-about_us-banner_title_view">
             <h1>About Us</h1>
             <img src={aboutUsBorder} />
-            <h2>{'Home > About Us'}</h2>
+            <h2>{'Acceuil > About Us'}</h2>
           </div>
           <div className="cactus-about_us-banner_image_view">
             <img src={aboutUsBanner} />
