@@ -544,6 +544,20 @@ const splitByNumOfChars = (str, n) => {
   return chunks
 }
 
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
+const isPhone = () => getWindowDimensions().width < 421  
+
+function paginate(array, page_size, page_number) {
+  return array.slice((page_number - 1) * page_size, page_number * page_size);
+}
+
 let firstLoad = true
 
 // const findCharacterPositi
@@ -991,7 +1005,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         />
       )}
       {chooseGenderModel && (
-        <GenderModel index={chooseGenderModel.index} variation={chooseGenderModel.array} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
+        <GenderModel isPhone={isPhone()} index={chooseGenderModel.index} variation={chooseGenderModel.array} femaleVariations={chooseGenderModel.femaleArray} onClick={(data) => {
           if(data.type) return setChooseGenderModel(undefined)
           if(!data.image) data.image = undefined
           console.log("EMPTY >>>>>", chooseGenderModel)
@@ -1006,32 +1020,36 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
             <img
               src={arrowBack}
               className="cactus-templete_detail_side__view_arrow_up"
+              onClick={() => document.getElementById("cactus-list").scrollLeft -= 100}
             />
-            {sideTempleArray.filter(item => item?.image?.coordinateVariation?.preview || item?.image?.url).map((item) => {
-              return (
-                item.image.url ?
-                  <img
-                    key={item.id}
-                    src={item?.image?.coordinateVariation?.preview || item?.image?.url}
-                    // onClick={() => setBackground(item.image)}
-                    style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
-                    className="cactus-templete_detail_side__view_image_style"
-                    onClick={() => setSelectedImage(item?.image?.coordinateVariation?.preview || item?.image?.url)}
-                  /> :
-                <h3>No image selected</h3>
-              );
-            })}
+            <div id="cactus-list" className="cactus-list">
+              {sideTempleArray.filter(item => item?.image?.coordinateVariation?.preview || item?.image?.url).map((item) => {
+                return (
+                  item.image.url ?
+                    <img
+                      key={item.id}
+                      src={item?.image?.coordinateVariation?.preview || item?.image?.url}
+                      // onClick={() => setBackground(item.image)}
+                      style={{ cursor: 'pointer', width: !ratios.has(item.image.url) ? '9rem' : undefined, height: !ratios.has(item.image.url) ? '9rem' : undefined}}
+                      className="cactus-templete_detail_side__view_image_style"
+                      onClick={() => setSelectedImage(item?.image?.coordinateVariation?.preview || item?.image?.url)}
+                    /> :
+                  <h3>No image selected</h3>
+                );
+              })}
+            </div>
             <img
               src={arrowBack}
               className="cactus-templete_detail_side__view_arrow_down"
+              onClick={() => document.getElementById("cactus-list").scrollLeft += 100}
             />
           </div>
           <div className="cactus-templete_detail-main_image_view">
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div style={JSON.parse(JSON.stringify({ height: '500px', width: '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" height={"500px"} width={"500px"} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+            <div style={JSON.parse(JSON.stringify({ height: '500px', width: isPhone() ? '350px' : '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
+              <canvas id="canvas" height={"500px"} width={isPhone() ? '350px' : '500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
               {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
                 zIndex: 100000000000000,
                 position: "absolute", 
@@ -1178,7 +1196,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 />))
               }
             </div>
-            <div style={{ display: "flex" }}>
+            <div className="order-buttons" style={{ display: "flex" }}>
               <div
                 onClick={async () => {
                   // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])

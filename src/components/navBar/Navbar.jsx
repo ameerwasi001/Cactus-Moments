@@ -3,7 +3,7 @@ import "./navbar.css";
 import close from "../../assets/close.png";
 import menu from "../../assets/menu.png";
 import { logo, search } from "../../assets";
-import { PaymentModel, DetailModal } from "../../components";
+import { PaymentModel, DetailModal, InfoListModel } from "../../components";
 import { setParam } from '../../urlParams'
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
@@ -17,6 +17,7 @@ const Navbar = (props) => {
   const [templateArray, setTemplateArray] = useState([])
   const [loading, setLoading] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(null)
+  const [commanderModel, setCommanderModel] = useState(false)
   const [showPaymentModel, setShowPaymentModel] = useState(null)
   const [withCard, setWithCard] = useState(false)
   const [detailModal, setDetailModal] = useState(null)
@@ -39,8 +40,16 @@ const Navbar = (props) => {
 
   const Menu = () => (
     <>
-      {showPaymentModel || detailModal ? (
-        detailModal ? <DetailModal
+      {showPaymentModel || detailModal || commanderModel ? (
+        commanderModel ? <InfoListModel
+        autoSelect={true}
+        containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
+        additionalData={detailModal}
+        ogProduct={{}}
+        product={{}}
+        closeModal={() => setCommanderModel(false)}
+        />
+        : detailModal ? <DetailModal
           autoSelect={true}
           containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
           additionalData={detailModal}
@@ -182,6 +191,9 @@ const Navbar = (props) => {
                   <div className="cart-checkout-button" onClick={() => {
                     setShowPaymentModel(true)
                   }}>Voir panier</div>
+                  <div className="cart-checkout-button" onClick={() => {
+                    setCommanderModel(true)
+                  }}>Commander</div>
                 </div> : p == "nodata" ? <div className="cart-item-none">There's nothing in your cart</div> : <div className="cart-item">
                   <p onClick={() => {
                     setDetailModal(p)
@@ -224,7 +236,7 @@ const Navbar = (props) => {
     </>
   );
 
-  return showPaymentModel || detailModal ? <Menu/> : (
+  return showPaymentModel || detailModal || commanderModel ? <Menu/> : (
     <div className="cactus__navbar">
       <div className="cactus__navbar-links_logo">
         <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>

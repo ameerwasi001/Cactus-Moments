@@ -285,7 +285,7 @@ const Payment = () => {
             <>
               <div className="payment-method-price-main-container">
                 <h2>
-                  Total <span style={{ color: "#666666" }}> TTC</span>
+                  Total <span style={{ color: "#666666" }}> TTC avec frais d‘envoi</span>
                 </h2>
                 <h2>€{price ?? 10}</h2>
               </div>

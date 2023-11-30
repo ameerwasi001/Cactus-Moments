@@ -231,6 +231,17 @@
   margin-right: 10rem;
 }
 
+.template-pagination {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+}
+
+.template-pagination > p {
+  margin: 1rem;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 950px) {
   .cactus-dashboard-banner_image_view img {
     object-fit: contain;
@@ -387,28 +398,47 @@
 }
 
 @media screen and (max-width: 520px) {
+  .cactus-dashboard-templete_title_view {
+    padding: 0;
+  }
+  .cactus-dashboard-templete_image_view {
+    margin: unset;
+    margin-bottom: 1rem;
+  }
+  .cactus-dashboard-templete_top_view {
+    justify-content: space-evenly;
+    padding-bottom: 2rem;
+  }
   .cactus-dashboard-templete_title_view h2 {
+    max-width: 80px;
     font-size: 1.6rem;
   }
   .cactus-dashboard-templete_view h3 {
     font-size: 1.2rem;
   }
   .cactus-dashboard-templete_image_view img {
-    width: 17.3rem;
-    height: 21rem;
+    width: unset;
+    height: 17rem;
+    /* height: 21rem; */
+  }
+  .cactus-dashboard-templete_top_view {
+    flex-wrap: wrap;
   }
 }
 
 @media screen and (max-width: 390px) {
+  
   .cactus-dashboard-templete_title_view h2 {
+    max-width: 12rem;
     font-size: 1.2rem;
   }
   .cactus-dashboard-templete_view h3 {
     font-size: 1rem;
   }
   .cactus-dashboard-templete_image_view img {
-    /* width: 12rem; */
-    height: 15rem;
+    width: unset;
+    height: 17rem;
+    /* height: 21rem; */
   }
   .cactus-dashboard-templete_title_view {
     padding: 0.2rem 0.4rem;
