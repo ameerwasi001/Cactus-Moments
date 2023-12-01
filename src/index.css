@@ -125,6 +125,11 @@
   src: url("./assets/Skia-Regular.ttf");
 }
 
+@font-face {
+  font-family: "OoohBaby-Regular";
+  src: url("./assets/OoohBaby-Regular.ttf");
+}
+
 :root {
   --font-family: 'K2D', sans-serif;
 }
