@@ -706,11 +706,12 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
   useEffect(() => {
     const calculatedOffsets = {}
+    console.log("MXC", groupDistribution(ogProduct, distribution).flat(1))
     for(const ch of groupDistribution(ogProduct, distribution).flat(1)) {
       console.log("STRING >>", ch, ch?.sprite)
       const img = ch?.sprite
       const el = document.querySelector(`[src="${img}"]`)
-      if(!el) return
+      if(!el) continue
       const { height } = el.getBoundingClientRect()
       console.log("IAMHERE!", height)
       calculatedOffsets[img] = height+CONSTANT_BOTTOM_OFFSET
@@ -1271,6 +1272,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                     rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`).getBoundingClientRect()))]))
                   }
                 }
+                console.log("MXC", offsets, productData.selections)
                 cartObj.push(productData)
                 setKey("cart", cartObj)
                 setErrorModal("show")
