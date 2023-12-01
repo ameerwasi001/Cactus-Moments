@@ -194,7 +194,7 @@ const Navbar = (props) => {
                   <div className="cart-checkout-button" onClick={() => {
                     setShowPaymentModel(true)
                   }}>Payer</div>
-                </div> : p == "nodata" ? <div className="cart-item-none">There's nothing in your cart</div> : <div className="cart-item">
+                </div> : p == "nodata" ? <div className="cart-item-none">Votre panier est vide.</div> : <div className="cart-item">
                   <p onClick={() => {
                     setDetailModal(p)
                   }}>{p?.selections?.product?.mainDesc} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
@@ -229,7 +229,7 @@ const Navbar = (props) => {
           onClick={() => navigate("/searchpage")}
           className="cactus__navbar-links_input_view"
         >
-          <input disabled placeholder="Search" />
+          <input disabled placeholder="Recherche" />
           <img alt="" src={search} />
         </div>
       </>}

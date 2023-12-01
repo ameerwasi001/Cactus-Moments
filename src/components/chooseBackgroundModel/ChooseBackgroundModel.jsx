@@ -12,7 +12,7 @@ export default function ChooseBackgroundModel(props) {
             <div className='cactus-choose_bg_model_view'>
                 <div className='cactus-composition_model_header_view'>
                     <h2></h2>
-                    <h1>Choose Background</h1>
+                    <h1>Séléctionnez un arrière-plan</h1>
                     <img onClick={props.onClick} src={closeBox} />
                 </div>
                 <div className='cactus-choose_bg_model-images_top_view'>

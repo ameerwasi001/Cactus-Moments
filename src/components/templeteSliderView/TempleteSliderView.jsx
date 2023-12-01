@@ -20,7 +20,7 @@ export default function TempleteSliderView(props) {
             <div className="cactus-dashboard-slider_title_view" style={props.style}>
                 <h1>{props.title}</h1>
                 {props.viewAll &&
-                    <h2>View all</h2>
+                    <h2>Voir tout</h2>
                 }
             </div>
             <div className="cactus-dashboard-slider_view">

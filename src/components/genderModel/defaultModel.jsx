@@ -119,8 +119,8 @@ export default function DefaultModel(props) {
                         }}>
                             <h3>Choisir</h3>
                         </button>
-                        {getMax(categories) > ogProduct.max && <div style={{ color: "red", maxWidth: "20rem", marginTop: "2rem" }}>
-                            Seulement {ogProduct.max} caractères sont autorisés, vous avez sélectionné {getMax(categories)} caractères.
+                        {getMax(categories) > ogProduct.max && <div style={{ color: "red", maxWidth: "20rem", marginTop: "2rem", fontSize: "17px", textAlign: "center" }}>
+                            Seulement {ogProduct.max} personnages sont autorisés sur cette illustration, vous avez sélectionné {getMax(categories)} personnages.
                         </div>}
                     </div>
                 </div>

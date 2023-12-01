@@ -1079,7 +1079,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                       className="cactus-templete_detail_side__view_image_style"
                       onClick={() => setSelectedImage(item?.image?.coordinateVariation?.preview || item?.image?.url)}
                     /> :
-                  <h3>No image selected</h3>
+                  <h3>Sélectionnez une image</h3>
                 );
               })}
             </div>
