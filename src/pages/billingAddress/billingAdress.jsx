@@ -38,15 +38,6 @@ const monthArr = [
   { label: "December", value: "december" },
 ];
 
-const countryArr = [
-  { label: "UK", value: "UK" },
-  { label: "Germany", value: "germany" },
-  { label: "France", value: "France" },
-  { label: "Spain", value: "Spain" },
-  { label: "England", value: "England" },
-  { label: "USA", value: "Usa" },
-];
-
 const BillingAdress = () => {
   const { product, adults, children } = getAllParams()
   const { state } = useLocation()
@@ -80,6 +71,15 @@ const BillingAdress = () => {
   const [address1, setAddres1] = useState("")
   const [address2, setAddres2] = useState("")
   const [error, setError] = useState("")
+
+  const countryArr = [
+    { label: "UK", value: "UK" },
+    { label: "Germany", value: "germany" },
+    { label: "France", value: "France" },
+    { label: "Spain", value: "Spain" },
+    { label: "England", value: "England" },
+    showBillingScreenForCard ? null : { label: "USA", value: "Usa" },
+  ].filter(x => !!x);
 
   useEffect(() => {
     for (let i = 1; i < 32; i++) {
