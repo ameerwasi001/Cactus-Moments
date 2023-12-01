@@ -35,7 +35,7 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-            <h3>Copyrights © Cactus Moments 2023 | Powered by TX Dynamics</h3>
+            <h3>Cactus Moments</h3>
         </div>
     )
 }

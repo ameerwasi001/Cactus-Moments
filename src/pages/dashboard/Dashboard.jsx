@@ -106,7 +106,7 @@ export default function Dashboard() {
             </h5>
             {isPhone() ? <div style={{ marginTop: "2rem" }}></div> : <div className="cactus-dashboard-banner_buttons_view">
               <div className="cactus-dashboard-banner_see_more_view">
-                <h2>Voir plus</h2>
+                <h2 onClick={() => document.getElementById("main-templates")?.scrollIntoView}>Voir plus</h2>
               </div>
               {/* <div className="cactus-dashboard-banner_contact_button">
                 <h3>Contact Us</h3>

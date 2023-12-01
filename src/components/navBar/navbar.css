@@ -202,12 +202,26 @@
 }
 
 @media screen and (max-width: 1160px) {
-  .cactus__navbar-links {
+  /* .cactus__navbar-links {
+    display: none;
+  } */
+
+  .character-box {
+    width: 22% !important;
+    height: 18rem !important;
+  }
+
+  .cactus__navbar-links_input_view {
     display: none;
   }
 
+  .cactus_navbar-links_container {
+    justify-content: space-around;
+    width: 80%;
+  }
+
   .cactus__navbar-menu {
-    display: flex;
+    display: none;
   }
 
   .cactus__navbar-links_text_view {
@@ -220,6 +234,14 @@
 @media screen and (max-width: 550px) {
   .cactus__navbar {
     padding: 0rem 3rem;
+  }
+
+  .cactus__navbar-links {
+    display: none;
+  }
+
+  .cactus__navbar-menu {
+    display: flex;
   }
 
   .cactus__navbar-links_logo img {
