@@ -742,6 +742,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         const curr = charPositions[catName] ?? 0
         const catDists = distribution.filter(cat => cat.categoryName == catName)
         const currDist = catDists[curr]
+        // if(curr >= parseInt(cat.modifiedMax)) return ch
         charPositions[catName] = curr + 1
         if(!currDist) return ch
         return currDist?.sprite
@@ -750,8 +751,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     // if(containsStatic) setCharacters(getCategoryCharacters(product))
     // else setCharacters(newChars)
     console.log("CHs", firstLoad, characters, newChars)
-    if(containsStatic) setCharacters(ogChars)
-    else setCharacters(newChars)
+    // if(containsStatic) setCharacters(ogChars)
+    // else setCharacters(newChars)
+    setCharacters(newChars)
   }, [product])
 
   useEffect(() => {
@@ -860,9 +862,10 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         categoryScale, 
         offset: product?.offsets?.[foundCategory?.name], 
         offsetWidth: product?.offsetWidths?.[foundCategory?.name], 
+        hidden: x.hidden,
         // offset: getTotalOffset(sprite).height, 
         // offsetWidth: getTotalOffset(sprite).width, 
-        sprite: x.hidden ? "" : sprite,
+        sprite: sprite,
       }
     })
     
@@ -1104,7 +1107,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
-                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.sprite} style={{
+                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
