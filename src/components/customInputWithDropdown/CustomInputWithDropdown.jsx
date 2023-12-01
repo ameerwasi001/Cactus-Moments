@@ -16,13 +16,13 @@ export default function CustomInputWithDropdown(props) {
             {props.dropdownValue &&
                 (props.type === 'name' ?
                     <>
-                        <h5>Surname</h5>
+                        <h5>Titre</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
                             <input placeholder="Enter title" ref={title} value={props.title} onChange={ev => props.onChangeTitle(ev.target.value)}/>
                             <img src={edit} onClick={() => title.current.focus()} />
                         </div>
                         <div className="cactus-templete_detail-form_dropdown_title_divider" />
-                        <h5>Family Name</h5>
+                        <h5>Sous-titre</h5>
                         <div className="cactus-templete_detail-form_dropdown_title_icon_view">
                             <input ref={subtitle} placeholder="Enter sub title" value={props.subtitle} onChange={ev => props.onChangeSubtitle(ev.target.value)} />
                             <img src={edit} onClick={() => subtitle.current.focus()} />
@@ -33,9 +33,9 @@ export default function CustomInputWithDropdown(props) {
                     :
                     <>
                         <div className="cactus-templete_detail-form_dropdown_background_data_view">
-                            {props?.dropdownData?.image?.url || props?.dropdownData?.image ? <img src={props.type === 'background' ? props.dropdownData.image.url : props.dropdownData.image} onClick={props.onClickButton} /> : <h3>No image selected</h3>}
+                            {props?.dropdownData?.image?.url || props?.dropdownData?.image ? <img src={props.type === 'background' ? props.dropdownData.image.url : props.dropdownData.image} onClick={props.onClickButton} /> : <h3>Sélectionnez une image</h3>}
                             <div onClick={props.onClickButton}>
-                                <h6>{props.type === 'background' ? 'Modifier Background' : props.type === 'adult' ? 'Modifier ' + props.categoryName : 'Modifier ' + props.categoryName}</h6>
+                                <h6>{props.type === 'background' ? 'Modifier l’arrière-plan' : props.type === 'adult' ? 'Modifier ' + props.categoryName : 'Modifier ' + props.categoryName}</h6>
                             </div>
                         </div>
                     </>

@@ -127,7 +127,7 @@ export default function Dashboard() {
             <img alt="" src={homeImage2} />
           </div>
         </div>
-        <TempleteSliderView title={"Popular Templates"} viewAll setSelectedCategory={x => {
+        <TempleteSliderView title={"Nos illustrations"} viewAll setSelectedCategory={x => {
           setSelectedCategory(x)
           navigate(`/?category=${x}`)
         }}/>

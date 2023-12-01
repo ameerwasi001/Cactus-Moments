@@ -13,9 +13,9 @@ export default function Footer() {
                     {/* <h4>Logo</h4> */}
                     <p>Faites de chaque cadeau un souvenir inoubliable en consultant notre boutique de cadeaux personnalisés. Que ce soit pour un anniversaire, un mariage, une fête de naissance, un EVG ou tout simplement pour montrer votre amour, nos cadeaux sur mesure sont la solution parfaite. Choisissez parmi une variété d'options pour créer des articles uniques qui laisseront une impression durable.</p>
                     <div className='cactus-footerSocialView'>
-                        <img src={facebook} alt='' />
-                        <img src={linkedIn} alt='' />
-                        <img src={instagram} alt='' />
+                        <img src={facebook} alt='' onClick={() => window.open("https://www.facebook.com/mycactusmoments", "_blank")}/>
+                        {/* <img src={linkedIn} alt='' onClick={() => window.open("https://www.instagram.com/mycactusmoments", "_blank")}/> */}
+                        <img src={instagram} alt='' onClick={() => window.open("https://www.instagram.com/mycactusmoments", "_blank")}/>
                     </div>
                 </div>
                 <div className='cactus-footerItemTopView margin100'>
