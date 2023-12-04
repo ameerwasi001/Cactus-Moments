@@ -27,7 +27,7 @@ const Payment = () => {
     (_price < 50 ? (_price + deliveryIncrement) : _price) : 
     _price
   const product = { ..._product, price }
-  console.log("PRODUCT-PRICE-X", minorBilling, _product, price, _price)
+  console.log("PRODUCT-PRICE-X", minorBilling, _product, price, _price, restProduct)
   const [selectedMethod, setSelectedMethod] = useState(withCard ? "card" : "code")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
