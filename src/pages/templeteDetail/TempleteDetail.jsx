@@ -1250,7 +1250,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 onClick={async () => {
                   // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
                   // console.log("imgs=>", img)
-                  setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect()))])) })
+                  setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))])) })
                 }}
                 style={{ marginRight: "1.5rem" }}
                 className="cactus-templete_detail-order_button"
@@ -1272,7 +1272,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                     realOffsets,
                     // templeteArray,
                     offsets,
-                    rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect()))]))
+                    rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))]))
                   }
                 }
                 console.log("MXC", offsets, productData.selections)
