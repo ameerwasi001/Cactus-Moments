@@ -712,11 +712,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
       const img = ch?.sprite
       const el = document.querySelector(`[src="${img}"]`)
       if(el) {
-        calculatedOffsets[img] = 0
-      } else {
         const { height } = el.getBoundingClientRect()
         console.log("IAMHERE!", height)
         calculatedOffsets[img] = height+CONSTANT_BOTTOM_OFFSET
+      } else {
+        calculatedOffsets[img] = 0
       }
     }
     console.log("OFFSET-VALUE-X", calculatedOffsets)
