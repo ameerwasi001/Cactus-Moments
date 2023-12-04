@@ -21,9 +21,11 @@ const Payment = () => {
   const fromCart = !product
   console.log("product-price", fromCart, product, restProduct)
   const _price = parseFloat(fromCart ? getPrice() : product?.price)
-  const deliveryIncrement = getCountry() == "France" ? 10 : 6
+  const deliveryIncrement = getCountry() == "France" ? 6 : 10
   console.log(deliveryIncrement)
-  const price = showBillingScreenForCard ? _price < 50 ? (_price + deliveryIncrement) : _price : _price
+  const price = showBillingScreenForCard ? 
+    (_price < 50 ? (_price + deliveryIncrement) : _price) : 
+    _price
   const [selectedMethod, setSelectedMethod] = useState(withCard ? "card" : "code")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
