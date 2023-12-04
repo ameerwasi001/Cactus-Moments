@@ -32,7 +32,7 @@ export default function Poster() {
           <div className="cactus-about_us-banner_title_view">
             <h1>Poster</h1>
             <img src={aboutUsBorder} style={{ width: 180 }} />
-            <h2>{'Acceuil > Poster'}</h2>
+            <h2>{'Accueil > Poster'}</h2>
           </div>
           <div className="cactus-about_us-banner_image_view">
             <img src={posterBanner} />

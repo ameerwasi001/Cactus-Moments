@@ -20,7 +20,7 @@ export default function Footer() {
                 </div>
                 <div className='cactus-footerItemTopView margin100'>
                     <h1>Site Web</h1>
-                    <h2 onClick={() => navigate('/')}>Acceuil</h2>
+                    <h2 onClick={() => navigate('/')}>Accueil</h2>
                     <h2 onClick={() => navigate('/aboutus')}>À propos de nous </h2>
                     <h2 onClick={() => navigate('/poster')}>Posters</h2>
                     <h2 onClick={() => navigate('/privacypolicy')}> Politique de confidentialité </h2>

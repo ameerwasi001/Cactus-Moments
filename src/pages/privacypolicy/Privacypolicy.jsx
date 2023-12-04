@@ -12,7 +12,7 @@ export default function Privacypolicy() {
           <div className="cactus-about_us-banner_title_view">
             <h1>Privacy Policy</h1>
             <img src={aboutUsBorder} style={{ width: 324 }} />
-            <h2>{'Acceuil > Privacy Policy'}</h2>
+            <h2>{'Accueil > Privacy Policy'}</h2>
           </div>
           <div className="cactus-about_us-banner_image_view">
             <img src={privacy} />

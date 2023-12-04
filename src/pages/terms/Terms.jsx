@@ -15,7 +15,7 @@ export default function Terms() {
           <div className="cactus-about_us-banner_title_view">
             <h1>Terms & Conditions</h1>
             <img src={aboutUsBorder} />
-            <h2>{"Acceuil > Term & Conditions"}</h2>
+            <h2>{"Accueil > Term & Conditions"}</h2>
           </div>
           <div className="cactus-about_us-banner_image_view">
             <img src={terms} />
