@@ -73,11 +73,11 @@ const BillingAdress = () => {
   const [error, setError] = useState("")
 
   const countryArr = [
-    { label: "UK", value: "UK" },
-    { label: "Germany", value: "germany" },
-    { label: "France", value: "France" },
-    { label: "Spain", value: "Spain" },
-    { label: "England", value: "England" },
+    { label: "France", value: "france" },
+    { label: "Belgique", value: "belgique" },
+    { label: "Luxembourg", value: "luxembourg" },
+    { label: "Allemagne", value: "allemagne" },
+    { label: "Espagne", value: "espagne" },
     showBillingScreenForCard ? null : { label: "USA", value: "Usa" },
   ].filter(x => !!x);
 
@@ -238,12 +238,13 @@ const BillingAdress = () => {
               onChange={() => setIschecked(!ischecked)}
               type="checkbox"
             />
-            <p>
+            {/* <p>
               I Agree with all{" "}
               <span style={{ textDecoration: "underline" }}>
                 term & Conditions Contact us for more details
               </span>
-            </p>
+            </p> */}
+            <p>Acceptez nos conditions générales de vente.</p>
           </div>
           <div
             style={{ opacity: 

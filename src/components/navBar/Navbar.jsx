@@ -104,7 +104,7 @@ const Navbar = (props) => {
                   : "none",
             }}
           >
-            Acceuil
+            Accueil
           </h1>
         </div>
         <div className="cactus__navbar-links_text_view">
@@ -133,7 +133,7 @@ const Navbar = (props) => {
         <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => {
-              setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasses", "Sacs"].map(mainDesc => ({ mainDesc })) })
+              setOpenDropdown(openDropdown?.title == "accessories" ? null : { title: "accessories", data: ["Tasses", "Pochettes"].map(mainDesc => ({ mainDesc })) })
             }}
             style={{
               borderBottomStyle:

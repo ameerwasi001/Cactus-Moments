@@ -32,7 +32,7 @@ export default function TempleteSliderView(props) {
                         return (
                             <div key={item.id} className="cactus-dashboard-slider_templete_view">
                                 <img src={item.image} alt="" onClick={() => props.setSelectedCategory(item.name.toLowerCase())}/>
-                                <h2>{item.name}</h2>
+                                <h2>{item.name}s</h2>
                             </div>
                         )
                     })}
