@@ -27,7 +27,7 @@ const Payment = () => {
     (_price < 50 ? (_price + deliveryIncrement) : _price) : 
     _price
   const product = { ..._product, price }
-  console.log("PRODUCT-PRICE-X", _product, price, _price)
+  console.log("PRODUCT-PRICE-X", minorBilling, _product, price, _price)
   const [selectedMethod, setSelectedMethod] = useState(withCard ? "card" : "code")
   const [next, setNext] = useState(true);
   const [cardNumber, setCardNumber] = useState("")
@@ -134,6 +134,7 @@ const Payment = () => {
             children,
             addressLine2,
             extraDeliveryCharge: showBillingScreenForCard,
+            christmas: minorBilling,
             selectedDimension,
             selectedFrame,
             code,
@@ -177,6 +178,7 @@ const Payment = () => {
         children,
         addressLine2,
         extraDeliveryCharge: showBillingScreenForCard,
+        christmas: minorBilling,
         selectedDimension,
         selectedFrame,
         code,

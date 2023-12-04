@@ -197,7 +197,7 @@ const Navbar = (props) => {
                 </div> : p == "nodata" ? <div className="cart-item-none">Votre panier est vide.</div> : <div className="cart-item">
                   <p onClick={() => {
                     setDetailModal(p)
-                  }}>{p?.selections?.product?.mainDesc} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
+                  }}>{p?.selections?.product?.mainDesc} - {p?.selections?.product?.name} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
                   <img src={crossImg} className="cart-item-cross" onClick={ev => {
                     ev.stopPropagation()
                     const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)

@@ -51,8 +51,8 @@ const BillingAdress = () => {
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
   const [dayselect, setDaySelected] = useState({ label: "1", value: "1" });
   const [countryselect, setCountrySelected] = useState({
-    label: "England",
-    value: "England",
+    label: "France",
+    value: "france",
   });
   const [monthSelect, setMonthSelected] = useState({
     label: "January",
@@ -78,7 +78,7 @@ const BillingAdress = () => {
     { label: "Luxembourg", value: "luxembourg" },
     { label: "Allemagne", value: "allemagne" },
     { label: "Espagne", value: "espagne" },
-    showBillingScreenForCard ? null : { label: "USA", value: "Usa" },
+    // showBillingScreenForCard ? null : { label: "USA", value: "Usa" },
   ].filter(x => !!x);
 
   useEffect(() => {
