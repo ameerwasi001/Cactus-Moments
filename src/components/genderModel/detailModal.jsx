@@ -62,12 +62,25 @@ const getCategoryMaxes = (max, categories, ogProduct) => {
 }
 
 const getMax = categories => categories.map(cat => cat.max).map(x => parseInt(x)).reduce((a, b) => a+b, 0)
+const groupPrcing = pricings => {
+    const grouped = {}
+    for(const pricing of pricings) grouped[pricing.section] = []
+    for(const pricing of pricings) grouped[pricing.section].push(pricing)
+    return grouped
+}
+
 
 export default function DefaultModel(props) {
 
+    const pricingGrouped = groupPrcing(props?.additionalData?.selections?.product?.pricing)
+
     const options = Object.entries(props?.additionalData?.selections ?? {})
         .filter(([k]) => k.startsWith("pricing-"))
-        .map(([k, answer]) => ({ question: k.replace("pricing-", ""), answer }))
+        .map(([k, answer]) => ({
+            question: k.replace("pricing-", ""), 
+            answer,
+            // answers: pricingGrouped[k.replace("pricing-", "")],
+        }))
 
     const [selectedOption, setSelectedOption] = useState(null)
 
