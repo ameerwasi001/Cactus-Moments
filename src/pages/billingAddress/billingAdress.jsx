@@ -45,7 +45,8 @@ const BillingAdress = () => {
   const withCard = selections?.withCard
   const minorBilling = selections?.minorBilling
   const showBillingScreenForCard = selections?.showBillingScreenForCard
-  const onlyEmail = !selections?.selectedCardPayment
+  const onlyEmail = !selections?.withCard
+  console.log("BILLING", selections?.selectedCardPayment)
   console.log("FSELECT", selections)
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
