@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { closeBox, female, male, maleDummy, radioFilled, radio } from '../../assets'
 import { Select } from 'antd'
 import './genderModel.css'
+import { getKey, setKey } from '../../requests'
 
 const { Option } = Select
 
@@ -72,15 +73,17 @@ const groupPrcing = pricings => {
 
 export default function DefaultModel(props) {
 
+    console.log("abcd", props.additionalData)
     const pricingGrouped = groupPrcing(props?.additionalData?.selections?.product?.pricing)
 
-    const options = Object.entries(props?.additionalData?.selections ?? {})
+    const [price, setPrice] = useState(props?.additionalData?.selections?.product?.price)
+    const [options, setOptions] = useState(Object.entries(props?.additionalData?.selections ?? {})
         .filter(([k]) => k.startsWith("pricing-"))
         .map(([k, answer]) => ({
             question: k.replace("pricing-", ""), 
             answer,
-            // answers: pricingGrouped[k.replace("pricing-", "")],
-        }))
+            answers: pricingGrouped[k.replace("pricing-", "")],
+        })))
 
     const [selectedOption, setSelectedOption] = useState(null)
 
@@ -92,9 +95,20 @@ export default function DefaultModel(props) {
                         {options.map((option, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '20rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <h2>{option?.question}</h2>
-                                <Select disabled className='option-disabled' style={{ width: "15rem" }} value={option.answer}>
+                                <Select style={{ width: "15rem" }} value={option.answer} onChange={text => {
+                                    const newOptions = [ ...options ]
+                                    console.log("abcd", newOptions[n].answer, text)
+                                    newOptions[n].answer = text
+                                    setOptions(newOptions)
+                                }}>
                                     {/* {console.log("CNAME", category?.name, -mins[category?.name])} */}
                                     <Option value={option.answer}>{option.answer}</Option>
+                                    {
+                                        option
+                                            .answers
+                                            .filter(opt => opt.name != option.answer)
+                                            .map(option => <Option value={option.name}>{option.name}</Option>)
+                                    }
                                 </Select>
                             </div>
                         </div>)}
@@ -103,6 +117,31 @@ export default function DefaultModel(props) {
                         }}>
                             <h3>Choisir</h3>
                         </button> */}
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <div
+                            className="cactus-templete_detail-order_button"
+                            style={{ color: "white", width: "100px", height: "40px", fontSize: "15px" }}
+                            onClick={() => {
+                                console.log("abcdef", props)
+                                const cart = getKey("cart") ?? []
+                                const currProduct = cart[props?.additionalData?._id]
+                                for(const opt of options) {
+                                    currProduct.selections[opt.question] = opt.answer
+                                    currProduct.selections[`pricing-${opt.question}`] = opt.answer
+                                }
+                                const price = Object.entries(currProduct?.selections)
+                                    .filter(([k]) => k.startsWith("pricing-"))
+                                    .map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0))
+                                    .reduce((a, b) => a+b, 0)
+                                currProduct.selections.product.price = price
+                                console.log("abcdefgh", price)
+                                setKey("cart", cart)
+                                props.closeModal()
+                            }}
+                        >
+                            Save
+                        </div>
                     </div>
                 </div>
                

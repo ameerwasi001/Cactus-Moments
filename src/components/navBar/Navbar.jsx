@@ -55,7 +55,10 @@ const Navbar = (props) => {
           additionalData={detailModal}
           ogProduct={{}}
           product={{}}
-          closeModal={() => setDetailModal(null)}
+          closeModal={() => {
+            setDetailModal(null)
+            setOpenDropdown(null)
+          }}
           hasStaticPositions={true}
           onClick={selectedCardPayment => {
             console.log("HERE, NAV")
@@ -196,7 +199,7 @@ const Navbar = (props) => {
                   }}>Payer</div>
                 </div> : p == "nodata" ? <div className="cart-item-none">Votre panier est vide.</div> : <div className="cart-item">
                   <p onClick={() => {
-                    setDetailModal(p)
+                    setDetailModal({ ...p, _id: i })
                   }}>{p?.selections?.product?.mainDesc} - {p?.selections?.title} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
                   <img src={crossImg} className="cart-item-cross" onClick={ev => {
                     ev.stopPropagation()
