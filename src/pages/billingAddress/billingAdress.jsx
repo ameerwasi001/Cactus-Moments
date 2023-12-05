@@ -45,6 +45,7 @@ const BillingAdress = () => {
   const withCard = selections?.withCard
   const minorBilling = selections?.minorBilling
   const showBillingScreenForCard = selections?.showBillingScreenForCard
+  const onlyEmail = !selections?.selectedCardPayment
   console.log("FSELECT", selections)
   const navigate = useNavigate();
   const [ischecked, setIschecked] = useState(false);
@@ -103,7 +104,7 @@ const BillingAdress = () => {
           <h1>{mostRequired ? 'Adresse de facturation' : `Adresse d'envoi`}</h1>
 
           <div id="err" style={{ display: error ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>
-          <div className="billing-address-select-mr-container">
+          {!onlyEmail && <div className="billing-address-select-mr-container">
             <div className="billing-address-select-mr-sub-container">
               {mrArr.map((item) => (
                 <>
@@ -119,25 +120,28 @@ const BillingAdress = () => {
                 </>
               ))}
             </div>
-          </div>
+          </div>}
           <div className="billing-address-add-billing-container" style={{ justifyContent: "space-between" }}>
             {
               <>
-                <div className="billing-address-input-container1">
-                  <TextInputBilling
-                    inputStyle={{ width: "70%" }}
-                    title={"Prénom*"}
-                    value={firstName}
-                    onChange={ev => setFirstName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
-                    type={"text"}
-                  />
-                  <TextInputBilling
-                    inputStyle={{ width: "70%" }}
-                    title={"Nom de famille*"}
-                    value={lastName}
-                    onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
-                    type={"text"}
-                  />
+                <div className="billing-address-input-container1" style={{ width: onlyEmail ? "90%": undefined }}>
+                  {!onlyEmail && <>
+                    <TextInputBilling
+                      inputStyle={{ width: "70%" }}
+                      title={"Prénom*"}
+                      value={firstName}
+                      onChange={ev => setFirstName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
+                      type={"text"}
+                    />
+                    <TextInputBilling
+                      inputStyle={{ width: "70%" }}
+                      title={"Nom de famille*"}
+                      value={lastName}
+                      onChange={ev => setLastName(ev.target.value.split("").map(ch => isCharacter(ch) ? ch : "").join(""))}
+                      type={"text"}
+                    />
+                  </>}
+
                   <TextInputBilling
                     inputStyle={{ width: "65%" }}
                     title={"Adresse mail*"}
@@ -145,14 +149,17 @@ const BillingAdress = () => {
                     value={email}
                     onChange={ev => setEmail(ev.target.value)}
                   />
-                  <TextInputBilling
-                    inputStyle={{ width: "75%" }}
-                    title={"Numéro de téléphone*"}
-                    type={"number"}
-                    value={number}
-                    onChange={ev => setNumber(ev.target.value)}
-                  />
-                  <div className="text-input-billing-main-container">
+                  {!onlyEmail && <>
+                    <TextInputBilling
+                      inputStyle={{ width: "75%" }}
+                      title={"Numéro de téléphone*"}
+                      type={"number"}
+                      value={number}
+                      onChange={ev => setNumber(ev.target.value)}
+                    />
+                  </>}
+                  
+                  {!onlyEmail && <div className="text-input-billing-main-container">
                     <div className="text-input-billing-divider-container">
                       <h3>Date de naissance*</h3>
                       <div className="text-input-billing-input-divider"></div>
@@ -177,9 +184,9 @@ const BillingAdress = () => {
                       setSelected={setYearSelect}
                       bg={{ width: "10rem" }}
                     />
-                  </div>
+                  </div>}
                 </div>
-                <div className="billing-address-input-container2">
+                {!onlyEmail && <div className="billing-address-input-container2">
                   <div
                     style={{ width: "100%" }}
                     className="text-input-billing-main-container"
@@ -226,7 +233,7 @@ const BillingAdress = () => {
                     value={address2}
                     onChange={ev => setAddres2(ev.target.value)}
                   />
-                </div>
+                </div>}
               </>
             }
           </div>
@@ -250,29 +257,38 @@ const BillingAdress = () => {
             style={{ opacity: 
               (
                 (!mostRequired && (ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))) ||
-                (mostRequired && ischecked && email.includes("@") && Object.entries({lastName, number, email}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))
+                (mostRequired && ischecked && email.includes("@") && Object.entries({lastName, number, email}).map(([_, v]) => !!v).reduce((a, b) => a && b, true)) ||
+                (onlyEmail && ischecked && email && email.includes("@"))
               ) ? 
                 1 : 
                 0.5 
             }}
             onClick={() => {
-              console.log("SELECTECTIONSS", selections)
+              console.log("SELECTECTIONSS", onlyEmail)
               if(!ischecked) return setError("L'accord avec les termes et conditions est requis.")
               let error = ""
-              const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
-              const notEmptyForCode = {lastName, number, email}
-              if(!email.includes("@")) return 
-              if(!mostRequired) Object.entries(notEmpty).forEach(([f, x]) => {
-                if(!x) error = `${f} is required`
-                window.scrollTo(0, 0)
-              }) 
-              else Object.entries(notEmptyForCode).forEach(([f, x]) => {
-                if(!x) error = `${f} is required`
-                window.scrollTo(0, 0)
-              }) 
-              if(error) {
-                window.scrollTo(0, 0)
-                return setError(error)
+              if(!onlyEmail) {
+                const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
+                const notEmptyForCode = {lastName, number, email}
+                if(!email.includes("@")) return 
+                if(!mostRequired) Object.entries(notEmpty).forEach(([f, x]) => {
+                  if(!x) error = `${f} is required`
+                  window.scrollTo(0, 0)
+                }) 
+                else Object.entries(notEmptyForCode).forEach(([f, x]) => {
+                  if(!x) error = `${f} is required`
+                  window.scrollTo(0, 0)
+                }) 
+                if(error) {
+                  window.scrollTo(0, 0)
+                  return setError(error)
+                }
+              } else {
+                if(!email || !email.includes("@")) {
+                  error = "Email is Required"
+                  window.scrollTo(0, 0)
+                  return setError(error)
+                }
               }
               navigate(`/payment?${setParam({
                 product: product,

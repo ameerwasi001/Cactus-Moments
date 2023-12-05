@@ -70,7 +70,7 @@ export default function DefaultModel(props) {
         },
         {
             id: 3,
-            text: "Achat au marché de Noël d'Arras 2023 avec code"
+            text: "Commande sur place"
         },
     ]
     const [selectedOption, setSelectedOption] = useState(null)
