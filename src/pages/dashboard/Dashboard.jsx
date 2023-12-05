@@ -78,11 +78,11 @@ export default function Dashboard() {
   }, [search])
 
   useEffect(() => {
-    req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry mainDesc defaultIllustration backgrounds price")}`)
+    req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry mainDesc defaultIllustration price")}`)
       .then(({products}) => {
         console.log(products)
         console.log("setting")
-        const mappedProducts = products?.filter(prod => prod.backgrounds.length)?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: p.defaultIllustration ? {url: p.defaultIllustration} : p.backgrounds[p.defaultBackground]} })
+        const mappedProducts = products?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: { url: p.defaultIllustration }} })
         setTemplateArray(mappedProducts)
         console.log("done setting", mappedProducts)
         setLoading(false)
