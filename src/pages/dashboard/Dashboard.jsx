@@ -20,6 +20,7 @@ import { req } from '../../requests'
 import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
+import EventEmitter from 'events'
 
 const getS3Url = id => `https://drivebuddyz.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
 const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => JSON.parse(decodeURIComponent(x)))
@@ -39,6 +40,8 @@ function paginate(array, page_size, page_number) {
   else return array
 }
 
+const emitter = new EventEmitter()
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
@@ -47,6 +50,7 @@ export default function Dashboard() {
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const [loadedProducts, setLoadedProducts] = useState({})
   const [selectedCategory, setSelectedCategory] = useState("poster")
   const [currPage, setCurrPage] = useState(1)
   const recordsPerPage = 10
@@ -89,6 +93,22 @@ export default function Dashboard() {
   useEffect(() => {
     if(templeteArray?.length) setLoading(false)
   }, [templeteArray])
+
+  useEffect(() => {
+    if(!templeteArray?.length) return
+    for(const item of templeteArray) 
+      fetchObejct(item._id)
+        .then(product => {
+          setLoadedProducts(loadedProducts => ({ ...loadedProducts, [item._id]: product }))
+          console.log("PRODUCT-EMIT", item._id)
+          emitter.emit(item._id, product)
+        })
+  }, [templeteArray])
+
+  useEffect(() => {
+    // TODO: Remove all listeneres for all events, somehow
+    return () => emitter.removeAllListeners()
+  }, [])
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -135,13 +155,21 @@ export default function Dashboard() {
           {loading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
               return (
                 <TempleteView
-                  onClick={async () => {
+                  onClick={async () => {                                                                                                                                                                                                   
                     setLoading(true)
                     const el = document.getElementById("main-products")
                     el?.scrollIntoView()
-                    const product = await fetchObejct(item._id)
-                    setLoading(false)
-                    navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+
+                    const onProductLoaded = product => {
+                      console.log("Loaded, naviating")
+                      setLoading(false)
+                      navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+                    }
+
+                    const product = loadedProducts[item._id]
+
+                    if(product) onProductLoaded(product) 
+                    else emitter.on(item._id, onProductLoaded)
                   }}
                   item={item}
                 />
