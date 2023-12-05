@@ -100,6 +100,14 @@
   color: #333333;
 }
 
+#overlay-title-hidden > div {
+  color: white !important;
+}
+
+#overlay-subtitle-hidden > div {
+  color: white !important;
+}
+
 .cactus-templete_detail-detail_top_view h2 {
   font-family: "K2D";
   font-style: normal;
