@@ -775,7 +775,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   }, [product])
 
   useEffect(() => {
-    if(!chosen) return
+    // if(!chosen) return
 
     let staticSeenCounters = {}
     const hiddenCentralCategories = {}
