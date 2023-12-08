@@ -16,12 +16,11 @@ export default function TempleteView(props) {
       <div>
         {/* <p>{item?.posterDesc}</p> */}
         <div className="cactus-dashboard-templete_title_view">
-          <div style={{ width: "3rem", height: "3rem" }}></div>
+          {!props.isPhone && <div style={{ width: "3rem", height: "3rem" }}></div>}
           <h2>{item?.mainDesc}</h2>
-          <img alt="" src={logo} />
+          {!props.isPhone && <img alt="" src={logo} />}
         </div>
         <h3>{item?.desc}</h3>
-        {console.log("UENTER", item)}
         <h4>{((parseFloat(item?.price ?? "0"))).toFixed(2)} €</h4>
       </div>
     </div>

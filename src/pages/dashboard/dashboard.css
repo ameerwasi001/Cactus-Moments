@@ -442,5 +442,6 @@
   }
   .cactus-dashboard-templete_title_view {
     padding: 0.2rem 0.4rem;
+    justify-content: center;
   }
 }

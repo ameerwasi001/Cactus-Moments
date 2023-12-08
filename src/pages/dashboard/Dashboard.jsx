@@ -155,6 +155,7 @@ export default function Dashboard() {
           {loading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
               return (
                 <TempleteView
+                  isPhone={isPhone()}
                   onClick={async () => {                                                                                                                                                                                                   
                     setLoading(true)
                     const el = document.getElementById("main-products")

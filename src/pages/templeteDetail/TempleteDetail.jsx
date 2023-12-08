@@ -993,6 +993,23 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     cartObj.push(productData)
     setKey("cart", cartObj)
   }
+  const PricingDataComponent = () => <>
+    <h1>{title}</h1>
+    <h2>{product.desc}</h2>
+    {console.log("PRCNGOPT", selectedPricingOptions)}
+    <h3>{(0 + parseFloat(Object.values(selectedPricingOptions).map(({price}) => parseFloat(price)).reduce((a, b) => a+b, 0))).toFixed(2)} €</h3>
+    {Object.entries(pricingObject).map(([section, prices]) => <DropdownModel
+      _={console.log("RELAPRICE", prices)}
+      name={selectedPricingOptions[section]?.name}
+      array={prices}
+      dropdownValue={shownPricingOptions[section]}
+      onClickValue={(data) => [
+        setSelectedPricingOptions({ ...selectedPricingOptions, [section]: data }),
+        setShownPricingOptions({ ...shownPricingOptions, [section]: false }),
+      ]}
+      onClick={() => setShownPricingOptions({ ...shownPricingOptions, [section]: !shownPricingOptions[section] })}
+    />)}
+  </>
 
   return (
     <div className="cactus-dashboard-main_container">
@@ -1088,6 +1105,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
 
       <div className="cactus-dashboard-container">
         <div className="cactus-templet_detail_top_container">
+          {isPhone() && <div className="cactus-templete_detail-detail_top_view">
+            <PricingDataComponent/>
+          </div>}
           <div className="cactus-templete_detail_side_templetes_view">
             <img
               src={arrowBack}
@@ -1187,25 +1207,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               // width: ratios.has(background.url) ? "350px" : "500px",
               width: "500px",
             }}>
-              <p>{product.posterDesc}</p>
+              <p style={{ marginTop: isPhone() ? '0px' : undefined }}>{isPhone() ? '' : product.posterDesc}</p>
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
-            <h1>{title}</h1>
-            <h2>{product.desc}</h2>
-            {console.log("PRCNGOPT", selectedPricingOptions)}
-            <h3>{(0 + parseFloat(Object.values(selectedPricingOptions).map(({price}) => parseFloat(price)).reduce((a, b) => a+b, 0))).toFixed(2)} €</h3>
-            {Object.entries(pricingObject).map(([section, prices]) => <DropdownModel
-              _={console.log("RELAPRICE", prices)}
-              name={selectedPricingOptions[section]?.name}
-              array={prices}
-              dropdownValue={shownPricingOptions[section]}
-              onClickValue={(data) => [
-                setSelectedPricingOptions({ ...selectedPricingOptions, [section]: data }),
-                setShownPricingOptions({ ...shownPricingOptions, [section]: false }),
-              ]}
-              onClick={() => setShownPricingOptions({ ...shownPricingOptions, [section]: !shownPricingOptions[section] })}
-            />)}
+            {!isPhone() && <PricingDataComponent/>}
             <div className="cactus-templete_detail-form_top_view">
               <div className="cactus-templete_detail-form_title">
                 <h4>Personnalisez l'affiche</h4>
@@ -1295,6 +1301,12 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
             </div>
             </div>
           </div>
+          {isPhone() && <div className="cactus-templete_poster-desc" style={{
+            // width: ratios.has(background.url) ? "350px" : "500px",
+            width: "500px",
+          }}>
+            <p>{product.posterDesc}</p>
+        </div>}
         </div>
         {/* <div style={{ display: recents == 'no' ? 'none' : 'undefined' }} className="cactus-templet_detail_bottom_view">
           <h1>Recently Viewed</h1>
