@@ -323,6 +323,10 @@
 }
 
 @media screen and (max-width: 520px) {
+  .add-product-modal-container-product-description-detail-video {
+    margin-left: unset;
+    margin: 1.5rem;
+  }
   .cactus-templete_detail-form_dropdown_top_view {
     width: 30rem;
   }
