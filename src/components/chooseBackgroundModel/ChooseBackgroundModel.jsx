@@ -18,13 +18,16 @@ export default function ChooseBackgroundModel(props) {
                 <div className='cactus-choose_bg_model-images_top_view'>
                     {dataArray.map((item) => {
                         return (
-                            <div style={{ borderWidth: selectedBg.id === item.id ? 2 : 0, }} className='cactus-choose_bg_model-images_view' onClick={() => setSelectedBg(item)} key={item.id}>
+                            <div style={{ borderWidth: selectedBg.id === item.id ? 2 : 0, }} className='cactus-choose_bg_model-images_view' onClick={() => {
+                                setSelectedBg(item)
+                                if(props.isPhone) document.getElementById("choose-background-button")?.scrollIntoView()
+                            }} key={item.id}>
                                 <img src={item.image.url} />
                             </div>
                         )
                     })}
                 </div>
-                <div onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
+                <div id="choose-background-button" onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
                     <h3>Choisir</h3>
                 </div>
             </div>

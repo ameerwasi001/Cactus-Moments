@@ -1084,6 +1084,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
       )}
       {chooseBackgroundModel && (
         <ChooseBackgroundModel
+          isPhone={isPhone()}
           backgrounds={product.backgrounds.filter(x => !x.coordinateVariation.evenFor)}
           onClick={data => {
             if(data.image) setBackground(data.image)
@@ -1140,8 +1141,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div style={JSON.parse(JSON.stringify({ height: '500px', width: isPhone() ? '350px' : '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" height={"500px"} width={isPhone() ? '350px' : '500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+            <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({ height: '500px', transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined, width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
+              <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
               {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
                 zIndex: 100000000000000,
                 position: "absolute", 

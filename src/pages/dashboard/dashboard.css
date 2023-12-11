@@ -427,7 +427,9 @@
 }
 
 @media screen and (max-width: 390px) {
-  
+  .cactus-dashboard-templete_title_view {
+    justify-content: center;
+  }
   .cactus-dashboard-templete_title_view h2 {
     max-width: 12rem;
     font-size: 1.2rem;

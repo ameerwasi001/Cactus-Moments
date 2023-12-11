@@ -148,6 +148,10 @@
   filter: invert(1);
 }
 
+#margin-none {
+  margin: unset !important;
+}
+
 .cactus-templete_detail-detail_top_view h3 {
   padding-top: 1rem;
   font-family: "K2D";
