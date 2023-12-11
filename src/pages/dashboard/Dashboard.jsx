@@ -7,6 +7,7 @@ import {
   dummyThree,
   dummyTwo,
   homeImage2,
+  homeImage2Responsive,
   shape,
 } from "../../assets";
 import {
@@ -144,7 +145,7 @@ export default function Dashboard() {
             </div>}
           </div>
           <div className="cactus-dashboard-banner_image_view">
-            <img alt="" src={homeImage2} />
+            <img alt="" src={isPhone() ? homeImage2Responsive : homeImage2} />
           </div>
         </div>
         <TempleteSliderView title={"Nos illustrations"} viewAll setSelectedCategory={x => {

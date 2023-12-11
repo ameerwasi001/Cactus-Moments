@@ -46,3 +46,4 @@ export { default as creditCard } from "./credit-card.png";
 export { default as creditCardBlack } from "./credit-card-black.png";
 export { default as successGif } from "./success-gif.gif";
 export { default as homeImage2 } from "./home-image2.png";
+export { default as homeImage2Responsive } from "./home-image2-responsive.png";

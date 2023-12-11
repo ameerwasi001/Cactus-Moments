@@ -134,8 +134,7 @@
 .cactus-dashboard-banner_image_view img {
   width: 92%;
   height: 92%;
-  object-fit: cover;
-  border-radius: 5rem;
+  /* border-radius: 5rem; */
 }
 
 .cactus-dashboard-templete_top_view {
@@ -244,6 +243,7 @@
 
 @media screen and (max-width: 950px) {
   .cactus-dashboard-banner_image_view img {
+    background-image: url('.././../assets/home-image2-responsive.png') !important;
     object-fit: contain;
     width: 37rem;
     height: 37rem;
