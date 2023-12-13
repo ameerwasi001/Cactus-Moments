@@ -11,6 +11,14 @@ import TextInputBilling from "../../components/textInputBilling/textInputBilling
 import ScaleLoader from "react-spinners/ScaleLoader";
 import "./payment.css";
 
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+const isPhone = () => getWindowDimensions().width < 421  
 const getPrice = () => (getKey("cart") ?? []).map(p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)).reduce((a, b) => a+b, 0)
 const stripePromise = loadStripe('pk_live_51OEy34JbX5shavtnvHumbLoNAoDYgQl7QYTSa6eN4uiyopxogrzJJPnKacaLVq6UKXWJAAKsqIZfaidfW1g3BJGy00WbYEtGiE');
 
@@ -116,6 +124,7 @@ const Payment = () => {
           product: product._id,
           bill: {
             cardNumber,
+            phoneOrder: isPhone(),
             cvv,
             expiry,
             courtesyTitle,
@@ -162,6 +171,7 @@ const Payment = () => {
         cardNumber,
         cvv,
         expiry,
+        phoneOrder: isPhone(),
         courtesyTitle,
         day,
         country,
