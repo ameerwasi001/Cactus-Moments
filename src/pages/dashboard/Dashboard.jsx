@@ -73,6 +73,8 @@ export default function Dashboard() {
       } else if(categoryName) {
         setSelectedCategory(categoryName)
         document?.getElementById("main-templates")?.scrollIntoView()
+      } else {
+        window.scrollTo(0, 0)
       }
     }
     f()
@@ -107,7 +109,6 @@ export default function Dashboard() {
   }, [templeteArray])
 
   useEffect(() => {
-    // TODO: Remove all listeneres for all events, somehow
     return () => emitter.removeAllListeners()
   }, [])
 
@@ -118,7 +119,7 @@ export default function Dashboard() {
         <div className="cactus-dashboard-banner_top_view">
           <div className="cactus-dashboard-banner_text_view">
             {/* <h5>Welcome to Cactus Moments</h5> */}
-            <h1>
+            <h1 id="top">
             Choisissez et personnalisez votre{" "}
               <span style={{ color: "#2B453E" }}>illustration</span> !
             </h1>

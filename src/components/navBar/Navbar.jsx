@@ -99,7 +99,11 @@ const Navbar = (props) => {
       ) : <>
         <div className="cactus__navbar-links_text_view">
           <h1
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/")
+              console.log(document.getElementById("top"))
+              document.getElementById("top")?.scrollIntoView()
+            }}
             style={{
               borderBottomStyle:
                 window.location.pathname === "/"
