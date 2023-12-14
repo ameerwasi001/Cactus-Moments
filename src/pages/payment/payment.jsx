@@ -9,6 +9,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import swal from 'sweetalert';
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import html2canvas from 'html2canvas';
 import "./payment.css";
 
 function getWindowDimensions() {
@@ -118,13 +119,14 @@ const Payment = () => {
       let ordered = 0
       const cartData = getKey("cart") ?? []
       const promises = []
+      const phoneOrder = isPhone()
       for(const order of cartData) {
         const { product, ...restProduct } = order.selections
         promises.push(req('POST', '/user/order', {
           product: product._id,
           bill: {
             cardNumber,
-            phoneOrder: isPhone(),
+            phoneOrder,
             cvv,
             expiry,
             courtesyTitle,
@@ -152,7 +154,7 @@ const Payment = () => {
             orderDate: new Date().toLocaleDateString(),
           },
           product: product._id,
-          selections: {product, ...restProduct}
+          selections: {product, phoneOrder, ...restProduct, img: undefined}
         }, err => {
           setLoading(false)
           setError(err)
@@ -161,7 +163,7 @@ const Payment = () => {
           if(ordered == cartData.length) {
             setLoading(false)
             setNext(false)
-            setKey("cart", [])
+            // setKey("cart", [])
           }
         }))
       }
@@ -196,7 +198,7 @@ const Payment = () => {
         orderDate: new Date().toLocaleDateString(),
       },
       product: product._id,
-      selections: {product, ...restProduct}
+      selections: {product, phoneOrder: isPhone(), ...restProduct, img: undefined}
     }, err => {
       setLoading(false)
       setError(err)

@@ -971,10 +971,19 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
    })()
   }, [title, subtitle, product, characters, background, distribution])
 
-  const setCartData = () => {
+  const setCartData = async () => {
     const cartObj = getKey("cart") ?? []
+    const illustration = document.getElementsByClassName("cactus-templete_detail-main_image")[0]
+    // const canvas = await html2canvas(illustration, {
+    //   // allowTaint: true,
+    //   // foreignObjectRendering: true,
+    //   scale: 1,
+    //   useCORS: true,
+    // })
+    // const img = canvas.toDataURL();
     const productData = {
       selections: {
+        img: "",
         product: { ...product, templeteArray: undefined }, 
         distribution,
         ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [`pricing-${k}`, obj.name])),
@@ -993,6 +1002,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     cartObj.push(productData)
     setKey("cart", cartObj)
   }
+
   const PricingDataComponent = () => <>
     <h1>{title}</h1>
     <h2>{product.desc}</h2>
@@ -1280,7 +1290,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 onClick={async () => {
                   // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
                   // console.log("imgs=>", img)
-                  setCartData()
+                  await setCartData()
                   setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))])) })
                 }}
                 style={{ marginRight: "1.5rem" }}
@@ -1288,8 +1298,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               >
                 <h5>Commandez maintenant</h5>
               </div>
-              <div className="cactus-templete_detail-order_button" onClick={() => {
-                setCartData()
+              <div className="cactus-templete_detail-order_button" onClick={async () => {
+                await setCartData()
                 setErrorModal("show")
                 swal({
                   title: "Succès",
