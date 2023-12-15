@@ -322,7 +322,15 @@
   }
 }
 
-@media screen and (max-width: 520px) {
+@media screen and (max-width: 1010px) {
+  .cactus-dashboard-banner_image_view img {
+    width: 97%;
+    height: 54%;
+  }
+}
+
+@media screen and (max-width: 540px) {
+
   .add-product-modal-container-product-description-detail-video {
     margin-left: unset;
     margin: 1.5rem;
