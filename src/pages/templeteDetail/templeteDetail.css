@@ -322,9 +322,9 @@
   }
 }
 
-@media screen and (max-width: 1010px) {
+@media screen and (max-width: 1300px) {
   .cactus-dashboard-banner_image_view img {
-    width: 97%;
+    width: 92%;
     height: 54%;
   }
 }
