@@ -29,7 +29,17 @@ import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
 import { getImageSize } from "react-image-size";
 import html2canvas from 'html2canvas';
+import AWS from "aws-sdk";
+import { Buffer } from "buffer";
 import swal from "sweetalert";
+import { FadeLoader } from "react-spinners";
+
+
+AWS.config.update({
+  accessKeyId: "AKIAVTRDW7SYZDI52F2K",
+  secretAccessKey: "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",
+  region: "us-east-2",
+});
 
 const CONSTANT_BOTTOM_OFFSET = 0
 let renderCanvas = true
@@ -441,20 +451,6 @@ const arrangeByParent = arr => {
   return parentChildArray
 }
 
-const screenshot = async ref => {
-  // Select the element that you want to capture
-  const captureElement = ref;
-
-  // Call the html2canvas function and pass the element as an argument
-  const canvas = await html2canvas(captureElement)
-  // Get the image data as a base64-encoded string
-  const imageData = canvas.toDataURL("image/png");
-
-  // Do something with the image data, such as saving it as a file or sending it to a server
-  // For example, you can create an anchor element and trigger a download action
-  return imageData
-}
-
 const TitleComponent = ({ elementId, givenId, background, title, style }) => {
   const hiddentitleCentricEl = document.querySelector(`#${elementId} > div`)
   const ogValue = hiddentitleCentricEl.innerHTML
@@ -586,6 +582,32 @@ const getCategoryOfCharacter = (product, sprite) => {
 
 // const findCharacterPositi
 
+const uploadImageOnS3 = async (src) => {
+  // return new Promise((resolve, reject) => {
+    // try {
+      // const reader = new FileReader();
+      // reader.onload = async () => {
+        const S3 = new AWS.S3();
+        const params = {
+          Bucket: "drivebuddyz",
+          Key: `${10000 + Math.round(Math.random() * 10000)}.png`,
+          Body: new Buffer(
+            src.replace(/^data:image\/\w+;base64,/, ""),
+            "base64"
+          ),
+        };
+        let res = await S3.upload(params).promise();
+        console.log(res);
+        return res.Location;
+      // })
+      // reader.onerror = (e) => console.log("OOPS!", e);
+      // reader.readAsDataURL(src);
+    // } catch (error) {
+    //   console.error("Error uploading to S3:", error);
+    //   reject(error);
+    // }
+};
+
 function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const navigate = useNavigate();
   const overlayTitleHidden = useRef(null)
@@ -644,6 +666,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const [withCard, setWithCard] = useState(false)
   const [hiddenCentralCategories, setHiddenCentralCategories] = useState({})
 
+  const [loading1, setLoading1] = useState(false)
+  const [loading2, setLoading2] = useState(false)
+
   const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
     const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
     const subtitleHiddenEl = document.querySelector(`#${elementId} > div`)
@@ -701,6 +726,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     // setSubtitle(product.subtitle)
     console.log("PREVIEWS", product.previews)
     setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url:x} } }))
+    ratios.add("null")
     setRatios(ratios)
   }
 
@@ -708,9 +734,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     const calculatedOffsets = {}
     console.log("MXC", groupDistribution(ogProduct, distribution).flat(1))
     for(const ch of groupDistribution(ogProduct, distribution).flat(1)) {
-      console.log("STRING >>", ch, ch?.sprite)
       const img = ch?.sprite
-      const el = document.querySelector(`[src="${img}"]`)
+      const el = document.getElementsByClassName(`${img}`)[0]
+      console.log("STRING >>", ch, ch?.sprite, el)
       if(el) {
         const { height } = el.getBoundingClientRect()
         console.log("IAMHERE!", height)
@@ -971,7 +997,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
    })()
   }, [title, subtitle, product, characters, background, distribution])
 
-  const setCartData = async () => {
+  const setCartData = async (setLoading) => {
+    setLoading(true)
     const cartObj = getKey("cart") ?? []
     const illustration = document.getElementsByClassName("cactus-templete_detail-main_image")[0]
     const watermarkEl = document.getElementById("watermark")
@@ -993,14 +1020,14 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
       useCORS: true,
     })
 
-    console.log("ILLUSTRATION-STYLE", illustrationStyle)
+    const dataURI = canvas.toDataURL()
+
+    const img = await uploadImageOnS3(dataURI)
     // illustration.style = illustrationStyle
 
-    const img = canvas.toDataURL();
-    console.log(img)
     const productData = {
       selections: {
-        img: "",
+        img,
         product: { ...product, templeteArray: undefined }, 
         distribution,
         ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [`pricing-${k}`, obj.name])),
@@ -1012,12 +1039,13 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
         realOffsets,
         // templeteArray,
         offsets,
-        rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))]))
+        rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.getElementsByClassName(x)?.[0]?.getBoundingClientRect() ?? "{}"))]))
       }
     }
     console.log("MXC", offsets, productData.selections)
     cartObj.push(productData)
     setKey("cart", cartObj)
+    setLoading(false)
   }
 
   const PricingDataComponent = () => <>
@@ -1180,8 +1208,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 width={'500px'}
               >
                 <img id="real-background" style={{ 
-                  width: ratios.has(background?.url) ? "355px" : "500px", 
-                  height: ratios.has(background?.url) ? '100%' : 'unset', 
+                  width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "355px" : "500px", 
+                  height: ratios.size == 0 ? undefined : ratios.has(background?.url) ? '100%' : 'unset', 
                   objectFit: 'contain',
                 }} src={`${background?.coordinateVariation?.alternate ?? background.url}?${Date.now()}`} crossOrigin="anonymous"/>
               </div>
@@ -1322,16 +1350,17 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 onClick={async () => {
                   // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
                   // console.log("imgs=>", img)
-                  await setCartData()
-                  setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))])) })
+                  await setCartData(setLoading1)
+                  console.log("ofcs>>", offsets)
+                  setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.getElementsByClassName(x)?.[0]?.getBoundingClientRect() ?? "{}"))])) })
                 }}
                 style={{ marginRight: "1.5rem" }}
                 className="cactus-templete_detail-order_button"
               >
-                <h5>Commandez maintenant</h5>
+                {loading1 ? <FadeLoader color="#fff" /> : <h5>Commandez maintenant</h5>}
               </div>
               <div className="cactus-templete_detail-order_button" onClick={async () => {
-                await setCartData()
+                await setCartData(setLoading2)
                 setErrorModal("show")
                 swal({
                   title: "Succès",
@@ -1340,8 +1369,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                   // dangerMode: true,
                 }).then(_ => setErrorModal(null))
               }}>
-                <h5>Ajouter au panier</h5>
-            </div>
+                {loading2 ? <FadeLoader color="#fff" /> : <h5>Ajouter au panier</h5>}
+              </div>
             </div>
           </div>
           {isPhone() && <div className="cactus-templete_poster-desc" style={{
