@@ -20,7 +20,10 @@ function getWindowDimensions() {
   };
 }
 const isPhone = () => getWindowDimensions().width < 421  
-const getPrice = () => (getKey("cart") ?? []).map(p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)).reduce((a, b) => a+b, 0)
+const getPrice = () => (getKey("cart") ?? []).map(p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => {
+  const arr = v.split(" ").filter(x => x.trim() != "€")
+  return parseFloat(arr[arr.length - 1] ?? 0)
+}).reduce((a, b) => a+b, 0)).reduce((a, b) => a+b, 0)
 const stripePromise = loadStripe('pk_live_51OEy34JbX5shavtnvHumbLoNAoDYgQl7QYTSa6eN4uiyopxogrzJJPnKacaLVq6UKXWJAAKsqIZfaidfW1g3BJGy00WbYEtGiE');
 
 const Payment = () => {

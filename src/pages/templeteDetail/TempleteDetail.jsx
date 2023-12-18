@@ -974,13 +974,30 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const setCartData = async () => {
     const cartObj = getKey("cart") ?? []
     const illustration = document.getElementsByClassName("cactus-templete_detail-main_image")[0]
-    // const canvas = await html2canvas(illustration, {
-    //   // allowTaint: true,
-    //   // foreignObjectRendering: true,
-    //   scale: 1,
-    //   useCORS: true,
-    // })
-    // const img = canvas.toDataURL();
+    const watermarkEl = document.getElementById("watermark")
+    const bgEl = document.getElementById("real-background")
+
+    const illustrationStyle = {...illustration.style}
+
+    if(watermarkEl) watermarkEl.style.display = "none"
+    if(bgEl) {
+      const {width, height} = bgEl.getBoundingClientRect()
+      illustration.style.height = `${height}px`
+      illustration.style.width = `${width}px`
+    }
+
+    const canvas = await html2canvas(illustration, {
+      // allowTaint: true,
+      // foreignObjectRendering: true,
+      scale: 1,
+      useCORS: true,
+    })
+
+    console.log("ILLUSTRATION-STYLE", illustrationStyle)
+    // illustration.style = illustrationStyle
+
+    const img = canvas.toDataURL();
+    console.log(img)
     const productData = {
       selections: {
         img: "",
@@ -1151,9 +1168,24 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({ height: '500px', transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined, width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-              {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
+            <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({
+              height: '500px', 
+              transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined, 
+              width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', 
+              position: "relative", margin: 0, padding: 0 }))
+            } className="cactus-templete_detail-main_image">
+              <div 
+                id="canvas" 
+                height={"500px"} 
+                width={'500px'}
+              >
+                <img id="real-background" style={{ 
+                  width: ratios.has(background?.url) ? "355px" : "500px", 
+                  height: ratios.has(background?.url) ? '100%' : 'unset', 
+                  objectFit: 'contain',
+                }} src={`${background?.coordinateVariation?.alternate ?? background.url}?${Date.now()}`} crossOrigin="anonymous"/>
+              </div>
+              {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={`${background.coordinateVariation.frame}?${Date.now()}`} style={{
                 zIndex: 100000000000000,
                 position: "absolute", 
                 top: -1,
@@ -1165,7 +1197,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
               {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
               {groupDistribution(ogProduct, distribution).map(sprites => <>
                 {
-                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
+                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img crossOrigin="anonymous" data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.hidden ? "" : `${sprite.sprite}?${Date.now()}`} style={{
                     height: "unset", 
                     width: "unset", 
                     position: "absolute", 
@@ -1182,7 +1214,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 }
               </>)}
               {console.log("LOGO COMP", ratios.has(background.url))}
-              {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
+              {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <img id="watermark" className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
                 top: "74px",
                 left: "100px"
               }}/>}

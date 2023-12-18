@@ -6,7 +6,10 @@ import { getKey } from '../../requests'
 
 const { Option } = Select
 
-const findPrice = p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)
+const findPrice = p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => {
+    const arr = v.split(" ").filter(x => x.trim() != "€")
+    return parseFloat(arr[arr.length - 1] ?? 0)
+  }).reduce((a, b) => a+b, 0)
 
 const selectOptions = opts => {
     const obj = {}
