@@ -27,12 +27,35 @@ import { req, getKey, setKey } from '../../requests'
 import { logo } from "../../assets";
 import { getAllParams, setParam } from "../../urlParams";
 import "./templeteDetail.css";
+import AWS from "aws-sdk";
+import { Buffer } from "buffer"
 import { getImageSize } from "react-image-size";
 import html2canvas from 'html2canvas';
 import swal from "sweetalert";
 
 const CONSTANT_BOTTOM_OFFSET = 0
 let renderCanvas = true
+
+const uploadImageOnS3 = async (src) => {
+  const S3 = new AWS.S3();
+  const params = {
+    Bucket: "drivebuddyz",
+    Key: `${10000 + Math.round(Math.random() * 10000)}.png`,
+    Body: new Buffer(
+      src.replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
+    ),
+  };
+  let res = await S3.upload(params).promise();
+  console.log(res);
+  return res.Location;
+}
+
+AWS.config.update({
+  accessKeyId: "AKIAVTRDW7SYZDI52F2K",
+  secretAccessKey: "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",
+  region: "us-east-2",
+});
 
 const renderText = (context, name, xText, yText, textSize, font, color) => {
 
@@ -441,20 +464,6 @@ const arrangeByParent = arr => {
   return parentChildArray
 }
 
-const screenshot = async ref => {
-  // Select the element that you want to capture
-  const captureElement = ref;
-
-  // Call the html2canvas function and pass the element as an argument
-  const canvas = await html2canvas(captureElement)
-  // Get the image data as a base64-encoded string
-  const imageData = canvas.toDataURL("image/png");
-
-  // Do something with the image data, such as saving it as a file or sending it to a server
-  // For example, you can create an anchor element and trigger a download action
-  return imageData
-}
-
 const TitleComponent = ({ elementId, givenId, background, title, style }) => {
   const hiddentitleCentricEl = document.querySelector(`#${elementId} > div`)
   const ogValue = hiddentitleCentricEl.innerHTML
@@ -644,6 +653,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
   const [withCard, setWithCard] = useState(false)
   const [hiddenCentralCategories, setHiddenCentralCategories] = useState({})
 
+  const [imageSize, setImageSize] = useState({})
+
+  const [loading1, setLoading1] = useState(false)
+  const [loading2, setLoading2] = useState(false)
+
   const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
     const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
     const subtitleHiddenEl = document.querySelector(`#${elementId} > div`)
@@ -696,6 +710,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
       const {height, width} = await getImageSize(background.url)
       const ratio = height/width
       if(ratio >= 1.1 && ratio <= 1.5) ratios.add(background.url)
+      setImageSize({height, width})
     }
     // setTitle(product.name)
     // setSubtitle(product.subtitle)
@@ -971,19 +986,34 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
    })()
   }, [title, subtitle, product, characters, background, distribution])
 
-  const setCartData = async () => {
+  const setCartData = async (setLoading) => {
+    setLoading(true)
+
     const cartObj = getKey("cart") ?? []
-    const illustration = document.getElementsByClassName("cactus-templete_detail-main_image")[0]
-    // const canvas = await html2canvas(illustration, {
-    //   // allowTaint: true,
-    //   // foreignObjectRendering: true,
-    //   scale: 1,
-    //   useCORS: true,
-    // })
-    // const img = canvas.toDataURL();
+
+    const illustration = document.getElementsByClassName("display-image")[0]
+    illustration.style.display = "flex"
+    const canvas = await html2canvas(illustration, {
+      // allowTaint: true,
+      // foreignObjectRendering: true,
+      scale: 1,
+      useCORS: true,
+    })
+
+    const watermarkEl = document.getElementById("watermark")
+    const bgEl = document.getElementById("real-background")
+    console.log("UPLOADED-IMG",bgEl)
+
+    const illustrationStyle = {...illustration.style}
+    const img = canvas.toDataURL();
+    const uploadedImage = await uploadImageOnS3(img)
+    console.log("UPLOADED-IMG", uploadedImage)
+
+    illustration.style.display = "none"
+
     const productData = {
       selections: {
-        img: "",
+        img: uploadedImage,
         product: { ...product, templeteArray: undefined }, 
         distribution,
         ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [`pricing-${k}`, obj.name])),
@@ -1001,6 +1031,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
     console.log("MXC", offsets, productData.selections)
     cartObj.push(productData)
     setKey("cart", cartObj)
+
+    setLoading(false)
   }
 
   const PricingDataComponent = () => <>
@@ -1290,7 +1322,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 onClick={async () => {
                   // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
                   // console.log("imgs=>", img)
-                  await setCartData()
+                  await setCartData(setLoading1)
                   setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))])) })
                 }}
                 style={{ marginRight: "1.5rem" }}
@@ -1299,7 +1331,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
                 <h5>Commandez maintenant</h5>
               </div>
               <div className="cactus-templete_detail-order_button" onClick={async () => {
-                await setCartData()
+                await setCartData(setLoading2)
                 setErrorModal("show")
                 swal({
                   title: "Succès",
@@ -1340,6 +1372,84 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents }) {
           </div>
         </div> */}
         { recents == 'no' ? <></> : <Footer /> }
+        <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({
+          height: '500px', 
+          transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined, 
+          width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', 
+          position: "relative", 
+          margin: 0, 
+          padding: 0,
+        }))} className="cactus-templete_detail-main_image display-image">
+          <div
+            id="canvas-print"
+            style={{
+              width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "355px" : "500px",
+              height: ratios.size == 0 ? undefined : ratios.has(background?.url) ? '100%' : 'unset',
+            }}
+          >
+            <img id="real-background" style={{
+              width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "355px" : "500px",
+              height: ratios.size == 0 ? undefined : ratios.has(background?.url) ? '100%' : 'unset',
+              objectFit: 'contain',
+            }} src={`${background?.coordinateVariation?.alternate ?? background.url}?${Date.now()}`} crossOrigin="anonymous" />
+          </div>
+          {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
+          {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={`${background.coordinateVariation.frame}?${Date.now()}`} style={{
+            zIndex: 100000000000000,
+            position: "absolute",
+            top: -1,
+            left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
+            height: "101%",
+            maxWidth: "355px",
+            width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
+          }} />}
+          {groupDistribution(ogProduct, distribution).map(sprites => <>
+            {
+              (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img crossOrigin="anonymous" data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight) / 2} className={sprite.sprite} src={sprite.hidden ? "" : `${sprite.sprite}?${Date.now()}`} style={{
+                height: "unset",
+                width: "unset",
+                position: "absolute",
+                _: console.log("GVN", sprite.categoryName, sprite, sprite.fixedWidth, sprite.x),
+                _: console.log("do we", product.alignBottom, "so now", decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
+                _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale / 100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale / 100), (sprite.scale == 0 ? 1 : sprite.scale / 100) * (sprite.categoryScale == 0 ? 1 : sprite.categoryScale / 100), realOffsets[sprite.sprite]?.width, sprite),
+                left: `${((parseFloat(sprite.x) + parseInt(product.xAddition ?? "0") + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.fixedWidth)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth) / 2) : 0)))}px`,
+                top: `${((parseFloat(sprite.y) + parseInt(product.yAddition ?? "0") + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? ((sprite.offset ?? 0)) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0)) / 2) : 0))))}px`,
+                scale: `${(sprite.scale == 0 ? 1 : sprite.scale / 100) * (sprite.categoryScale == 0 ? 1 : sprite.categoryScale / 100) * (product.scaleAddition == 0 || !product.scaleAddition ? 1 : product.scaleAddition / 100)}`,
+                maxWidth: "500px",
+                transformOrigin: "0 0",
+                zIndex: 100 * (sprite.layer + 1) + ((sprite?.categoryLayer ?? 0) * 1000)
+              }} />)
+            }
+          </>)}
+          {console.log("LOGO COMP", ratios.has(background.url))}
+          {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+            {<div style={{
+              // height: "500px", 
+              // width: "500px", 
+              whiteSpace: 'nowrap',
+              position: "absolute",
+              left: `${background.coordinateVariation.xText}px`,
+              top: `${background.coordinateVariation.yText}px`,
+              fontSize: `${background.coordinateVariation.textSize}pt`,
+              fontFamily: background.font,
+              color: background.coordinateVariation.color,
+            }}>{title}</div>}
+          </div>}
+          {<div id="overlay-subtitle-hidden" ref={overlaySubtitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+            {<div style={{
+              // height: "500px", 
+              // width: "500px", 
+              whiteSpace: 'nowrap',
+              position: "absolute",
+              left: `${background.coordinateVariation.xSmallText}px`,
+              top: `${background.coordinateVariation.ySmallText}px`,
+              fontSize: `${background.coordinateVariation.smallTextSize}pt`,
+              fontFamily: background.smallFont,
+              color: background.coordinateVariation.smallColor,
+            }}>{subtitle}</div>}
+          </div>}
+          {defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage ? <></> : <MultiText background={background} />}
+        </div>
       </div>
     </div>
   );
