@@ -32,10 +32,10 @@ const Navbar = (props) => {
 
   const DropDown = ({ title, list: openDropdown, onClick }) => {
     return <div className="navbar-dropdown-container">
-      {openDropdown?.title == title && <div className="navbar-dropdown">
-        {loading ? <ClipLoader color="black" /> : openDropdown?.data?.map(od => <p className={onClick ? "" : "important-font-weight"} style={{ cursor: onClick ? "pointer" : "default" }} onClick={() => onClick ? onClick(od) : null}>{od.mainDesc}</p>)}
-      </div>}
-    </div>
+        {openDropdown?.title == title && <div className="navbar-dropdown">
+          {loading ? <ClipLoader color="black" /> : openDropdown?.data?.map(od => <p className={onClick ? "" : "important-font-weight"} style={{ cursor: onClick ? "pointer" : "default" }} onClick={() => onClick ? onClick(od) : null}>{od.mainDesc}</p>)}
+        </div>}
+      </div>
   }
 
   const Menu = () => (
@@ -243,43 +243,45 @@ const Navbar = (props) => {
     </>
   );
 
-  return showPaymentModel || detailModal || commanderModel ? <Menu/> : (
-    <div className="cactus__navbar">
-      <div className="cactus__navbar-links_logo">
-        <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>
-        <p style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Cactus Moments</p>
-      </div>
-      <div className="cactus__navbar-links">
-        <div className="cactus_navbar-links_container">
-          <Menu />
+  return <div className={openDropdown ? "complete-cover" : ""} onClick={() => openDropdown ? setOpenDropdown(null) : null}>
+    {showPaymentModel || detailModal || commanderModel ? <Menu/> : (
+      <div className="cactus__navbar">
+        <div className="cactus__navbar-links_logo">
+          <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>
+          <p style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Cactus Moments</p>
+        </div>
+        <div className="cactus__navbar-links">
+          <div className="cactus_navbar-links_container">
+            <Menu />
+          </div>
+        </div>
+        <div className="cactus__navbar-menu">
+          {toggleMenu ? (
+            <img
+              alt="Close"
+              onClick={() => setToggleMenu(!toggleMenu)}
+              src={close}
+              className="cactus__navbar_closeIcon"
+            />
+          ) : (
+            <img
+              alt="Menu"
+              onClick={() => setToggleMenu(!toggleMenu)}
+              src={menu}
+              className="cactus__navbar_menuIcon"
+            />
+          )}
+          {toggleMenu && (
+            <div className="cactus__navbar-menu_container scale-up-center">
+              <div className="cactus__navbar-menu_container_links">
+                <Menu />
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      <div className="cactus__navbar-menu">
-        {toggleMenu ? (
-          <img
-            alt="Close"
-            onClick={() => setToggleMenu(!toggleMenu)}
-            src={close}
-            className="cactus__navbar_closeIcon"
-          />
-        ) : (
-          <img
-            alt="Menu"
-            onClick={() => setToggleMenu(!toggleMenu)}
-            src={menu}
-            className="cactus__navbar_menuIcon"
-          />
-        )}
-        {toggleMenu && (
-          <div className="cactus__navbar-menu_container scale-up-center">
-            <div className="cactus__navbar-menu_container_links">
-              <Menu />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    )}
+  </div>;
 };
 
 export default Navbar;
