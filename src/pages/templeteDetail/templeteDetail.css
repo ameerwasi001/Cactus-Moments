@@ -240,7 +240,7 @@
   height: 100px;
   min-width: 150px;
   object-fit: contain;
-  object-position: top left;
+  /* object-position: top left; */
 }
 
 .display-image {
