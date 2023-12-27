@@ -30,6 +30,7 @@ import "./templeteDetail.css";
 import AWS from "aws-sdk";
 import { Buffer } from "buffer"
 import { getImageSize } from "react-image-size";
+import ScaleLoader from "react-spinners/ScaleLoader";
 import html2canvas from 'html2canvas';
 import swal from "sweetalert";
 
@@ -976,6 +977,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   }, [title, subtitle, product, characters, background, distribution])
 
   const setCartData = async (setLoading) => {
+    const rects = Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))]))
     setLoading(true)
 
     const cartObj = getKey("cart") ?? []
@@ -1014,7 +1016,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
         realOffsets,
         // templeteArray,
         offsets,
-        rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))]))
+        rects,
       }
     }
     console.log("MXC", offsets, productData.selections)
@@ -1309,28 +1311,34 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
             <div className="order-buttons" style={{ display: "flex" }}>
               <div
                 onClick={async () => {
+                  if(loading1) return
                   // const img = await screenshot(document.getElementsByClassName("cactus-templete_detail-main_image_view")[0])
                   // console.log("imgs=>", img)
+                  const rects = Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))]))
                   await setCartData(setLoading1)
-                  setShowPaymentModel({ rects: Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))])) })
+                  setShowPaymentModel({ rects })
                 }}
-                style={{ marginRight: "1.5rem" }}
+                style={{ marginRight: "1.5rem", cursor: loading1 ? "default" : undefined }}
                 className="cactus-templete_detail-order_button"
               >
-                <h5>Commandez maintenant</h5>
+                {loading1 ? <ScaleLoader color="#fff" /> : <h5>Commandez maintenant</h5>}
               </div>
-              <div className="cactus-templete_detail-order_button" onClick={async () => {
-                await setCartData(setLoading2)
-                setErrorModal("show")
-                swal({
-                  title: "Succès",
-                  text: "Le produit a été ajouté à votre panier.",
-                  icon: "success",
-                  // dangerMode: true,
-                }).then(_ => setErrorModal(null))
+              <div className="cactus-templete_detail-order_button"
+                style={{ cursor: loading2 ? "default" : undefined }}
+                onClick={async () => {
+                  if(loading2) return
+
+                  await setCartData(setLoading2)
+                  setErrorModal("show")
+                  swal({
+                    title: "Succès",
+                    text: "Le produit a été ajouté à votre panier.",
+                    icon: "success",
+                    // dangerMode: true,
+                  }).then(_ => setErrorModal(null))
               }}>
-                <h5>Ajouter au panier</h5>
-            </div>
+                {loading2 ? <ScaleLoader color="#fff" /> : <h5>Ajouter au panier</h5>}
+              </div>
             </div>
           </div>
           {isPhone() && <div className="cactus-templete_poster-desc" style={{
