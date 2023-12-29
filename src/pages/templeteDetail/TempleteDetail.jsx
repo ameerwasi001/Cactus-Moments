@@ -546,14 +546,21 @@ const NestedDescription = ({
 
 const splitByNumOfChars = (str, n) => {
   console.log("ARROFSUBTITLE-str", str)
+  const splitStr = str.split(" ")
   const chunks = [];
-  const charsLength = str.length
-  let current = ""
-
-  for (var i = 0; i < charsLength; i += n) {
-      chunks.push(str.substring(i, i + n));
+  let curr = ""
+  let len = 0
+  for(let i = 0; i < splitStr.length; i++) {
+    console.log(len, len + splitStr[i].length, curr, splitStr[i])
+    if(len + splitStr[i].length > n) {
+      chunks.push(curr)
+      curr = " "
+      len = 1
+    }
+    curr += splitStr[i] + " "
+    len += splitStr.length + 1
   }
-
+  chunks.push(curr)
   return chunks
 }
 
@@ -594,6 +601,17 @@ const getCategoryOfCharacter = (product, sprite) => {
   return [foundCategory, foundSubcategory]
 }
 
+const genUUID = () => {
+  return (
+      String('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx')
+  ).replace(/[xy]/g, (character) => {
+      const random = (Math.random() * 16) | 0;
+      const value = character === "x" ? random : (random & 0x3) | 0x8;
+
+      return value.toString(16);
+  });
+}
+
 // const findCharacterPositi
 
 function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }) {
@@ -601,17 +619,17 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const overlayTitleHidden = useRef(null)
   const overlaySubtitleHidden = useRef(null)
   const [errorModal, setErrorModal] = useState(null)
-  const [product, setProduct] = useState(Object.freeze(JSON.parse(JSONProduct)))
-  console.log("navi", product.mainDesc)
-  const [distribution, setDistribution] = useState(props.distribution ?? [])
+  const [product, setProduct] = useState(props?.product ?? Object.freeze(JSON.parse(JSONProduct)))
+  console.log("navi", props?.distribution, product.mainDesc)
+  const [distribution, setDistribution] = useState(props?.distribution ?? [])
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
 
   const [background, setBackground] = useState(product.backgrounds[product.defaultBackground])
   const [alternateBackground, setAlternateBackground] = useState(product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url))
-  const [title, setTitle] = useState(props.title ?? product.name)
-  const [subtitle, setSubtitle] = useState(props.subtitle ?? product.subtitle)
+  const [title, setTitle] = useState(props?.title ?? product.name)
+  const [subtitle, setSubtitle] = useState(props?.subtitle ?? product.subtitle)
   const [fontLoaded, setFontLoaded] = useState(false)
   const [showFrameModel, setShowFrameModel] = useState(false);
   const [showDimensionModel, setShowDimensionModel] = useState(false);
@@ -623,11 +641,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [pricingObject, setPricingObject] = useState(groupPricing(product.pricing));
-  const [selectedPricingOptions, setSelectedPricingOptions] = useState(props.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]])))
+  const [selectedPricingOptions, setSelectedPricingOptions] = useState(props?.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]])))
   const [shownPricingOptions, setShownPricingOptions] = useState(Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, false])))
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [defaultModel, setDefaultModel] = useState(true);
-  const [characters, setCharacters] = useState(props.characters ?? [])
+  const [characters, setCharacters] = useState(props?.characters ?? [])
 
   const [sideTempleArray, setSideTempleArray] = useState((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }));
   const [templeteArray, setTemplateArray] = useState([]);
@@ -980,7 +998,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     const rects = Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))]))
     setLoading(true)
 
-    const cartObj = getKey("cart") ?? []
+    let cartObj = getKey("cart") ?? []
 
     const illustration = document.getElementsByClassName("display-image")[0]
     illustration.style.display = "flex"
@@ -1001,7 +1019,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     console.log("UPLOADED-IMG", uploadedImage)
 
     illustration.style.display = "none"
-
+  
     const productData = {
       selections: {
         img: uploadedImage,
@@ -1020,7 +1038,16 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
       }
     }
     console.log("MXC", offsets, productData.selections)
-    cartObj.push(productData)
+
+    console.log("PROP-UUID", props, props?.uuid)
+    if(props?.uuid) cartObj = cartObj.map(p => p.uuid == props.uuid ? productData : p)
+    else {
+      const uuid = genUUID()
+      productData.uuid = uuid
+      productData.selections.uuid = uuid
+      cartObj.push(productData)
+    }
+
     setKey("cart", cartObj)
 
     setLoading(false)
@@ -1098,7 +1125,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
       )}
       {defaultModel && (
         <DefaultModel
-          autoSelect={autoSelect}
+          _={console.log("autoselect", props)}
+          autoSelect={props ? false : autoSelect}
           ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
           product={product}
           hasStaticPositions={hasStaticPositions(ogProduct)}
@@ -1433,15 +1461,19 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
 }
 
 export default function TempleteDetailWrapper() {
-  const { product: JSONProductFromURL, recents, props } = getAllParams()
+  const { product: JSONProductFromURL, recents, editData } = getAllParams()
   const [JSONProduct, setJSONProduct] = useState(JSONProductFromURL)
   const [ogProduct, setOgProduct] = useState(Object.freeze(JSON.parse(JSONProductFromURL)))
 
-  const parsedProps = JSON.parse(props ?? '{}')
+  const parsedProps = JSON.parse(editData ? decodeURIComponent(editData) : '{}')
+  const selectionData = parsedProps.props ? JSON.parse(decodeURIComponent(parsedProps.props)) : null
 
   return <TempleteDetail ogProduct={ogProduct} setOgProduct={x => {
-    console.log("naviX", x.mainDesc)
+    console.log("naviX", selectionData)
     setOgProduct(x)
     setJSONProduct(JSON.stringify(x))
-  }} JSONProduct={JSONProduct} recents={recents} props={parsedProps}/>
+  }} JSONProduct={JSONProduct} recents={recents} props={selectionData ? {
+    // ...parsedProps,
+    ...selectionData,
+  } : null}/>
 }

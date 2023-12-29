@@ -3,8 +3,9 @@ import { closeBox, female, male, maleDummy, radioFilled, radio } from '../../ass
 import { Select } from 'antd'
 import { getAllParams, setParam } from "../../urlParams";
 import './genderModel.css'
-import { getKey, setKey } from '../../requests'
+import { getKey, setKey, req } from '../../requests'
 import { useNavigate } from 'react-router-dom'
+import { ScaleLoader } from "react-spinners";
 
 const { Option } = Select
 
@@ -91,18 +92,40 @@ export default function DefaultModel(props) {
 
     const [selectedOption, setSelectedOption] = useState(null)
 
+    const [loading, setLoading] = useState(false)
+
     return (
         <div onClick={() => props.closeModal()} style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
             <div onClick={ev => ev.stopPropagation()} style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%', alignItems: 'center' }}>
-                    {img && <img onClick={() => [
-                        navigate(`/templetedetail?${setParam({
+                    {img && !loading && <img onClick={async () => {
+                        const productId = props?.additionalData?.selections?.product?._id
+
+                        const redirectData = {
                             product: JSON.stringify(props?.additionalData?.selections?.product),
-                            // props: {
-                            //     ...props?.additionalData?.selections
-                            // }
-                        })}`)
-                    ]} src={img} style={{ width: "200px" }}/>}
+                            props: encodeURIComponent(JSON.stringify({
+                                ...props?.additionalData?.selections
+                            })),
+                            order: props.additionalData.id,
+                        }
+
+                        if(window.location.href.includes("templetedetail")) return navigate('/', { state: { redirect: redirectData } })
+
+                        setLoading(true)
+                        const { product } = await req("GET", `/user/product/${productId}`)
+                        setLoading(false)
+
+                        const params = {
+                            editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
+                            product: JSON.stringify(product),
+                        }
+                        const url = `/templetedetail?${setParam(params)}`
+                        if(window.location.href.includes("templetedetail")) navigate('/', { state: { redirect: redirectData } })
+                        else navigate(url)
+                    }} src={img} style={{ width: "200px" }}/>}
+                    {img && loading && <div className='click-loader-container'>
+                        <ScaleLoader color='#000'/>
+                    </div>}
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
                         {options.map((option, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '20rem', alignItems: 'center', justifyContent: 'space-between' }}>

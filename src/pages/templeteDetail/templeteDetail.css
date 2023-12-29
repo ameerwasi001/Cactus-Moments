@@ -236,10 +236,23 @@
   justify-content: center;
 }
 
+.cactus-gender_model_side_top_view > img {
+  cursor: pointer;
+}
+
+.click-loader-container {
+  width: 200px;
+  margin-bottom: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .commander-modal-img {
   height: 100px;
   min-width: 150px;
   object-fit: contain;
+  cursor: pointer;
   /* object-position: top left; */
 }
 

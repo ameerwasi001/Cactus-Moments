@@ -46,6 +46,7 @@ const emitter = new EventEmitter()
 export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
+  const [productLoading, setProductLoading] = useState(true)
   const [templeteArray, setTemplateArray] = useState([]);
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -55,15 +56,40 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("poster")
   const [currPage, setCurrPage] = useState(1)
   const recordsPerPage = 10
-  const { search } = useLocation()
+  const { search, state } = useLocation()
 
-  console.log("PRODID", search)
+  const redirect = state?.redirect
+
+  console.log("PRODID", redirect)
+
+  useEffect(() => {
+    const f = async () => {
+      console.log("PRODID2", redirect)
+
+      if(!redirect) {
+        setProductLoading(false)
+        return
+      }
+
+      setProductLoading(true)
+      const el = document.getElementById("main-products")
+      el?.scrollIntoView()
+      const { product } = await req("GET", `/user/product/${JSON.parse(redirect.product)?._id}`)
+      setProductLoading(false)
+      navigate(`/templetedetail?${setParam({
+        editData: encodeURIComponent(JSON.stringify({ ...redirect })),
+        product: JSON.stringify(product),
+      })}`)
+    } 
+    f()
+  }, [])
 
   useEffect(() => {
     const f = async () => {
       const productId = search?.split("productId=")?.[1]
       const categoryName = search?.split("category=")?.[1]
-      if(productId) {
+      if(redirect) {
+      } else if(productId) {
         const el = document.getElementById("main-products")
         el?.scrollIntoView()
         setLoading(true)
@@ -154,7 +180,7 @@ export default function Dashboard() {
           navigate(`/?category=${x}`)
         }}/>
         <div id="main-products" className="cactus-dashboard-templete_top_view">
-          {loading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
+          {loading || productLoading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
               return (
                 <TempleteView
                   isPhone={isPhone()}
