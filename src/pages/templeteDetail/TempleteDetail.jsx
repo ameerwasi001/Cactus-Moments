@@ -544,24 +544,26 @@ const NestedDescription = ({
   );
 }
 
-const splitByNumOfChars = (str, n) => {
-  console.log("ARROFSUBTITLE-str", str)
-  const splitStr = str.split(" ")
-  const chunks = [];
-  let curr = ""
-  let len = 0
-  for(let i = 0; i < splitStr.length; i++) {
-    console.log(len, len + splitStr[i].length, curr, splitStr[i])
-    if(len + splitStr[i].length > n) {
-      chunks.push(curr)
-      curr = " "
-      len = 1
-    }
-    curr += splitStr[i] + " "
-    len += splitStr.length + 1
+const splitByNumOfChars = (inputString, maxLength) => {
+  console.log("ARROFSUBTITLE-str", inputString)
+  const words = inputString.split(' ');
+  const lines = [];
+  let currentLine = '';
+
+  words.forEach(word => {
+      if (currentLine.length + word.length + 1 <= maxLength) {
+          currentLine += word + ' ';
+      } else {
+          lines.push(currentLine.trim());
+          currentLine = word + ' ';
+      }
+  });
+
+  if (currentLine.trim()) {
+      lines.push(currentLine.trim());
   }
-  chunks.push(curr)
-  return chunks
+
+  return lines;
 }
 
 function getWindowDimensions() {
@@ -641,7 +643,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [pricingObject, setPricingObject] = useState(groupPricing(product.pricing));
-  const [selectedPricingOptions, setSelectedPricingOptions] = useState(props?.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]])))
+  const [selectedPricingOptions, setSelectedPricingOptions] = useState((props?.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]]))))
   const [shownPricingOptions, setShownPricingOptions] = useState(Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, false])))
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [defaultModel, setDefaultModel] = useState(true);
