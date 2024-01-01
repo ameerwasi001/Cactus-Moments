@@ -617,12 +617,13 @@ const genUUID = () => {
 // const findCharacterPositi
 
 function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }) {
+  const currPricingObject = props ? Object.fromEntries(Object.entries(props).filter(([k]) => k.startsWith('pricing-')).map(([k, str]) => [k, props.product.pricing.find(pricing => pricing?.name == str)]).map(([k, v]) => [k.split("pricing-").join(""), v])) : null
   const navigate = useNavigate();
   const overlayTitleHidden = useRef(null)
   const overlaySubtitleHidden = useRef(null)
   const [errorModal, setErrorModal] = useState(null)
   const [product, setProduct] = useState(props?.product ?? Object.freeze(JSON.parse(JSONProduct)))
-  console.log("navi", props?.distribution, product.mainDesc)
+  console.log("navi", props)
   const [distribution, setDistribution] = useState(props?.distribution ?? [])
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
@@ -643,7 +644,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [pricingObject, setPricingObject] = useState(groupPricing(product.pricing));
-  const [selectedPricingOptions, setSelectedPricingOptions] = useState((props?.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]]))))
+  console.log("dt01n xyz", currPricingObject)
+  const [selectedPricingOptions, setSelectedPricingOptions] = useState(currPricingObject ? currPricingObject : (props?.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]]))))
   const [shownPricingOptions, setShownPricingOptions] = useState(Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, false])))
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [defaultModel, setDefaultModel] = useState(true);
@@ -1004,27 +1006,35 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
 
     const illustration = document.getElementsByClassName("display-image")[0]
     illustration.style.display = "flex"
-    const canvas = await html2canvas(illustration, {
-      // allowTaint: true,
-      // foreignObjectRendering: true,
-      scale: 1,
-      useCORS: true,
-    })
 
-    const watermarkEl = document.getElementById("watermark")
-    const bgEl = document.getElementById("real-background")
-    console.log("UPLOADED-IMG",bgEl)
+    let uploadedImage = null
+    if(props && JSON.stringify(distribution) != JSON.stringify(props.distribution) || !props) {
+      const canvas = await html2canvas(illustration, {
+        // allowTaint: true,
+        // foreignObjectRendering: true,
+        scale: 1,
+        useCORS: true,
+      })
+  
+      const watermarkEl = document.getElementById("watermark")
+      const bgEl = document.getElementById("real-background")
+      console.log("UPLOADED-IMG",bgEl)
+  
+      const illustrationStyle = {...illustration.style}
+      const img = canvas.toDataURL();
+      uploadedImage = await uploadImageOnS3(img)
+    }
 
-    const illustrationStyle = {...illustration.style}
-    const img = canvas.toDataURL();
-    const uploadedImage = await uploadImageOnS3(img)
     console.log("UPLOADED-IMG", uploadedImage)
 
     illustration.style.display = "none"
   
+    console.log("dt01n", Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [`pricing-${k}`, obj.name])))
     const productData = {
+      uuid: props?.uuid,
       selections: {
-        img: uploadedImage,
+        uuid: props?.uuid,
+        img: uploadedImage ? uploadedImage : (props?.img ?? props?.selection?.img),
         product: { ...product, templeteArray: undefined }, 
         distribution,
         ...Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [`pricing-${k}`, obj.name])),
