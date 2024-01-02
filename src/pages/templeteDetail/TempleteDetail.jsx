@@ -1347,6 +1347,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
                   }
                 />))
               }
+              <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', height: "45px", width: "100px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => document.getElementsByClassName('cactus-templete_detail-main_image')[0]?.scrollIntoView()}>
+                    <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "1.5rem" }}>Voir affiche</h3>
+                </button>
+              </div>
             </div>
             <div className="order-buttons" style={{ display: "flex" }}>
               <div
