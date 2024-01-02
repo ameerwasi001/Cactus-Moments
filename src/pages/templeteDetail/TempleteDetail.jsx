@@ -644,11 +644,10 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const [familyCompositionModel, setFamilyCompositionModel] = useState(false);
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [pricingObject, setPricingObject] = useState(groupPricing(product.pricing));
-  console.log("dt01n xyz", currPricingObject)
   const [selectedPricingOptions, setSelectedPricingOptions] = useState(currPricingObject ? currPricingObject : (props?.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]]))))
   const [shownPricingOptions, setShownPricingOptions] = useState(Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, false])))
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
-  const [defaultModel, setDefaultModel] = useState(true);
+  const [defaultModel, setDefaultModel] = useState(props ? false : true);
   const [characters, setCharacters] = useState(props?.characters ?? [])
 
   const [sideTempleArray, setSideTempleArray] = useState((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }));
