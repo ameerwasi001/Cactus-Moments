@@ -64,10 +64,10 @@ export default function DefaultModel(props) {
             id: 1,
             text: "Paiement par carte bancaire avec livraison à domicile. Frais d’envoi : France 6€, autre pays européen : 10€. Livraison gratuite à partir de 50€."
         },
-        {
-            id: 2,
-            text: "Paiement par carte et récupération de l'achat au marché de Noël d'Arras 2023 (sans frais de livraison)"
-        },
+        // {
+        //     id: 2,
+        //     text: "Paiement par carte et récupération de l'achat au marché de Noël d'Arras 2023 (sans frais de livraison)"
+        // },
         {
             id: 3,
             text: "Commande sur place"
