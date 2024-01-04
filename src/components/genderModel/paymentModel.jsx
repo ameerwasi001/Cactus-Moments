@@ -82,7 +82,7 @@ export default function DefaultModel(props) {
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
                         {options.map(opt => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '30rem', alignItems: 'center', fontFamily: "K2D" }}>
-                                <img src={opt.id == selectedOption ? radioFilled : radio} style={{ marginRight: "1rem", cursor: "pointer" }} onClick={() => setSelectedOption(selectedOption == opt.id ? null : opt.id)} />
+                                <img className='choice-fill' src={opt.id == selectedOption ? radioFilled : radio} style={{ marginRight: "1rem", cursor: "pointer" }} onClick={() => setSelectedOption(selectedOption == opt.id ? null : opt.id)} />
                                 <h2>{opt?.text}</h2>
                             </div>
                         </div>)}

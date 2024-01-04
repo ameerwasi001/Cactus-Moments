@@ -145,3 +145,7 @@ html {
 body {
   zoom: 100% !important;
 }
+
+.choice-fill {
+  width: 20px;
+}
