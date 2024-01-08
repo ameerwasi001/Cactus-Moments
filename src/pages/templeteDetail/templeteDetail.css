@@ -354,6 +354,9 @@
 }
 
 @media screen and (max-width: 540px) {
+  .video-model {
+    height: unset;
+  }
 
   .add-product-modal-container-product-description-detail-video {
     margin-left: unset;
