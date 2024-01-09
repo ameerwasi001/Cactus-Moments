@@ -5,6 +5,16 @@ import './genderModel.css'
 
 const { Option } = Select
 
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
+}
+  
+const isPhone = () => getWindowDimensions().width < 421    
+
 const findIndex = (f, arr) => {
     for(let i = 0; i < arr.length; i++)
       if(f(arr[i])) return i
@@ -102,10 +112,26 @@ export default function DefaultModel(props) {
     }
 
     return (
-        <div style={{height:'100%', overflow:'hidden'}} className="cactus-gender-model_top_view">
-            {console.log("ALLPROPSx-1", props.illustrationData)}
-            <props.Illustration {...props.illustrationData} style={{ marginRight: "3rem" }}/>
-            <div style={{ minHeight:'70%', minWidth: '30rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
+        <div style={{height:'100%', overflow:'', display: isPhone() ? "unset" : "flex"}} className="cactus-gender-model_top_view">
+            <props.Illustration {...props.illustrationData} style={
+                isPhone() ? {
+                    margin: "unset",
+                    marginLeft: "-75px",
+                    marginTop: "-70px",
+                    scale: props.isVertical ? "0.5" : "0.5", 
+                    ...(props.isVertical ? {} : { 
+                        marginLeft: "0px",
+                        marginTop: "-100px"
+                     })
+                } : { marginRight: "3rem" }}/>
+            <div style={{
+                minHeight:'70%', 
+                minWidth: '30rem', 
+                width: 'unset', 
+                justifyContent: 'center', 
+                flexDirection: 'column', 
+                ...(isPhone() ? { marginTop: '-240px', ...(props.isVertical ? {} : { marginTop: '-175px' }) } : {}) 
+            }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
                         {ogProduct.categories.map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>

@@ -1083,8 +1083,19 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     />)}
   </>
 
-  const IllustrationRender = ({ distribution, ogProduct, background, product, showChars, style }) => <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({ height: '500px', transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined, width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', position: "relative", margin: 0, padding: 0, ...(style ?? {}) }))} className="cactus-templete_detail-main_image">
-    {console.log("ALLPROPS", { distribution, ogProduct, showChars })}
+  const IllustrationRender = ({ distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => <div 
+    id={isPhone() && !ratios.has(background?.url) && unsetMargin ? 'margin-none' : ''} 
+    style={JSON.parse(JSON.stringify({
+      height: '500px', 
+      transform: isPhone() && !ratios.has(background?.url) && adjustScale ? 'scale(0.7)' : undefined, 
+      width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', 
+      position: "relative", 
+      margin: 0, 
+      padding: 0, 
+      ...(style ?? {}) 
+    }))} 
+    className={['cactus-templete_detail-main_image', ...(containerClasses ?? [])].join(" ")}
+  >
     <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
     {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
       zIndex: 100000000000000,
@@ -1120,37 +1131,37 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
       top: "74px",
       left: "100px"
     }}/>}
-    {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-      {<div style={{
-        // height: "500px", 
-        // width: "500px", 
-        whiteSpace: 'nowrap',
-        position: "absolute", 
-        left: `${background.coordinateVariation.xText}px`, 
-        top: `${background.coordinateVariation.yText}px`,
-        fontSize: `${background.coordinateVariation.textSize}pt`,
-        fontFamily: background.font,
-        color: background.coordinateVariation.color,
-      }}>{title}</div>}
-    </div>}
-    {<div id="overlay-subtitle-hidden" ref={overlaySubtitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-      {<div style={{
-        // height: "500px", 
-        // width: "500px", 
-        whiteSpace: 'nowrap',
-        position: "absolute", 
-        left: `${background.coordinateVariation.xSmallText}px`, 
-        top: `${background.coordinateVariation.ySmallText}px`,
-        fontSize: `${background.coordinateVariation.smallTextSize}pt`,
-        fontFamily: background.smallFont,
-        color: background.coordinateVariation.smallColor,
-      }}>{subtitle}</div>}
-    </div>}
     {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <MultiText background={background}/>}
   </div>
 
   return (
     <div className="cactus-dashboard-main_container">
+      {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+        {<div style={{
+          // height: "500px", 
+          // width: "500px", 
+          whiteSpace: 'nowrap',
+          position: "absolute",
+          left: `${background.coordinateVariation.xText}px`,
+          top: `${background.coordinateVariation.yText}px`,
+          fontSize: `${background.coordinateVariation.textSize}pt`,
+          fontFamily: background.font,
+          color: background.coordinateVariation.color,
+        }}>{title}</div>}
+      </div>}
+      {<div id="overlay-subtitle-hidden" ref={overlaySubtitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+        {<div style={{
+          // height: "500px", 
+          // width: "500px", 
+          whiteSpace: 'nowrap',
+          position: "absolute",
+          left: `${background.coordinateVariation.xSmallText}px`,
+          top: `${background.coordinateVariation.ySmallText}px`,
+          fontSize: `${background.coordinateVariation.smallTextSize}pt`,
+          fontFamily: background.smallFont,
+          color: background.coordinateVariation.smallColor,
+        }}>{subtitle}</div>}
+      </div>}
       {recents == 'no' ? <></> : <NavBar onProductClick={async (od, setLoading) => {
           console.log("Navigating through custom function")
           navigate(`/?productId=${od._id}`)
@@ -1208,6 +1219,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
           product={product}
           Illustration={IllustrationRender}
+          isVertical={!ratios.has(background?.url)}
           illustrationData={{ distribution, product, ogProduct, background, showChars: true }}
           hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={({product, closeModal}) => {
@@ -1285,10 +1297,13 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
               <h5>{product.mainDesc}</h5>
             </div>
             <IllustrationRender
+              containerClasses={['cactus-templete_detail-main_image_main_mode']}
               distribution={distribution}
               product={product}
               background={background}
               ogProduct={ogProduct}
+              unsetMargin={true}
+              adjustScale={true}
               showChars={false}
             />
             <div className="cactus-templete_poster-desc" style={{
