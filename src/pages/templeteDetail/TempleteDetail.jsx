@@ -669,6 +669,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const [loading1, setLoading1] = useState(false)
   const [loading2, setLoading2] = useState(false)
 
+  console.log("xydist",distribution)
+
   const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
     const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
     const subtitleHiddenEl = document.querySelector(`#${elementId} > div`)
@@ -780,7 +782,6 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
       console.log("chs", charPositions)
     // if(containsStatic) setCharacters(getCategoryCharacters(product))
     // else setCharacters(newChars)
-    console.log("CHs", firstLoad, characters, newChars)
     // if(containsStatic) setCharacters(ogChars)
     // else setCharacters(newChars)
     setCharacters(newChars)
@@ -812,7 +813,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
       staticSeenCounters[cat?.name] = staticSeenCounters[cat?.name] ?? 0
       const hidden = hasSeen && hasStaticPositions(ogProduct) ? true : cat?.hidden
 
-      console.log("DIST01-PROTO", cat?.name, cat?.hidden, parseInt(cat?.modifiedMax ?? '0'), staticSeenCounters[cat?.name])
+      // console.log("DIST01-PROTO", cat?.name, cat?.hidden, parseInt(cat?.modifiedMax ?? '0'), staticSeenCounters[cat?.name])
 
       const catCounter = categoryCounters[`${cat?.name}`] ?? 0
       hiddenCentralCategories[`${cat?.name} ${(categoryCounters[`${cat?.name}`] ?? 0) + 1}`] = hidden
@@ -917,7 +918,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
-    console.log("DIST01", sprites, finalDistribution.filter(d => !d.hidden))
+    console.log("DIST01", sprites)
     if(sprites.length != 0) setDistribution(finalDistribution)
     setHiddenCentralCategories(hiddenCentralCategories)
   }, [chosen, product, characters, background])
@@ -1082,6 +1083,72 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     />)}
   </>
 
+  const IllustrationRender = ({ distribution, ogProduct, background, product, showChars, style }) => <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({ height: '500px', transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined, width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', position: "relative", margin: 0, padding: 0, ...(style ?? {}) }))} className="cactus-templete_detail-main_image">
+    {console.log("ALLPROPS", { distribution, ogProduct, showChars })}
+    <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+    {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
+      zIndex: 100000000000000,
+      _: console.log("showChars", distribution, showChars),
+      position: "absolute", 
+      top: -1,
+      left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
+      height: "101%",
+      maxWidth: "500px",
+      width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
+    }}/>}
+    {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
+    {groupDistribution(ogProduct, distribution).map(sprites => <>
+      {
+        (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) && !showChars ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
+          height: "unset", 
+          width: "unset", 
+          position: "absolute", 
+          // _: console.log("GVN", sprite.categoryName, sprite, sprite.fixedWidth, sprite.x),
+          // _: console.log("do we", product.alignBottom, "so now", decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
+          // _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
+          left: `${((parseFloat(sprite.x) + parseInt(product.xAddition ?? "0") + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.fixedWidth)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)))}px`, 
+          top: `${((parseFloat(sprite.y) + parseInt(product.yAddition ?? "0") + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? ((sprite.offset ?? 0)) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))))}px`,
+          scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)*(product.scaleAddition == 0 || !product.scaleAddition ? 1 : product.scaleAddition/100)}`,
+          maxWidth: "500px",
+          transformOrigin: "0 0",
+          zIndex: 100*(sprite.layer+1)+((sprite?.categoryLayer ?? 0)*1000)
+        }}/>)
+      }
+    </>)}
+    {console.log("LOGO COMP", ratios.has(background.url))}
+    {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
+      top: "74px",
+      left: "100px"
+    }}/>}
+    {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+      {<div style={{
+        // height: "500px", 
+        // width: "500px", 
+        whiteSpace: 'nowrap',
+        position: "absolute", 
+        left: `${background.coordinateVariation.xText}px`, 
+        top: `${background.coordinateVariation.yText}px`,
+        fontSize: `${background.coordinateVariation.textSize}pt`,
+        fontFamily: background.font,
+        color: background.coordinateVariation.color,
+      }}>{title}</div>}
+    </div>}
+    {<div id="overlay-subtitle-hidden" ref={overlaySubtitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
+      {<div style={{
+        // height: "500px", 
+        // width: "500px", 
+        whiteSpace: 'nowrap',
+        position: "absolute", 
+        left: `${background.coordinateVariation.xSmallText}px`, 
+        top: `${background.coordinateVariation.ySmallText}px`,
+        fontSize: `${background.coordinateVariation.smallTextSize}pt`,
+        fontFamily: background.smallFont,
+        color: background.coordinateVariation.smallColor,
+      }}>{subtitle}</div>}
+    </div>}
+    {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <MultiText background={background}/>}
+  </div>
+
   return (
     <div className="cactus-dashboard-main_container">
       {recents == 'no' ? <></> : <NavBar onProductClick={async (od, setLoading) => {
@@ -1140,14 +1207,18 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           autoSelect={props ? false : autoSelect}
           ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
           product={product}
+          Illustration={IllustrationRender}
+          illustrationData={{ distribution, product, ogProduct, background, showChars: true }}
           hasStaticPositions={hasStaticPositions(ogProduct)}
-          onClick={product => {
-            console.log("chs2", firstLoad)
+          onClick={({product, closeModal}) => {
+            console.log("chs2")
             firstLoad = false
             setProduct(Object.freeze(product))
-            setChosen(true)
-            setAutoSelect(false)
-            setDefaultModel(false)
+            if(closeModal) {
+              setDefaultModel(false)
+              setChosen(true)
+              setAutoSelect(false)
+            }
           }}
         />
       )}
@@ -1213,69 +1284,13 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
             <div className="cactus-templete_detail-main_image_button_view">
               <h5>{product.mainDesc}</h5>
             </div>
-            <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({ height: '500px', transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined, width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', position: "relative", margin: 0, padding: 0 }))} className="cactus-templete_detail-main_image">
-              <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-              {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img src={background.coordinateVariation.frame} style={{
-                zIndex: 100000000000000,
-                position: "absolute", 
-                top: -1,
-                left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
-                height: "101%",
-                maxWidth: "500px",
-                width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
-              }}/>}
-              {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
-              {groupDistribution(ogProduct, distribution).map(sprites => <>
-                {
-                  (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
-                    height: "unset", 
-                    width: "unset", 
-                    position: "absolute", 
-                    _: console.log("GVN", sprite.categoryName, sprite, sprite.fixedWidth, sprite.x),
-                    _: console.log("do we", product.alignBottom, "so now", decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
-                    _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
-                    left: `${((parseFloat(sprite.x) + parseInt(product.xAddition ?? "0") + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.fixedWidth)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)))}px`, 
-                    top: `${((parseFloat(sprite.y) + parseInt(product.yAddition ?? "0") + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? ((sprite.offset ?? 0)) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))))}px`,
-                    scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)*(product.scaleAddition == 0 || !product.scaleAddition ? 1 : product.scaleAddition/100)}`,
-                    maxWidth: "500px",
-                    transformOrigin: "0 0",
-                    zIndex: 100*(sprite.layer+1)+((sprite?.categoryLayer ?? 0)*1000)
-                  }}/>)
-                }
-              </>)}
-              {console.log("LOGO COMP", ratios.has(background.url))}
-              {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
-                top: "74px",
-                left: "100px"
-              }}/>}
-              {<div id="overlay-title-hidden" ref={overlayTitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-                {<div style={{
-                  // height: "500px", 
-                  // width: "500px", 
-                  whiteSpace: 'nowrap',
-                  position: "absolute", 
-                  left: `${background.coordinateVariation.xText}px`, 
-                  top: `${background.coordinateVariation.yText}px`,
-                  fontSize: `${background.coordinateVariation.textSize}pt`,
-                  fontFamily: background.font,
-                  color: background.coordinateVariation.color,
-                }}>{title}</div>}
-              </div>}
-              {<div id="overlay-subtitle-hidden" ref={overlaySubtitleHidden} style={{ position: "absolute", zIndex: -100000 }}>
-                {<div style={{
-                  // height: "500px", 
-                  // width: "500px", 
-                  whiteSpace: 'nowrap',
-                  position: "absolute", 
-                  left: `${background.coordinateVariation.xSmallText}px`, 
-                  top: `${background.coordinateVariation.ySmallText}px`,
-                  fontSize: `${background.coordinateVariation.smallTextSize}pt`,
-                  fontFamily: background.smallFont,
-                  color: background.coordinateVariation.smallColor,
-                }}>{subtitle}</div>}
-              </div>}
-              {defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage ? <></> : <MultiText background={background}/>}
-            </div>
+            <IllustrationRender
+              distribution={distribution}
+              product={product}
+              background={background}
+              ogProduct={ogProduct}
+              showChars={false}
+            />
             <div className="cactus-templete_poster-desc" style={{
               // width: ratios.has(background.url) ? "350px" : "500px",
               width: "500px",

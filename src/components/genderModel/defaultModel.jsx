@@ -85,8 +85,26 @@ export default function DefaultModel(props) {
         else setOverselected(false)
     }, [categories])
 
+    useEffect(() => {
+        props.onClick({ product: makeProduct(categories), closeModal: false })
+    }, [])
+
+    const makeProduct = (newCategories) => {
+        const newProduct = JSON.parse(JSON.stringify(product))
+        if(hasStaticPositions) newProduct.categories = ogProduct.categories.map(cat => ({
+            ...cat, 
+            modifiedMax: newCategories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)?.max,
+            archiveMax: newCategories.find(cat2 => cat2.name == cat.name)?.max,
+            hidden: !newCategories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)
+        }))
+        else newProduct.categories = newCategories
+        return newProduct
+    }
+
     return (
         <div style={{height:'100%', overflow:'hidden'}} className="cactus-gender-model_top_view">
+            {console.log("ALLPROPSx-1", props.illustrationData)}
+            <props.Illustration {...props.illustrationData} style={{ marginRight: "3rem" }}/>
             <div style={{ minHeight:'70%', minWidth: '30rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
@@ -98,8 +116,11 @@ export default function DefaultModel(props) {
                                     newCategories[n].max = val
                                     console.log("NEW-CAT", newCategories)
                                     setCategories(newCategories)
+
+                                    if(getMax(newCategories) > ogProduct.max) return
+                                    const newProduct = makeProduct(newCategories)
+                                    props.onClick({ product: newProduct, closeModal: false })
                                 }}>
-                                    {console.log("CNAME", category?.name, -mins[category?.name])}
                                     {[0, ...(new Array(parseInt(category?.max ?? 0)).fill(0).map((_, i) => i+1))].slice(-mins[category?.name]).map(i => <Option value={i}>{i}</Option>)}
                                 </Select>
                             </div>
@@ -115,7 +136,7 @@ export default function DefaultModel(props) {
                             }))
                             else newProduct.categories = categories
                             console.log("_PRODUCT111_2", categories, newProduct)
-                            props.onClick(newProduct)
+                            props.onClick({ product: newProduct, closeModal: true })
                         }}>
                             <h3>Choisir</h3>
                         </button>
