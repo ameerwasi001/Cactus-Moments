@@ -9,6 +9,9 @@ import { ScaleLoader } from 'react-spinners'
 
 const { Option } = Select
 
+
+const getSelectionPricing = p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)
+const getPrice = () => (getKey("cart") ?? []).map(getSelectionPricing).reduce((a, b) => a+b, 0)
 const findPrice = p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)
 
 const selectOptions = opts => {
@@ -108,6 +111,7 @@ export default function DefaultModel(props) {
                                         />
                                     </div>
                                     {/* <p>{scrollList[`cactus-current-list-${n}`] ?? 1}/{option?.images?.length}</p> */}
+                                    <p style={{ fontSize: "12px" }}>${getSelectionPricing(option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]?.order)}</p>
                                 </div>
                                 <h2 style={{ marginLeft: "30px", marginRight: "30px" }}>{option?.question}</h2>
                                 <Select disabled className='option-disabled' style={{ width: "15rem" }} value={option.answer}>
@@ -116,14 +120,17 @@ export default function DefaultModel(props) {
                                 </Select>
                             </div>
                         </div>)}
-                        {/* <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: selectedOption === null ? "0.5" : undefined, pointer: selectedOption === null ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
-                            props.onClick(selectedOption == 1, props.additionalData)
-                        }}>
-                            <h3>Choisir</h3>
-                        </button> */}
                     </div>
                 </div>
-               
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div
+                        className="cactus-templete_detail-order_button"
+                        style={{ color: "white", width: "100px", height: "40px", fontSize: "15px" }}
+                        onClick={() => props.payClciked()}
+                    >
+                        Pay ${getPrice()}
+                    </div>
+                </div>
             </div>
         </div>
     )

@@ -42,6 +42,10 @@ const Navbar = (props) => {
     <>
       {showPaymentModel || detailModal || commanderModel ? (
         commanderModel ? <InfoListModel
+        payClciked={() => {
+          setCommanderModel(false)
+          setShowPaymentModel(true)
+        }}
         autoSelect={true}
         containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
         additionalData={detailModal}
@@ -192,34 +196,35 @@ const Navbar = (props) => {
         <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => {
-              setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
-                (p, i) => p == "check" ? <div className="cart-item">
-                  <div></div>
-                  <div className="cart-checkout-button" style={{ marginRight: "auto" }} onClick={() => {
-                    setCommanderModel(true)
-                  }}>Voir Panier</div>
-                  <div className="cart-checkout-button" onClick={() => {
-                    setShowPaymentModel(true)
-                  }}>Payer</div>
-                </div> : p == "nodata" ? <div className="cart-item-none">Votre panier est vide.</div> : <div className="cart-item">
-                  <p onClick={() => {
-                    setDetailModal({ ...p, _id: i })
-                  }}>{p?.selections?.product?.mainDesc} - {p?.selections?.title} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
-                  <img src={crossImg} className="cart-item-cross" onClick={ev => {
-                    ev.stopPropagation()
-                    const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
-                    const cart = (getKey("cart") ?? []).filter((_, j) => j != i)
-                    // delete cart[p?.selections?.product?._id]
-                    setKey("cart", cart)
-                    console.log("opendrop", cart)
-                    setOpenDropdown(openDropdown => ({
-                      // title: "cart",
-                      ...(openDropdown ?? {}),
-                      data
-                    }))
-                  }}/>
-                </div>
-              ).map(mainDesc => ({ mainDesc })) })
+              // setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
+              //   (p, i) => p == "check" ? <div className="cart-item">
+              //     <div></div>
+              //     <div className="cart-checkout-button" style={{ marginRight: "auto" }} onClick={() => {
+              //       setCommanderModel(true)
+              //     }}>Voir Panier</div>
+              //     <div className="cart-checkout-button" onClick={() => {
+              //       setShowPaymentModel(true)
+              //     }}>Payer</div>
+              //   </div> : p == "nodata" ? <div className="cart-item-none">Votre panier est vide.</div> : <div className="cart-item">
+              //     <p onClick={() => {
+              //       setDetailModal({ ...p, _id: i })
+              //     }}>{p?.selections?.product?.mainDesc} - {p?.selections?.title} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
+              //     <img src={crossImg} className="cart-item-cross" onClick={ev => {
+              //       ev.stopPropagation()
+              //       const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
+              //       const cart = (getKey("cart") ?? []).filter((_, j) => j != i)
+              //       // delete cart[p?.selections?.product?._id]
+              //       setKey("cart", cart)
+              //       console.log("opendrop", cart)
+              //       setOpenDropdown(openDropdown => ({
+              //         // title: "cart",
+              //         ...(openDropdown ?? {}),
+              //         data
+              //       }))
+              //     }}/>
+              //   </div>
+              // ).map(mainDesc => ({ mainDesc })) })
+              setCommanderModel(true)
             }}
             style={{
               borderBottomStyle:
