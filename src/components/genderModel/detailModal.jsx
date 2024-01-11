@@ -82,13 +82,15 @@ export default function DefaultModel(props) {
     const [price, setPrice] = useState(props?.additionalData?.selections?.product?.price)
     const navigate = useNavigate()
     const img = props?.additionalData?.selections?.img
-    const [options, setOptions] = useState(Object.entries(props?.additionalData?.selections ?? {})
-        .filter(([k]) => k.startsWith("pricing-"))
-        .map(([k, answer]) => ({
+    const [options, setOptions] = useState(
+        Object.entries(props?.additionalData?.selections ?? {})
+            .filter(([k]) => k.startsWith("pricing-"))
+            .map(([k, answer]) => ({
             question: k.replace("pricing-", ""), 
             answer,
             answers: pricingGrouped[k.replace("pricing-", "")],
-        })))
+        }))
+    )
 
     const [selectedOption, setSelectedOption] = useState(null)
 

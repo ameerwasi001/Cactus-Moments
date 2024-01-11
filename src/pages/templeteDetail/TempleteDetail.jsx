@@ -1083,56 +1083,71 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     />)}
   </>
 
-  const IllustrationRender = ({ distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => <div 
-    id={isPhone() && !ratios.has(background?.url) && unsetMargin ? 'margin-none' : ''} 
-    style={JSON.parse(JSON.stringify({
-      height: '500px', 
-      transform: isPhone() && !ratios.has(background?.url) && adjustScale ? 'scale(0.7)' : undefined, 
-      width: isPhone() && ratios.has(background?.url) ? '350px' : '500px', 
-      position: "relative", 
-      margin: 0, 
-      padding: 0, 
-      ...(style ?? {}) 
-    }))} 
-    className={['cactus-templete_detail-main_image', ...(containerClasses ?? [])].join(" ")}
-  >
-    <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-    {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
-      zIndex: 100000000000000,
-      _: console.log("showChars", distribution, showChars),
-      position: "absolute", 
-      top: -1,
-      left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
-      height: "101%",
-      maxWidth: "500px",
-      width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
-    }}/>}
-    {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
-    {groupDistribution(ogProduct, distribution).map(sprites => <>
-      {
-        (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) && !showChars ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight)/2} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
-          height: "unset", 
-          width: "unset", 
-          position: "absolute", 
-          // _: console.log("GVN", sprite.categoryName, sprite, sprite.fixedWidth, sprite.x),
-          // _: console.log("do we", product.alignBottom, "so now", decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
-          // _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
-          left: `${((parseFloat(sprite.x) + parseInt(product.xAddition ?? "0") + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.fixedWidth)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth)/2) : 0)))}px`, 
-          top: `${((parseFloat(sprite.y) + parseInt(product.yAddition ?? "0") + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? ((sprite.offset ?? 0)) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0))/2) : 0))))}px`,
-          scale: `${(sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100)*(product.scaleAddition == 0 || !product.scaleAddition ? 1 : product.scaleAddition/100)}`,
+  const IllustrationRender = ({ distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
+    const [loadedImages, setLoadedImages] = useState(
+      new Set(distribution.map(({sprite}) => sprite))
+    )
+    return <div
+      id={isPhone() && !ratios.has(background?.url) && unsetMargin ? 'margin-none' : ''}
+      style={JSON.parse(JSON.stringify({
+        height: '500px',
+        transform: isPhone() && !ratios.has(background?.url) && adjustScale ? 'scale(0.7)' : undefined,
+        width: isPhone() && ratios.has(background?.url) ? '350px' : '500px',
+        position: "relative",
+        margin: 0,
+        padding: 0,
+        ...(style ?? {})
+      }))}
+      className={['cactus-templete_detail-main_image', ...(containerClasses ?? [])].join(" ")}
+    >
+      <>
+        <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
+        {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
+          zIndex: 100000000000000,
+          _: console.log("showChars", distribution, showChars),
+          position: "absolute",
+          top: -1,
+          left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
+          height: "101%",
           maxWidth: "500px",
-          transformOrigin: "0 0",
-          zIndex: 100*(sprite.layer+1)+((sprite?.categoryLayer ?? 0)*1000)
-        }}/>)
-      }
-    </>)}
-    {console.log("LOGO COMP", ratios.has(background.url))}
-    {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
-      top: "74px",
-      left: "100px"
-    }}/>}
-    {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <MultiText background={background}/>}
-  </div>
+          width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
+        }} />}
+        {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
+        {groupDistribution(ogProduct, distribution).map(sprites => <>
+          {
+            (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) && !showChars ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight) / 2} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
+              height: "unset",
+              width: "unset",
+              position: "absolute",
+              // _: console.log("GVN", sprite.categoryName, sprite, sprite.fixedWidth, sprite.x),
+              // _: console.log("do we", product.alignBottom, "so now", decodeURIComponent(sprite.sprite), "at", sprite.y, "XTSCALE", sprite.rectHeight, sprite.offset, "offset-height", sprite.offset / 2, "rect-height", sprite.rectHeight / 2),
+              // _: console.log("STATS", (sprite.scale == 0 ? 1 : sprite.scale/100), (sprite.categoryScale == 0 || sprite.categoryScale == "" ? 1 : sprite.categoryScale/100), (sprite.scale == 0 ? 1 : sprite.scale/100)*(sprite.categoryScale == 0 ? 1 : sprite.categoryScale/100), realOffsets[sprite.sprite]?.width, sprite),
+              left: `${((parseFloat(sprite.x) + parseInt(product.xAddition ?? "0") + parseFloat(sprite.fixedWidth == "" || sprite.fixedWidth == undefined ? "0" : sprite.fixedWidth)) - ((product.alignCenterX ? (sprite.offsetWidth == sprite.rectWidth && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : (sprite.offsetWidth - sprite.rectWidth) / 2) : 0)))}px`,
+              top: `${((parseFloat(sprite.y) + parseInt(product.yAddition ?? "0") + parseFloat(sprite.fixedOffset == "" || sprite.fixedOffset == undefined ? "0" : sprite.fixedOffset)) - ((product.alignBottom ? ((sprite.offset ?? 0)) - (sprite.rectHeight ?? 0) : (product.alignCenter ? (sprite.offset == sprite.rectHeight && sprite.ogSubcategoryName == sprite.subcategoryName ? 0 : ((realOffsets[sprite.sprite]?.height ?? 1) - (sprite.rectHeight ?? 0)) / 2) : 0))))}px`,
+              scale: `${(sprite.scale == 0 ? 1 : sprite.scale / 100) * (sprite.categoryScale == 0 ? 1 : sprite.categoryScale / 100) * (product.scaleAddition == 0 || !product.scaleAddition ? 1 : product.scaleAddition / 100)}`,
+              maxWidth: "500px",
+              transformOrigin: "0 0",
+              zIndex: 100 * (sprite.layer + 1) + ((sprite?.categoryLayer ?? 0) * 1000)
+            }} />)
+          }
+        </>)}
+        {console.log("LOGO COMP", ratios.has(background.url))}
+        {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <img className="overlay-logo-template" src={logo} style={ratios.has(background.url) ? {} : {
+          top: "74px",
+          left: "100px"
+        }} />}
+        {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <MultiText background={background} />}
+        {/* {<div className="overlay-loader-container" style={{
+          ...(ratios.has(background.url) ? {} : {
+            top: "74px",
+            left: "100px",
+          }),
+        }}>
+          <ScaleLoader color="blue" />
+        </div>} */}
+      </>
+    </div>
+  }
 
   return (
     <div className="cactus-dashboard-main_container">

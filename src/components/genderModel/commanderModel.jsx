@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { arrowBack, closeBox, female, male, maleDummy, radioFilled, radio } from '../../assets'
 import { Select } from 'antd'
 import './genderModel.css'
-import { getKey, req } from '../../requests'
+import { getKey, req, setKey } from '../../requests'
 import { useNavigate, useNavigation } from 'react-router-dom'
 import { setParam } from '../../urlParams'
 import { ScaleLoader } from 'react-spinners'
@@ -13,6 +13,24 @@ const { Option } = Select
 const getSelectionPricing = p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)
 const getPrice = () => (getKey("cart") ?? []).map(getSelectionPricing).reduce((a, b) => a+b, 0)
 const findPrice = p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)
+
+const groupPrcing = pricings => {
+    const grouped = {}
+    for(const pricing of pricings) grouped[pricing.section] = []
+    for(const pricing of pricings) grouped[pricing.section].push(pricing)
+    return grouped
+}
+
+const getOrderPricingOptions = order => {
+    const pricingGrouped = groupPrcing(order?.selections?.product?.pricing)
+    return Object.entries(order?.selections ?? {})
+        .filter(([k]) => k.startsWith("pricing-"))
+        .map(([k, answer]) => ({
+            question: k.replace("pricing-", ""), 
+            answer,
+            answers: pricingGrouped[k.replace("pricing-", "")],
+        }))
+}
 
 const selectOptions = opts => {
     const obj = {}
@@ -34,18 +52,28 @@ const selectOptions = opts => {
         objp[order?.selections?.product?.mainDesc] += 1
     }
     console.log("UPLOADED-IMG ", objimg)
-    return Object.entries(obj).map(([k, v]) => ({ question: `${k} x ${objp[k]}`, answer: `${v}€`, images: objimg[k].map(img => ({ img, order: objorders[img] })) }))
+    return Object.entries(obj).map(([k, v]) => ({
+        question: `${k} x ${objp[k]}`,
+        answer: `${v}€`,
+        images: objimg[k].map(img => ({
+            img,
+            order: objorders[img],
+            pricingOptions: getOrderPricingOptions(objorders[img])
+        })) 
+    }))
 }
 
 export default function DefaultModel(props) {
 
-    const options = selectOptions(getKey("cart") ?? {})
+    const [ogOrders, setOgOrders] = useState(getKey("cart") ?? {})
+    const [options, setOptions] = useState(selectOptions(getKey("cart") ?? {}))
     const navigate = useNavigate()
 
     const [selectedOption, setSelectedOption] = useState(null)
     const [scrollList, setScrollList] = useState({})
     const [loading, setLoading] = useState(false)
 
+    console.log(options)
     return (
         <div onClick={() => props.closeModal()} style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
             <div onClick={ev => ev.stopPropagation()} style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
@@ -114,10 +142,43 @@ export default function DefaultModel(props) {
                                     <p style={{ fontSize: "12px" }}>${getSelectionPricing(option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]?.order)}</p>
                                 </div>
                                 <h2 style={{ marginLeft: "30px", marginRight: "30px" }}>{option?.question}</h2>
-                                <Select disabled className='option-disabled' style={{ width: "15rem" }} value={option.answer}>
-                                    {/* {console.log("CNAME", category?.name, -mins[category?.name])} */}
-                                    <Option value={option.answer}>{option.answer}</Option>
-                                </Select>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                {option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]?.pricingOptions?.map((poption, k) => <div style={{ display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px' }}>
+                                    <div style={{ display: 'flex', width: '20rem', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <h2>{poption?.question}</h2>
+                                        <Select style={{ width: "15rem" }} value={poption.answer} onChange={text => {
+                                            const optArr = options.map((optx, nx) => n == nx ? { ...optx, images: optx.images.map(img => ({ ...img, pricingOptions: img?.pricingOptions?.map((popt, kx) => kx == k ? {...popt, answer: text} : popt) })) } : optx)
+                                            setOptions(optArr)
+
+                                            const cart = getKey("cart") ?? []
+
+                                            const obj = option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]
+                                            const order = obj?.order
+                                            const currProduct = cart.find(c => c.selections.uuid == order.selections.uuid)
+                                            console.log(currProduct)
+                                            // console.log(cart, currProduct, opt.question)
+                                            currProduct.selections[poption.question] = text
+                                            currProduct.selections[`pricing-${poption.question}`] = text
+                                            const price = Object.entries(currProduct?.selections)
+                                                .filter(([k]) => k.startsWith("pricing-"))
+                                                .map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0))
+                                                .reduce((a, b) => a+b, 0)
+                                            currProduct.selections.product.price = price
+
+                                            // console.log(">>", cart)
+                                            setKey("cart", [...cart])
+                                        }}>
+                                            <Option value={poption.answer}>{poption.answer}</Option>
+                                            {
+                                                poption
+                                                    .answers
+                                                    .filter(opt => opt.name != poption.answer)
+                                                    .map(option => <Option value={option.name}>{option.name}</Option>)
+                                            }
+                                        </Select>
+                                    </div>
+                                </div>)}
                             </div>
                         </div>)}
                     </div>
@@ -125,7 +186,7 @@ export default function DefaultModel(props) {
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <div
                         className="cactus-templete_detail-order_button"
-                        style={{ color: "white", width: "100px", height: "40px", fontSize: "15px" }}
+                        style={{ color: "white", width: "100px", height: "40px", fontSize: "15px", marginBottom: "1rem" }}
                         onClick={() => props.payClciked()}
                     >
                         Pay ${getPrice()}
