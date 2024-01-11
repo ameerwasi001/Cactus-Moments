@@ -76,10 +76,12 @@ export default function Dashboard() {
       el?.scrollIntoView()
       const { product } = await req("GET", `/user/product/${JSON.parse(redirect.product)?._id}`)
       setProductLoading(false)
-      navigate(`/templetedetail?${setParam({
-        editData: encodeURIComponent(JSON.stringify({ ...redirect })),
-        product: JSON.stringify(product),
-      })}`)
+      navigate(`/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`, { 
+        state: {
+          editData: encodeURIComponent(JSON.stringify({ ...redirect })),
+          product: JSON.stringify(product),
+        }
+      })
     } 
     f()
   }, [])
@@ -95,7 +97,7 @@ export default function Dashboard() {
         setLoading(true)
         const { product } = await req("GET", `/user/product/${productId}`)
         setLoading(false)
-        navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+        navigate(`/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`, { state: { product: JSON.stringify(product) } })
       } else if(categoryName) {
         setSelectedCategory(categoryName)
         document?.getElementById("main-templates")?.scrollIntoView()
@@ -192,7 +194,7 @@ export default function Dashboard() {
                     const onProductLoaded = product => {
                       console.log("Loaded, naviating")
                       setLoading(false)
-                      navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+                      navigate(`/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`, { state: { product: JSON.stringify(product) } })
                     }
 
                     const product = loadedProducts[item._id]

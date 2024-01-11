@@ -161,6 +161,12 @@
   background-color: rgba(255, 255, 255, 0.5);
 }
 
+.main_cactus-loader-container-template {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #margin-none {
   margin: unset !important;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   arrowBack,
   arrowDown,
@@ -31,6 +31,7 @@ import AWS from "aws-sdk";
 import { Buffer } from "buffer"
 import { getImageSize } from "react-image-size";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import ClipLoader from "react-spinners/ClipLoader";
 import html2canvas from 'html2canvas';
 import swal from "sweetalert";
 
@@ -623,7 +624,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const overlaySubtitleHidden = useRef(null)
   const [errorModal, setErrorModal] = useState(null)
   const [product, setProduct] = useState(props?.product ?? Object.freeze(JSON.parse(JSONProduct)))
-  console.log("navi", props)
+  console.log("navi", product)
   const [distribution, setDistribution] = useState(props?.distribution ?? [])
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
@@ -847,7 +848,6 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     console.log("SPRITES", distribution)
     const spritedDistribution = distribution.map((x, i) => {
       const sprite = sprites[i]
-      const { product: JSONProduct } = getAllParams()
       const ogProduct = JSON.parse(JSONProduct)
       const foundCategory = ogProduct?.categories?.find(
         cat => 
@@ -1522,19 +1522,43 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
 }
 
 export default function TempleteDetailWrapper() {
-  const { product: JSONProductFromURL, recents, editData } = getAllParams()
+  const { state } = useLocation()
+  // const { product: JSONProductFromURL, recents, editData } = state
+  const JSONProductFromURL = state?.product
+  const editData = state?.editData
+  const recents = []
   const [JSONProduct, setJSONProduct] = useState(JSONProductFromURL)
-  const [ogProduct, setOgProduct] = useState(Object.freeze(JSON.parse(JSONProductFromURL)))
+  const [ogProduct, setOgProduct] = useState(JSONProductFromURL ? Object.freeze(JSON.parse(JSONProductFromURL)) : null)
 
-  const parsedProps = JSON.parse(editData ? decodeURIComponent(editData) : '{}')
-  const selectionData = parsedProps.props ? JSON.parse(decodeURIComponent(parsedProps.props)) : null
+  const [parsedProps, setParsedProps] = useState(JSON.parse(editData ? decodeURIComponent(editData) : '{}'))
+  const [selectionData, setSelectionData] = useState(parsedProps.props ? JSON.parse(decodeURIComponent(parsedProps.props)) : null)
 
-  return <TempleteDetail ogProduct={ogProduct} setOgProduct={x => {
-    console.log("naviX", selectionData)
+  useEffect(() => {
+    const title = window.location.search.split("?title=")[1]
+    if(title && !ogProduct) req('GET', `/user/product?query=${encodeURIComponent(JSON.stringify({
+      mainDesc: {
+        $regex: decodeURIComponent(title).split("-").join(" "),
+        $options: 'i'
+      }
+    }))}`)
+    .then(({ products }) => {
+      console.log("MPRODUCT", products)
+      const product = products[0]
+      setOgProduct(product)
+      setJSONProduct(JSON.stringify(product))
+    })
+  }, [])
+
+  return ogProduct ? <TempleteDetail ogProduct={ogProduct} setOgProduct={x => {
     setOgProduct(x)
     setJSONProduct(JSON.stringify(x))
   }} JSONProduct={JSONProduct} recents={recents} props={selectionData ? {
     // ...parsedProps,
     ...selectionData,
-  } : null}/>
+  } : null}/> : <div className="cactus-dashboard-main_container">
+    <NavBar/>
+    <div className="cactus-templet_detail_top_container main_cactus-loader-container-template" style={{ height: "100vh", width: "100vw" }}>
+      <ClipLoader color="black" size={100}/>
+    </div>
+  </div>
 }

@@ -43,7 +43,7 @@ export default function Poster() {
         {loading ? <small>Loading...</small> : templeteArray.map((item) => {
             return (
               <TempleteView
-                onClick={() => navigate(`/templetedetail?${setParam({"product": JSON.stringify(item)})}`)}
+                onClick={() => navigate(`/templetedetail`, { state: { product: JSON.stringify(item) } })}
                 item={item}
               />
             );

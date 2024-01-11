@@ -111,7 +111,7 @@ export default function DefaultModel(props) {
                             order: props.additionalData.id,
                         }
 
-                        if(window.location.href.includes("templetedetail")) return navigate('/', { state: { redirect: redirectData } })
+                        if(window.location.href.includes(`templetedetail?title=${props?.additionalData?.selections?.product?.mainDesc?.split(" ")?.join("-")}`)) return navigate('/', { state: { redirect: redirectData } })
 
                         setLoading(true)
                         const { product } = await req("GET", `/user/product/${productId}`)
@@ -121,9 +121,9 @@ export default function DefaultModel(props) {
                             editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
                             product: JSON.stringify(product),
                         }
-                        const url = `/templetedetail?${setParam(params)}`
-                        if(window.location.href.includes("templetedetail")) navigate('/', { state: { redirect: redirectData } })
-                        else navigate(url)
+                        const url = `/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`
+                        if(window.location.href.includes(`templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`)) navigate('/', { state: { redirect: {...params, redirectData} } })
+                        else navigate(url, { state: params })
                     }} src={img} style={{ width: "200px" }}/>}
                     {img && loading && <div className='click-loader-container'>
                         <ScaleLoader color='#000'/>
