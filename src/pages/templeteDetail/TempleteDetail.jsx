@@ -95,6 +95,26 @@ const shuffleSeed = (seed) => (n, array) => {
 const getCharacters = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).fit(0, parseInt(cat.max))
 const getCategoryCharacters = product => product.categories.map(cat => getCharacters(cat)).reduce((a, b) => a.concat(b), []).fit(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
 
+export const getInitialCategoryCharacters = (product, distribution) => {
+  const containsStatic = hasStaticPositions(product)
+  const charPositions = {}
+  const ogChars = getCategoryCharacters(product)
+  let newChars = ogChars
+    // .slice(0, newChars.length - diff - 1)
+    .map((ch, i) => {
+      const [cat] = getCategoryOfCharacter(product, ch)
+      const catName = cat.name
+      const curr = charPositions[catName] ?? 0
+      const catDists = distribution.filter(cat => cat.categoryName == catName)
+      const currDist = catDists[curr]
+      // if(curr >= parseInt(cat.modifiedMax)) return ch
+      charPositions[catName] = curr + 1
+      if (!currDist) return ch
+      return currDist?.sprite
+    })
+  return newChars
+}
+
 const getCharactersGivenStatic = cat => cat.subcategories.map(sub => sub.characters).reduce((a, b) => a.concat(b)).fit(0, parseInt(cat.modifiedMax ?? cat.max))
 const getCategoryCharactersGivenStatic = product => product.categories.map(cat => getCharactersGivenStatic(cat)).reduce((a, b) => a.concat(b), []).fit(0, product.categories.map(cat => parseInt(cat.max)).reduce((a, b) => a + b, 0))
 
@@ -617,6 +637,118 @@ const genUUID = () => {
 
 // const findCharacterPositi
 
+export const getDistribution = (product, ogProduct, background, characters, alternateBackground) => {
+  let staticSeenCounters = {}
+  const hiddenCentralCategories = {}
+  const categoryCounters = {}
+  const processBg = background => background.positions.map((pos, i) => {
+    const cat = product.categories.find(cat => cat.name == positions[i]?.name?.[0])
+    const hasSeen = staticSeenCounters[cat?.name] >= parseInt((cat?.modifiedMax ?? cat?.max) ?? '0')
+    staticSeenCounters[cat?.name] = staticSeenCounters[cat?.name] ?? 0
+    const hidden = hasSeen && hasStaticPositions(ogProduct) ? true : cat?.hidden
+
+    // console.log("DIST01-PROTO", cat?.name, cat?.hidden, parseInt(cat?.modifiedMax ?? '0'), staticSeenCounters[cat?.name])
+
+    const catCounter = categoryCounters[`${cat?.name}`] ?? 0
+    hiddenCentralCategories[`${cat?.name} ${(categoryCounters[`${cat?.name}`] ?? 0) + 1}`] = hidden
+    categoryCounters[`${cat?.name}`] = catCounter + 1
+    const ret = {
+      x: pos[0],
+      y: pos[1],
+      ogSubcategoryName: product?.ogSubcats?.[`${pos[0]},${pos[1]}`],
+      rectHeight: product?.positionalRects?.[`${pos[0]},${pos[1]}`],
+      rectWidth: product?.positionalWidths?.[`${pos[0]},${pos[1]}`],
+      layer: pos[2],
+      scale: pos[3],
+      hidden,
+    }
+
+    if(staticSeenCounters[cat?.name]) staticSeenCounters[cat?.name] += 1
+    else staticSeenCounters[cat?.name] = 1
+
+    return ret
+  }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
+
+  const sprites = characters
+  const positions = productPositions(ogProduct)
+  const alternateBackgroundNow = alternateBackground ?? product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url)
+  let distribution = processBg(background)
+  if(distribution.length % 2 == 0 && alternateBackgroundNow) distribution = processBg(alternateBackgroundNow)
+  console.log("DISTRIBUTIN-NUMS", distribution.length, alternateBackgroundNow, distribution.length % 2 == 0 && alternateBackgroundNow)
+
+  // console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
+  // middling algorithm
+  console.log("SPRITES", distribution)
+  const spritedDistribution = distribution.map((x, i) => {
+    const sprite = sprites[i]
+    // const ogProduct = JSON.parse(JSONProduct)
+    const foundCategory = ogProduct?.categories?.find(
+      cat => 
+        cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
+        cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(sprite)) ||
+        cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(sprite))
+    )
+    const foundSubcategory = foundCategory?.subcategories?.find(
+      sub => sub?.characters?.includes(sprite) || 
+        sub?.characters?.includes(encodeURIComponent(sprite)) ||
+        sub?.characters?.includes(makeSpriteModification(sprite))
+    )
+    const foundParent = foundCategory?.subcategories?.find(sub => sub?.name == foundSubcategory?.parent)
+    const foundFirstChild = foundCategory?.subcategories?.find(sub => sub?.parent == foundSubcategory?.name)
+
+    let categoryScale = foundSubcategory?.categoryScale
+    let fixedOffset = foundSubcategory?.fixedOffset
+    let fixedWidth = foundSubcategory?.fixedWidth
+    let categoryLayer = foundSubcategory?.layer
+
+    if(!categoryScale) categoryScale = foundParent?.categoryScale
+    if(!categoryLayer) categoryLayer = foundParent?.layer
+    if(!fixedOffset) fixedOffset = foundParent?.fixedOffset
+    if(!fixedWidth) fixedWidth = foundParent?.fixedWidth
+
+    if(!categoryScale) categoryScale = foundFirstChild?.categoryScale ?? 0
+    if(!fixedOffset) fixedOffset = foundFirstChild?.fixedOffset ?? 0
+    if(!fixedWidth) fixedWidth = foundFirstChild?.fixedWidth ?? 0
+
+    console.log(
+      "FINDCATEGORY-urix",
+      hiddenCentralCategories
+    )
+    return { 
+      ...x, 
+      ogscat: foundSubcategory,
+      ogparent: foundParent,
+      categoryLayer,
+      subcategoryName: foundSubcategory?.name, 
+      fixedOffset,
+      fixedWidth,
+      categoryName: foundCategory?.name, 
+      categoryScale, 
+      offset: product?.offsets?.[foundCategory?.name], 
+      offsetWidth: product?.offsetWidths?.[foundCategory?.name], 
+      hidden: x.hidden,
+      // offset: getTotalOffset(sprite).height, 
+      // offsetWidth: getTotalOffset(sprite).width, 
+      sprite: sprite,
+    }
+  })
+  
+  const nulls = spritedDistribution.filter(({sprite}) => !sprite)
+  const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
+
+  const len = Math.round(nulls.length/2)
+  const nulls1 = nulls.fit(0, len)
+  const nulls2 = nulls.fit(len, nulls.length)
+
+  const finalDistribution = [...nulls1, ...actuals, ...nulls2]
+
+  // finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
+
+  return finalDistribution
+}
+
+const preloadImage = img => new Image().src = img
+
 function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }) {
   const currPricingObject = props ? Object.fromEntries(Object.entries(props).filter(([k]) => k.startsWith('pricing-')).map(([k, str]) => [k, props.product.pricing.find(pricing => pricing?.name == str)]).map(([k, v]) => [k.split("pricing-").join(""), v])) : null
   const navigate = useNavigate();
@@ -721,16 +853,19 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const editData = async () => {
     const ratios = new Set()
     for(const background of product.backgrounds) {
-      const {height, width} = await getImageSize(background.url)
-      const ratio = height/width
-      if(ratio >= 1.1 && ratio <= 1.5) ratios.add(background.url)
-      setImageSize({height, width})
+      preloadImage(background?.url)
+      getImageSize(background.url).then(({height, width}) => {
+        const ratio = height/width
+        if(ratio >= 1.1 && ratio <= 1.5) ratios.add(background.url)
+        setImageSize({height, width})
+        setRatios(oldRatios => new Set([...oldRatios, ...ratios]))
+      })
     }
     // setTitle(product.name)
     // setSubtitle(product.subtitle)
     console.log("PREVIEWS", product.previews)
     setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url:x} } }))
-    setRatios(ratios)
+    // setRatios(ratios)
   }
 
   useEffect(() => {
@@ -763,24 +898,10 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     // Setting the required states
     // setSideTempleArray((product.previews ?? []).map((x, id) => { return { id, image: {url: x} } }))
     console.log("SPRITES-NOW", distribution, characters)
-    const containsStatic = hasStaticPositions(product)
 
-    const charPositions = {}
-    const ogChars = getCategoryCharacters(product)
-    let newChars = ogChars
-      // .slice(0, newChars.length - diff - 1)
-      .map((ch, i) => {
-        const [cat] = getCategoryOfCharacter(product, ch)
-        const catName = cat.name
-        const curr = charPositions[catName] ?? 0
-        const catDists = distribution.filter(cat => cat.categoryName == catName)
-        const currDist = catDists[curr]
-        // if(curr >= parseInt(cat.modifiedMax)) return ch
-        charPositions[catName] = curr + 1
-        if(!currDist) return ch
-        return currDist?.sprite
-      })
-      console.log("chs", charPositions)
+    
+    const newChars = getInitialCategoryCharacters(product, characters)
+      // console.log("chs", charPositions)
     // if(containsStatic) setCharacters(getCategoryCharacters(product))
     // else setCharacters(newChars)
     // if(containsStatic) setCharacters(ogChars)
@@ -805,121 +926,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   useEffect(() => {
     // if(!chosen) return
 
-    let staticSeenCounters = {}
-    const hiddenCentralCategories = {}
-    const categoryCounters = {}
-    const processBg = background => background.positions.map((pos, i) => {
-      const cat = product.categories.find(cat => cat.name == positions[i]?.name?.[0])
-      const hasSeen = staticSeenCounters[cat?.name] >= parseInt((cat?.modifiedMax ?? cat?.max) ?? '0')
-      staticSeenCounters[cat?.name] = staticSeenCounters[cat?.name] ?? 0
-      const hidden = hasSeen && hasStaticPositions(ogProduct) ? true : cat?.hidden
-
-      // console.log("DIST01-PROTO", cat?.name, cat?.hidden, parseInt(cat?.modifiedMax ?? '0'), staticSeenCounters[cat?.name])
-
-      const catCounter = categoryCounters[`${cat?.name}`] ?? 0
-      hiddenCentralCategories[`${cat?.name} ${(categoryCounters[`${cat?.name}`] ?? 0) + 1}`] = hidden
-      categoryCounters[`${cat?.name}`] = catCounter + 1
-      const ret = {
-        x: pos[0],
-        y: pos[1],
-        ogSubcategoryName: product?.ogSubcats?.[`${pos[0]},${pos[1]}`],
-        rectHeight: product?.positionalRects?.[`${pos[0]},${pos[1]}`],
-        rectWidth: product?.positionalWidths?.[`${pos[0]},${pos[1]}`],
-        layer: pos[2],
-        scale: pos[3],
-        hidden,
-      }
-
-      if(staticSeenCounters[cat?.name]) staticSeenCounters[cat?.name] += 1
-      else staticSeenCounters[cat?.name] = 1
-
-      return ret
-    }).fit(0, product.categories.map(x => parseInt(x.max)).reduce((a, b) => a + b, 0))
-
-    const sprites = characters
-    const positions = productPositions(ogProduct)
-    const alternateBackgroundNow = alternateBackground ?? product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url)
-    let distribution = processBg(background)
-    if(distribution.length % 2 == 0 && alternateBackgroundNow) distribution = processBg(alternateBackgroundNow)
-    console.log("DISTRIBUTIN-NUMS", distribution.length, alternateBackgroundNow, distribution.length % 2 == 0 && alternateBackgroundNow)
-
-    // console.log("DIST00", product.categories.map(x => parseInt(x.max)), distribution)
-    // middling algorithm
-    console.log("SPRITES", distribution)
-    const spritedDistribution = distribution.map((x, i) => {
-      const sprite = sprites[i]
-      const ogProduct = JSON.parse(JSONProduct)
-      const foundCategory = ogProduct?.categories?.find(
-        cat => 
-          cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
-          cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(sprite)) ||
-          cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(sprite))
-      )
-      const foundSubcategory = foundCategory?.subcategories?.find(
-        sub => sub?.characters?.includes(sprite) || 
-          sub?.characters?.includes(encodeURIComponent(sprite)) ||
-          sub?.characters?.includes(makeSpriteModification(sprite))
-      )
-      const foundParent = foundCategory?.subcategories?.find(sub => sub?.name == foundSubcategory?.parent)
-      const foundFirstChild = foundCategory?.subcategories?.find(sub => sub?.parent == foundSubcategory?.name)
-
-      let categoryScale = foundSubcategory?.categoryScale
-      let fixedOffset = foundSubcategory?.fixedOffset
-      let fixedWidth = foundSubcategory?.fixedWidth
-      let categoryLayer = foundSubcategory?.layer
-
-      if(!categoryScale) categoryScale = foundParent?.categoryScale
-      if(!categoryLayer) categoryLayer = foundParent?.layer
-      if(!fixedOffset) fixedOffset = foundParent?.fixedOffset
-      if(!fixedWidth) fixedWidth = foundParent?.fixedWidth
-
-      if(!categoryScale) categoryScale = foundFirstChild?.categoryScale ?? 0
-      if(!fixedOffset) fixedOffset = foundFirstChild?.fixedOffset ?? 0
-      if(!fixedWidth) fixedWidth = foundFirstChild?.fixedWidth ?? 0
-
-      console.log(
-        "FINDCATEGORY-urix",
-        hiddenCentralCategories
-      )
-      return { 
-        ...x, 
-        ogscat: foundSubcategory,
-        ogparent: foundParent,
-        categoryLayer,
-        subcategoryName: foundSubcategory?.name, 
-        fixedOffset,
-        fixedWidth,
-        categoryName: foundCategory?.name, 
-        categoryScale, 
-        offset: product?.offsets?.[foundCategory?.name], 
-        offsetWidth: product?.offsetWidths?.[foundCategory?.name], 
-        hidden: x.hidden,
-        // offset: getTotalOffset(sprite).height, 
-        // offsetWidth: getTotalOffset(sprite).width, 
-        sprite: sprite,
-      }
-    })
-    
-    const nulls = spritedDistribution.filter(({sprite}) => !sprite)
-    const actuals = spritedDistribution.filter(({sprite}) => !!sprite)
-
-    const len = Math.round(nulls.length/2)
-    const nulls1 = nulls.fit(0, len)
-    const nulls2 = nulls.fit(len, nulls.length)
-
-    const finalDistribution = [...nulls1, ...actuals, ...nulls2]
-
-    // finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
-
-    const bg = background
-    const font = bg.font
-    const smallFont = bg.smallFont
-    const variation = bg.coordinateVariation
-    const {textSize, xText, yText, smallTextSize, xSmallText, ySmallText, color, smallColor} = bg.coordinateVariation
+    const finalDistribution = getDistribution(product, ogProduct, background, characters, alternateBackground)
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
-    console.log("DIST01", sprites)
-    if(sprites.length != 0) setDistribution(finalDistribution)
+    // console.log("DIST01", sprites)
+    if(characters.length != 0) setDistribution(finalDistribution)
     setHiddenCentralCategories(hiddenCentralCategories)
   }, [chosen, product, characters, background])
 

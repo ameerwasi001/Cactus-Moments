@@ -22,6 +22,7 @@ import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
 import EventEmitter from 'events'
+import { getDistribution, getInitialCategoryCharacters } from "../templeteDetail/TempleteDetail";
 
 const getS3Url = id => `https://drivebuddyz.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
 const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => JSON.parse(decodeURIComponent(x)))
@@ -40,6 +41,8 @@ function paginate(array, page_size, page_number) {
   if(isPhone()) return array.slice((page_number - 1) * page_size, page_number * page_size);
   else return array
 }
+
+const preloadImage = img => new Image().src = img
 
 const emitter = new EventEmitter()
 
@@ -127,13 +130,23 @@ export default function Dashboard() {
 
   useEffect(() => {
     if(!templeteArray?.length) return
+
     for(const item of templeteArray) 
       fetchObejct(item._id)
         .then(product => {
           setLoadedProducts(loadedProducts => ({ ...loadedProducts, [item._id]: product }))
-          console.log("PRODUCT-EMIT", item._id)
+
+          const firstBgUrl = product?.backgrounds?.[0]?.url
+          preloadImage(firstBgUrl)
+
+          const initDist = getDistribution(product, product, product?.backgrounds?.[0], [])
+          const chars = getInitialCategoryCharacters(product, initDist)
+          const distribution = getDistribution(product, product, product?.backgrounds?.[0], chars)
+          for(const ch of distribution) preloadImage(ch?.sprite)
+
           emitter.emit(item._id, product)
         })
+      
   }, [templeteArray])
 
   useEffect(() => {
