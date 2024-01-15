@@ -139,9 +139,9 @@ export default function Dashboard() {
           const firstBgUrl = product?.backgrounds?.[0]?.url
           preloadImage(firstBgUrl)
 
-          const [initDist, _] = getDistribution(product, product, product?.backgrounds?.[0], [])
+          const [initDist, _1] = getDistribution(product, product, product?.backgrounds?.[0], [])
           const chars = getInitialCategoryCharacters(product, initDist)
-          const [distribution, _] = getDistribution(product, product, product?.backgrounds?.[0], chars)
+          const [distribution, _2] = getDistribution(product, product, product?.backgrounds?.[0], chars)
           for(const ch of distribution) preloadImage(ch?.sprite)
 
           emitter.emit(item._id, product)
