@@ -744,7 +744,8 @@ export const getDistribution = (product, ogProduct, background, characters, alte
 
   // finalDistribution.forEach(({x, y, sprite, layer, scale}, i) => graph.addNode(null, null, new Tags().override(fromObject({x, y, layer, sprite, scale}))));
 
-  return finalDistribution
+  console.log("hidcent", hiddenCentralCategories)
+  return [finalDistribution, hiddenCentralCategories]
 }
 
 const preloadImage = img => new Image().src = img
@@ -801,6 +802,28 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
 
   const [loading1, setLoading1] = useState(false)
   const [loading2, setLoading2] = useState(false)
+
+  const imageInstance = new Image()
+  imageInstance.src = background?.coordinateVariation?.alternate ?? background.url
+
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+
+  useEffect(() => {
+    if(!distribution.length) return
+    const interval = setInterval(() => {
+      const images = distribution.map(({ sprite }) => sprite).map(img => {
+        const ins = new Image()
+        ins.src = img
+        return ins
+      })
+      console.log("XYZ", images)
+      const allLoaded = images.map(img => img.complete).reduce((a, b) => a && b, true)
+      if(allLoaded) return setIsImageLoaded(allLoaded)
+      setIsImageLoaded(allLoaded)
+      if(allLoaded) clearInterval(interval)
+    }, 500)
+    return () => clearInterval(interval)
+  }, [distribution])
 
   console.log("xydist",distribution)
 
@@ -926,7 +949,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   useEffect(() => {
     // if(!chosen) return
 
-    const finalDistribution = getDistribution(product, ogProduct, background, characters, alternateBackground)
+    const [finalDistribution, hiddenCentralCategories] = getDistribution(product, ogProduct, background, characters, alternateBackground)
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
     // console.log("DIST01", sprites)
@@ -1094,10 +1117,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     />)}
   </>
 
-  const IllustrationRender = ({ distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
-    const [loadedImages, setLoadedImages] = useState(
-      new Set(distribution.map(({sprite}) => sprite))
-    )
+  const IllustrationRender = ({ isImageLoaded, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
+
     return <div
       id={isPhone() && !ratios.has(background?.url) && unsetMargin ? 'margin-none' : ''}
       style={JSON.parse(JSON.stringify({
@@ -1148,14 +1169,16 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           left: "100px"
         }} />}
         {(defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage) && !showChars ? <></> : <MultiText background={background} />}
-        {/* {<div className="overlay-loader-container" style={{
-          ...(ratios.has(background.url) ? {} : {
-            top: "74px",
-            left: "100px",
+        {!isImageLoaded && <div className="overlay-loader-container" style={{
+          ...(ratios.has(background.url) ? {
+            width: "355px",
+          } : {
+            width: "500px",
+            height: "355px",
           }),
         }}>
           <ScaleLoader color="blue" />
-        </div>} */}
+        </div>}
       </>
     </div>
   }
@@ -1246,7 +1269,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           product={product}
           Illustration={IllustrationRender}
           isVertical={!ratios.has(background?.url)}
-          illustrationData={{ distribution, product, ogProduct, background, showChars: true }}
+          illustrationData={{ distribution, isImageLoaded, product, ogProduct, background, showChars: true }}
           hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={({product, closeModal}) => {
             console.log("chs2")
@@ -1326,6 +1349,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
               containerClasses={['cactus-templete_detail-main_image_main_mode']}
               distribution={distribution}
               product={product}
+              isImageLoaded={isImageLoaded}
               background={background}
               ogProduct={ogProduct}
               unsetMargin={true}
