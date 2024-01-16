@@ -103,8 +103,8 @@ export default function DefaultModel(props) {
                                                     document.getElementById(`cactus-current-list-${n}`).scrollLeft -= 150
                                                 }}
                                             />
-                                            <div id={`cactus-current-list-${n}`} style={{ display: 'flex', width: '150px', background: "red", overflowX: 'hidden' }}>
-                                                {option?.images && option?.images?.length && option.images.map(({ img, order }) => <div style={{ width: "150px" }}>
+                                            <div id={`cactus-current-list-${n}`} style={{ display: 'flex', width: '150px', overflowX: 'hidden' }}>
+                                                {option?.images && option?.images?.length && option.images.map(({ img, order }) => <div style={{ display: 'flex', width: "150px" }}>
                                                     <img className="commander-modal-img" onClick={async () => {
                                                         const productId = order?.selections?.product?._id
                                                         console.log("orderx1", order)
