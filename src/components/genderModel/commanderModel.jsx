@@ -103,8 +103,8 @@ export default function DefaultModel(props) {
                                                     document.getElementById(`cactus-current-list-${n}`).scrollLeft -= 150
                                                 }}
                                             />
-                                            <div id={`cactus-current-list-${n}`} style={{ display: 'flex', width: '150px', overflowX: 'hidden' }}>
-                                                {option?.images && option?.images?.length && option.images.map(({ img, order }) => <>
+                                            <div id={`cactus-current-list-${n}`} style={{ display: 'flex', width: '150px', background: "red", overflowX: 'hidden' }}>
+                                                {option?.images && option?.images?.length && option.images.map(({ img, order }) => <div style={{ width: "150px" }}>
                                                     <img className="commander-modal-img" onClick={async () => {
                                                         const productId = order?.selections?.product?._id
                                                         console.log("orderx1", order)
@@ -162,7 +162,7 @@ export default function DefaultModel(props) {
                                                             />
                                                         </div>
                                                     </div>
-                                                </>)}
+                                                </div>)}
                                             </div>
                                             <img
                                                 src={arrowBack}
@@ -179,7 +179,7 @@ export default function DefaultModel(props) {
                                             />
                                         </div>
                                         {/* <p>{scrollList[`cactus-current-list-${n}`] ?? 1}/{option?.images?.length}</p> */}
-                                        <p style={{ fontSize: "12px" }}>${getSelectionPricing(option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]?.order)}</p>
+                                        <p style={{ fontSize: "12px" }}>€{getSelectionPricing(option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]?.order)}</p>
                                     </div>
                                     <h2 style={{ marginLeft: "30px", marginRight: "30px" }}>{option?.question}</h2>
                                 </div>
