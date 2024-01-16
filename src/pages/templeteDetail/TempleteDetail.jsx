@@ -641,6 +641,7 @@ export const getDistribution = (product, ogProduct, background, characters, alte
   let staticSeenCounters = {}
   const hiddenCentralCategories = {}
   const categoryCounters = {}
+  console.log("bgx", background)
   const processBg = background => background.positions.map((pos, i) => {
     const cat = product.categories.find(cat => cat.name == positions[i]?.name?.[0])
     const hasSeen = staticSeenCounters[cat?.name] >= parseInt((cat?.modifiedMax ?? cat?.max) ?? '0')
@@ -806,7 +807,13 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const imageInstance = new Image()
   imageInstance.src = background?.coordinateVariation?.alternate ?? background.url
 
-  const [isImageLoaded, setIsImageLoaded] = useState(false)
+  const [isImageLoaded, setIsImageLoaded] = useState(true)
+
+  const [currRender, setCurrRender] = useState(0)
+
+  const rerender = () => {
+    setCurrRender(currRender + 1)
+  }
 
   useEffect(() => {
     if(!distribution.length) return
@@ -923,7 +930,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     console.log("SPRITES-NOW", distribution, characters)
 
     
-    const newChars = getInitialCategoryCharacters(product, characters)
+    const newChars = getInitialCategoryCharacters(product, distribution)
       // console.log("chs", charPositions)
     // if(containsStatic) setCharacters(getCategoryCharacters(product))
     // else setCharacters(newChars)
@@ -948,14 +955,27 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
 
   useEffect(() => {
     // if(!chosen) return
+    // if(lock) return
+    // lock = true
 
     const [finalDistribution, hiddenCentralCategories] = getDistribution(product, ogProduct, background, characters, alternateBackground)
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
     // console.log("DIST01", sprites)
+    console.log("bgxfinal", background.positions, finalDistribution)
     if(characters.length != 0) setDistribution(finalDistribution)
     setHiddenCentralCategories(hiddenCentralCategories)
-  }, [chosen, product, characters, background])
+  // lock = false
+  }, [
+    product,
+    distribution,
+    background,
+    characters,
+    chosen,
+    ratios,
+    offsets,
+    realOffsets,
+  ])
 
   useEffect(() => {
     // setInterval(() => {
@@ -1117,7 +1137,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     />)}
   </>
 
-  const IllustrationRender = ({ isImageLoaded, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
+  const IllustrationRender = ({ isImageLoaded, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
 
     return <div
       id={isPhone() && !ratios.has(background?.url) && unsetMargin ? 'margin-none' : ''}
@@ -1269,7 +1289,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           product={product}
           Illustration={IllustrationRender}
           isVertical={!ratios.has(background?.url)}
-          illustrationData={{ distribution, isImageLoaded, product, ogProduct, background, showChars: true }}
+          illustrationData={{ distribution, realOffsets, isImageLoaded, product, ogProduct, background, showChars: true }}
           hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={({product, closeModal}) => {
             console.log("chs2")
@@ -1292,6 +1312,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           backgrounds={product.backgrounds.filter(x => !x.coordinateVariation.evenFor)}
           onClick={data => {
             if(data.image) setBackground(data.image)
+            // const distCopy = [...distribution]
+            // setDistribution([ ...distCopy ])
+            // setDistribution(() => distCopy)
             setChooseBackgroundModel(undefined)
           }}
         />
@@ -1349,6 +1372,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
               containerClasses={['cactus-templete_detail-main_image_main_mode']}
               distribution={distribution}
               product={product}
+              realOffsets={realOffsets}
               isImageLoaded={isImageLoaded}
               background={background}
               ogProduct={ogProduct}

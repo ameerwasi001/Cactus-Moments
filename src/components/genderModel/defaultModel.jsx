@@ -83,7 +83,7 @@ export default function DefaultModel(props) {
     const ogProduct = props.ogProduct
     ogProduct.max = parseInt(ogProduct.max)
     const mins = Object.fromEntries(Object.entries(minCategoryGivenStatics(ogProduct)).map(([k, _]) => [k, 0]))
-    console.log("_PRODUCT111", product)
+    console.log("_PRODUCT111", props.product.categories)
     const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : processMaxes(props.product.categories))
     // const [categories, setCategories] = useState(getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct))
     const [overSelected, setOverselected] = useState(false)
