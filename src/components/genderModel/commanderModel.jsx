@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { arrowBack, closeBox, female, male, maleDummy, radioFilled, radio, emptyCart } from '../../assets'
+import { arrowBack, closeBox, female, male, maleDummy, radioFilled, radio, emptyCart, close, closeBlack } from '../../assets'
 import { Select } from 'antd'
 import './genderModel.css'
 import { getKey, req, setKey } from '../../requests'
@@ -53,6 +53,7 @@ const selectOptions = opts => {
     }
     console.log("UPLOADED-IMG ", objimg)
     return Object.entries(obj).map(([k, v]) => ({
+        name: k,
         question: `${k} x ${objp[k]}`,
         answer: `${v}€`,
         images: objimg[k].map(img => ({
@@ -72,6 +73,8 @@ export default function DefaultModel(props) {
     const [selectedOption, setSelectedOption] = useState(null)
     const [scrollList, setScrollList] = useState({})
     const [loading, setLoading] = useState(false)
+
+    const [hoverCross, setHoverCross] = useState(null)
 
     console.log(options)
     return (
@@ -101,32 +104,65 @@ export default function DefaultModel(props) {
                                                 }}
                                             />
                                             <div id={`cactus-current-list-${n}`} style={{ display: 'flex', width: '150px', overflowX: 'hidden' }}>
-                                                {option?.images && option?.images?.length && option.images.map(({ img, order }) => <img className="commander-modal-img" onClick={async () => {
-                                                    const productId = order?.selections?.product?._id
-                                                    console.log("orderx1", order)
+                                                {option?.images && option?.images?.length && option.images.map(({ img, order }) => <>
+                                                    <img className="commander-modal-img" onClick={async () => {
+                                                        const productId = order?.selections?.product?._id
+                                                        console.log("orderx1", order)
 
-                                                    const redirectData = {
-                                                        product: JSON.stringify(order?.selections?.product),
-                                                        props: encodeURIComponent(JSON.stringify({
-                                                            ...order?.selections
-                                                        })),
-                                                        order: order.id,
-                                                    }
+                                                        const redirectData = {
+                                                            product: JSON.stringify(order?.selections?.product),
+                                                            props: encodeURIComponent(JSON.stringify({
+                                                                ...order?.selections
+                                                            })),
+                                                            order: order.id,
+                                                        }
 
-                                                    if (window.location.href.includes(`templetedetail?title=${order?.selections?.mainDesc?.split(" ")?.join("-")}`)) return navigate('/', { state: { redirect: redirectData } })
+                                                        if (window.location.href.includes(`templetedetail?title=${order?.selections?.mainDesc?.split(" ")?.join("-")}`)) return navigate('/', { state: { redirect: redirectData } })
 
-                                                    setLoading(true)
-                                                    const { product } = await req("GET", `/user/product/${productId}`)
-                                                    setLoading(false)
+                                                        setLoading(true)
+                                                        const { product } = await req("GET", `/user/product/${productId}`)
+                                                        setLoading(false)
 
-                                                    const params = {
-                                                        editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
-                                                        product: JSON.stringify(product),
-                                                    }
+                                                        const params = {
+                                                            editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
+                                                            product: JSON.stringify(product),
+                                                        }
 
-                                                    const url = `/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`
-                                                    navigate(url, { state: params })
-                                                }} src={img} />)}
+                                                        const url = `/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`
+                                                        navigate(url, { state: params })
+                                                    }} src={img} />
+                                                    <div
+                                                        style={{ display: "flex", height: 80, width: 25, marginLeft: -25, marginTop: 10  }}
+                                                    >
+                                                        <div
+                                                            style={{ height: 15, width: 15, cursor: "pointer" }}
+                                                            onMouseEnter={() => setHoverCross({ index: scrollList[`cactus-current-list-${n}`] ?? 1, option })}
+                                                            onMouseLeave={() => setHoverCross(null)}
+                                                            onClick={() => {
+                                                                const cart = getKey("cart") ?? []
+                                                                const newCart = cart.filter(
+                                                                    corder => corder?.selections?.uuid != order?.selections?.uuid
+                                                                )
+                                                                setKey("cart", [...newCart])
+                                                                setOptions(selectOptions(getKey("cart")))
+                                                            }}
+                                                        >
+                                                            <img
+                                                                src={closeBlack}
+                                                                style={{
+                                                                    width: 10,
+                                                                    height: 10,
+                                                                    ...(
+                                                                        (hoverCross?.index == (scrollList[`cactus-current-list-${n}`] ?? 1)) && (hoverCross?.option?.question == option?.question) ? {
+                                                                            filter: "invert(17%) sepia(87%) saturate(5995%) hue-rotate(359deg) brightness(106%) contrast(124%)",
+                                                                            scale: "1.2"
+                                                                        } : {}
+                                                                    )
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </>)}
                                             </div>
                                             <img
                                                 src={arrowBack}
