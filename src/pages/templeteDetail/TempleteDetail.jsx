@@ -526,7 +526,6 @@ const TitleComponent = ({ elementId, givenId, background, title, style }) => {
 const decodeOffsets = obj => Object.fromEntries(Object.entries(obj).map(([k, v]) => [decodeURIComponent(k), v]))
 
 const makeSpriteModification = img => {
-  console.log("IMG>>", img)
   if(!img) return null
   const url = "https://drivebuddyz.s3.us-east-2.amazonaws.com/"
   const [_, rest] = img.split(url)
@@ -804,6 +803,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const [loading1, setLoading1] = useState(false)
   const [loading2, setLoading2] = useState(false)
 
+  const lastDistOffsetRef = useRef(null)
+  const lastDistRealOffsetRef = useRef(null)
+
   const imageInstance = new Image()
   imageInstance.src = background?.coordinateVariation?.alternate ?? background.url
 
@@ -818,12 +820,12 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   useEffect(() => {
     if(!distribution.length) return
     const interval = setInterval(() => {
+      if(!distribution.length) return
       const images = distribution.map(({ sprite }) => sprite).map(img => {
         const ins = new Image()
         ins.src = img
         return ins
       })
-      console.log("XYZ", images)
       const allLoaded = images.map(img => img.complete).reduce((a, b) => a && b, true)
       if(allLoaded) return setIsImageLoaded(allLoaded)
       setIsImageLoaded(allLoaded)
@@ -898,7 +900,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     // setRatios(ratios)
   }
 
-  useEffect(() => {
+  const recalcOffset = () => {
+    console.log("groupx", lastDistOffsetRef?.current, distribution)
+
     const calculatedOffsets = {}
     console.log("MXC", groupDistribution(ogProduct, distribution).flat(1))
     for(const ch of groupDistribution(ogProduct, distribution).flat(1)) {
@@ -914,9 +918,17 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
       }
     }
     console.log("OFFSET-VALUE-X", calculatedOffsets)
+    lastDistOffsetRef.current = distribution
     setOffsets(calculatedOffsets)
     console.log("OFFSET >=>", calculatedOffsets)
-  }, [title, subtitle, product, characters, distribution, background])
+  }
+
+  useEffect(recalcOffset, [title, subtitle, product, characters, background])
+  useEffect(() => {
+    if(JSON.stringify(lastDistOffsetRef?.current) == JSON.stringify(distribution)) return
+    recalcOffset()
+  }, [distribution])
+
 
   useEffect(() => {
     setAlternateBackground(product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url))
@@ -962,17 +974,15 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     // graph.addTextNode(title, {textSize, xText, yText, color, font})
     // graph.addTextNode(subtitle, {textSize: smallTextSize, xText: xSmallText, yText: ySmallText, color: smallColor, font: smallFont})
     // console.log("DIST01", sprites)
-    console.log("bgxfinal", background.positions, finalDistribution)
     if(characters.length != 0) setDistribution(finalDistribution)
     setHiddenCentralCategories(hiddenCentralCategories)
   // lock = false
   }, [
     product,
-    distribution,
     background,
     characters,
     chosen,
-    ratios,
+    // ratios,
     offsets,
     realOffsets,
   ])
@@ -986,12 +996,11 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
 
   }, [])
 
-  useEffect(() => {
+  const recalcRealOffset = () => {
     const fonts = new Set(Array.from(document.fonts).map(x => x.family))
     setFontLoaded(fonts.has(title));
 
     document.fonts.onloadingdone = e => {
-      console.log("fontSet>>", new Set([...e.fontfaces].map(x => x.family)))
       setFontLoaded(fonts.has(title));
    }
   
@@ -1038,6 +1047,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
    }
 
    (async () => {
+    console.log(lastDistRealOffsetRef.current, distribution)
     const realOffsets = {}
     let i = 0
     for(const sprite of distribution) getImgHeight(
@@ -1046,11 +1056,21 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
       obj => {
         realOffsets[sprite.sprite] = obj
         i++
-        if(i == distribution.length) setRealOffsets(realOffsets)
+        if(i == distribution.length) {
+          setRealOffsets(realOffsets)
+        }
       }
     )
+    lastDistRealOffsetRef.current = distribution
    })()
-  }, [title, subtitle, product, characters, background, distribution])
+  }
+
+  useEffect(recalcRealOffset, [title, subtitle, product, characters, background])
+  useEffect(() => {
+    if(JSON.stringify(lastDistRealOffsetRef?.current) == JSON.stringify(distribution)) return
+    recalcRealOffset()
+  })
+
 
   const setCartData = async (setLoading) => {
     const rects = Object.fromEntries(Object.keys(offsets).map(x => [x, JSON.parse(JSON.stringify(document.querySelector(`[src="${x}"]`)?.getBoundingClientRect() ?? "{}"))]))
@@ -1072,18 +1092,15 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   
       const watermarkEl = document.getElementById("watermark")
       const bgEl = document.getElementById("real-background")
-      console.log("UPLOADED-IMG",bgEl)
   
       const illustrationStyle = {...illustration.style}
       const img = canvas.toDataURL();
       uploadedImage = await uploadImageOnS3(img)
     }
 
-    console.log("UPLOADED-IMG", uploadedImage)
 
     illustration.style.display = "none"
   
-    console.log("dt01n", Object.fromEntries(Object.entries(selectedPricingOptions).map(([k, obj]) => [`pricing-${k}`, obj.name])))
     const productData = {
       uuid: props?.uuid,
       selections: {
@@ -1103,9 +1120,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
         rects,
       }
     }
-    console.log("MXC", offsets, productData.selections)
 
-    console.log("PROP-UUID", props, props?.uuid)
     if(props?.uuid) cartObj = cartObj.map(p => p.uuid == props.uuid ? productData : p)
     else {
       const uuid = genUUID()
@@ -1122,7 +1137,6 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const PricingDataComponent = () => <>
     <h1>{title}</h1>
     <h2>{product.desc}</h2>
-    {console.log("PRCNGOPT", selectedPricingOptions)}
     <h3>{(0 + parseFloat(Object.values(selectedPricingOptions).map(({price}) => parseFloat(price)).reduce((a, b) => a+b, 0))).toFixed(2)} €</h3>
     {Object.entries(pricingObject).map(([section, prices]) => <DropdownModel
       _={console.log("RELAPRICE", prices)}
