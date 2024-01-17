@@ -821,7 +821,12 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     if(!distribution.length) return
     const interval = setInterval(() => {
       if(!distribution.length) return
-      const images = distribution.map(({ sprite }) => sprite).map(img => {
+      const images = distribution.filter(({ hidden }) => !hidden).map(({ sprite }) => sprite).map(img => {
+        if(!img) {
+          return {
+            complete: true
+          }
+        }
         const ins = new Image()
         ins.src = img
         return ins

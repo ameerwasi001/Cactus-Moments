@@ -139,10 +139,13 @@ export default function Dashboard() {
           const firstBgUrl = product?.backgrounds?.[0]?.url
           preloadImage(firstBgUrl)
 
-          const [initDist, _1] = getDistribution(product, product, product?.backgrounds?.[0], [])
-          const chars = getInitialCategoryCharacters(product, initDist)
-          const [distribution, _2] = getDistribution(product, product, product?.backgrounds?.[0], chars)
-          for(const ch of distribution) preloadImage(ch?.sprite)
+          console.log("window.location.href", window.location.pathname)
+          if(window.location.href == '/') {
+            const [initDist, _1] = getDistribution(product, product, product?.backgrounds?.[0], [])
+            const chars = getInitialCategoryCharacters(product, initDist)
+            const [distribution, _2] = getDistribution(product, product, product?.backgrounds?.[0], chars)
+            for(const ch of distribution) preloadImage(ch?.sprite)
+          }
 
           emitter.emit(item._id, product)
         })
