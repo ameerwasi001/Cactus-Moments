@@ -121,7 +121,7 @@ export default function DefaultModel(props) {
                             editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
                             product: JSON.stringify(product),
                         }
-                        const url = `/templetedetail?title=${product?.mainDesc}`
+                        const url = `/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`
                         if(window.location.href.includes(`templetedetail?title=${product?.mainDesc}`)) navigate('/', { state: { redirect: {...params, redirectData} } })
                         else navigate(url, { state: params })
                     }} src={img} style={{ width: "200px" }}/>}

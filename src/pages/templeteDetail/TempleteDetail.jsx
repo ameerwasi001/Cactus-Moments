@@ -1612,9 +1612,10 @@ export default function TempleteDetailWrapper() {
   const [selectionData, setSelectionData] = useState(parsedProps.props ? JSON.parse(decodeURIComponent(parsedProps.props)) : null)
 
   useEffect(() => {
-    const title = window.location.search.split("?title=")[1]
+    const { title, productCategry } = getAllParams()
     if(title && !ogProduct) req('GET', `/user/product?query=${encodeURIComponent(JSON.stringify({
-      mainDesc: decodeURIComponent(title)
+      mainDesc: decodeURIComponent(title),
+      productCategry: productCategry ? decodeURIComponent(productCategry) : "poster"
     }))}`)
     .then(({ products }) => {
       console.log("MPRODUCT", products)

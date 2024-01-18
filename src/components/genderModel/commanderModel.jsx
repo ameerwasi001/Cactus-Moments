@@ -128,7 +128,7 @@ export default function DefaultModel(props) {
                                                             product: JSON.stringify(product),
                                                         }
 
-                                                        const url = `/templetedetail?title=${product?.mainDesc}`
+                                                        const url = `/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`
                                                         navigate(url, { state: params })
                                                     }} src={img} />
                                                     <div
