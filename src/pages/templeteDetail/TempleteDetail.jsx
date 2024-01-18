@@ -1614,10 +1614,7 @@ export default function TempleteDetailWrapper() {
   useEffect(() => {
     const title = window.location.search.split("?title=")[1]
     if(title && !ogProduct) req('GET', `/user/product?query=${encodeURIComponent(JSON.stringify({
-      mainDesc: {
-        $regex: decodeURIComponent(title).split("-").join(" "),
-        $options: 'i'
-      }
+      mainDesc: decodeURIComponent(title)
     }))}`)
     .then(({ products }) => {
       console.log("MPRODUCT", products)

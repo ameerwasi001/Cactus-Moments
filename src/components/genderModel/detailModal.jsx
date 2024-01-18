@@ -111,7 +111,7 @@ export default function DefaultModel(props) {
                             order: props.additionalData.id,
                         }
 
-                        if(window.location.href.includes(`templetedetail?title=${props?.additionalData?.selections?.product?.mainDesc?.split(" ")?.join("-")}`)) return navigate('/', { state: { redirect: redirectData } })
+                        if(window.location.href.includes(`templetedetail?title=${props?.additionalData?.selections?.product?.mainDesc}`)) return navigate('/', { state: { redirect: redirectData } })
 
                         setLoading(true)
                         const { product } = await req("GET", `/user/product/${productId}`)
@@ -121,8 +121,8 @@ export default function DefaultModel(props) {
                             editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
                             product: JSON.stringify(product),
                         }
-                        const url = `/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`
-                        if(window.location.href.includes(`templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`)) navigate('/', { state: { redirect: {...params, redirectData} } })
+                        const url = `/templetedetail?title=${product?.mainDesc}`
+                        if(window.location.href.includes(`templetedetail?title=${product?.mainDesc}`)) navigate('/', { state: { redirect: {...params, redirectData} } })
                         else navigate(url, { state: params })
                     }} src={img} style={{ width: "200px" }}/>}
                     {img && loading && <div className='click-loader-container'>

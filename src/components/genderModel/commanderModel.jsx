@@ -117,7 +117,7 @@ export default function DefaultModel(props) {
                                                             order: order.id,
                                                         }
 
-                                                        if (window.location.href.includes(`templetedetail?title=${order?.selections?.mainDesc?.split(" ")?.join("-")}`)) return navigate('/', { state: { redirect: redirectData } })
+                                                        if (window.location.href.includes(`templetedetail?title=${order?.selections?.mainDesc}`)) return navigate('/', { state: { redirect: redirectData } })
 
                                                         setLoading(true)
                                                         const { product } = await req("GET", `/user/product/${productId}`)
@@ -128,7 +128,7 @@ export default function DefaultModel(props) {
                                                             product: JSON.stringify(product),
                                                         }
 
-                                                        const url = `/templetedetail?title=${product?.mainDesc?.split(" ")?.join("-")}`
+                                                        const url = `/templetedetail?title=${product?.mainDesc}`
                                                         navigate(url, { state: params })
                                                     }} src={img} />
                                                     <div
