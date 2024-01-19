@@ -164,8 +164,8 @@ export default function Dashboard() {
           <div className="cactus-dashboard-banner_text_view">
             {/* <h5>Welcome to Cactus Moments</h5> */}
             <h1 id="top">
-            Choisissez et personnalisez votre{" "}
-              <span style={{ color: "#2B453E" }}>illustration</span> !
+            Personnaliser votre illustration préférée{" "}
+              <span style={{ color: "#2B453E" }}>préférée</span> !
             </h1>
             <h5>
             Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
