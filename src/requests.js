@@ -2937,3 +2937,5 @@ export function getCountry() {
 	const country = countries[_country];
 	return country;
 }
+
+export const getSmallImage = (url, resize='100') => `https://d1mq3916k6dmt.cloudfront.net/nwOr3tB7UZjp41oQl1eKXbY09VRFJHyz_SujluRquOg/rs:fit:${resize}:${resize}:0/g:no/${btoa(url).replace("=", "").replace('/', '_').replace('+', '-')}.png`

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { closeBox, onlyBg } from '../../assets'
+import { getSmallImage } from '../../requests'
 import './chooseBackgroundModel.css'
 
 export default function ChooseBackgroundModel(props) {
@@ -22,7 +23,7 @@ export default function ChooseBackgroundModel(props) {
                                 setSelectedBg(item)
                                 if(props.isPhone) document.getElementById("choose-background-button")?.scrollIntoView()
                             }} key={item.id}>
-                                <img src={item.image.url} />
+                                <img src={getSmallImage(item.image.url, '400')} />
                             </div>
                         )
                     })}

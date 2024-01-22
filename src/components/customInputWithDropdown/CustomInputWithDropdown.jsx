@@ -1,19 +1,7 @@
 import React, { useRef } from 'react'
 import { arrowDown, arrowDownTwo, arrowUp, edit, maleDummy, onlyBg } from '../../assets'
+import { getSmallImage } from '../../requests'
 import './customInputWithDropdown.css'
-
-const jsSHA = require("jssha");
-const proxyURL = "http://ec2-18-118-189-218.us-east-2.compute.amazonaws.com"
-
-function hex2a(hexx) {
-    var hex = hexx.toString() //force conversion
-    var str = ''
-    for (var i = 0; i < hex.length; i += 2)
-        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16))
-    return str
-}
-
-const getSmallImage = url => `https://d1mq3916k6dmt.cloudfront.net/nwOr3tB7UZjp41oQl1eKXbY09VRFJHyz_SujluRquOg/rs:fit:100:100:0/g:no/${btoa(url).replace("=", "").replace('/', '_').replace('+', '-')}.png`
 
 export default function CustomInputWithDropdown(props) {
     const title = useRef(null)

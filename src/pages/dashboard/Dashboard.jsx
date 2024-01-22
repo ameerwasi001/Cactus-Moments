@@ -164,11 +164,11 @@ export default function Dashboard() {
           <div className="cactus-dashboard-banner_text_view">
             {/* <h5>Welcome to Cactus Moments</h5> */}
             <h1 id="top">
-            Personnaliser votre illustration préférée{" "}
+            Personnalisez votre illustration {" "}
               <span style={{ color: "#2B453E" }}>préférée</span> !
             </h1>
             <h5>
-            Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
+              Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
             </h5>
             {isPhone() ? <div style={{ marginTop: "2rem" }}></div> : <div className="cactus-dashboard-banner_buttons_view">
               <div className="cactus-dashboard-banner_see_more_view" onClick={() => document.getElementById("main-templates")?.scrollIntoView()}>
