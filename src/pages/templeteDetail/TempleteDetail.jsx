@@ -34,23 +34,51 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import ClipLoader from "react-spinners/ClipLoader";
 import html2canvas from 'html2canvas';
 import swal from "sweetalert";
+import { OFFLINE, baseURL } from "../../constants";
 
 const CONSTANT_BOTTOM_OFFSET = 0
 let renderCanvas = true
 
-const uploadImageOnS3 = async (src) => {
-  const S3 = new AWS.S3();
-  const params = {
-    Bucket: "drivebuddyz",
-    Key: `${10000 + Math.round(Math.random() * 10000)}.png`,
-    Body: new Buffer(
-      src.replace(/^data:image\/\w+;base64,/, ""),
-      "base64"
-    ),
+const uploadImage = async (file) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MGQzZmJiZTM3NmE0M2NiMGNmMmI5OCIsImlhdCI6MTcwNTY2NDAzNSwiZXhwIjoxNzA1NjY0MTU1fQ.c50apc86vdB7UDBuL1p8QR0KSCcOLYoLbsbdk3ed0n0");
+
+  var formdata = new FormData();
+  formdata.append("file", file);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'follow'
   };
-  let res = await S3.upload(params).promise();
-  console.log(res);
-  return res.Location;
+
+  const requestObject = await fetch(`${baseURL}/user/uploadFile`, requestOptions)
+  const response = await requestObject.json()
+
+  return `${baseURL}/user/getFile?file=${encodeURIComponent(response.data.filename)}`
+}
+
+const uploadImageOnS3 = async (src) => {
+  if(OFFLINE) {
+    const blob = await fetch(src).then(it => it.blob());
+    const file = new File([blob], 'image.png', {type:"image/jpeg", lastModified: new Date()})
+    const url = await uploadImage(file)
+    return url
+  } else {
+    const S3 = new AWS.S3();
+    const params = {
+      Bucket: "drivebuddyz",
+      Key: `${10000 + Math.round(Math.random() * 10000)}.png`,
+      Body: new Buffer(
+        src.replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+      ),
+    };
+    let res = await S3.upload(params).promise();
+    console.log(res);
+    return res.Location;
+  }
 }
 
 AWS.config.update({
@@ -612,10 +640,12 @@ const getCategoryOfCharacter = (product, sprite) => {
     cat => 
       cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
       cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(sprite)) ||
+      cat?.subcategories?.map(sc => sc?.characters).flat().includes(decodeURIComponent(sprite)) ||
       cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(sprite))
   )
   const foundSubcategory = product?.subcategories?.find(
     sub => sub?.characters?.includes(sprite) || 
+      sub?.characters?.includes(decodeURIComponent(sprite)) ||
       sub?.characters?.includes(encodeURIComponent(sprite)) ||
       sub?.characters?.includes(makeSpriteModification(sprite))
   )
@@ -685,11 +715,19 @@ export const getDistribution = (product, ogProduct, background, characters, alte
     const foundCategory = ogProduct?.categories?.find(
       cat => 
         cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
+        cat?.subcategories?.map(
+          sc => sc?.characters?.map(x => {
+            console.log(x, decodeURI(x))
+            return decodeURI(x)
+          })
+        ).flat().includes(sprite) || 
         cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(sprite)) ||
         cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(sprite))
     )
+    console.log("NOW=FOUND", foundCategory)
     const foundSubcategory = foundCategory?.subcategories?.find(
       sub => sub?.characters?.includes(sprite) || 
+        sub?.characters?.includes(decodeURIComponent(sprite)) || 
         sub?.characters?.includes(encodeURIComponent(sprite)) ||
         sub?.characters?.includes(makeSpriteModification(sprite))
     )
@@ -712,7 +750,11 @@ export const getDistribution = (product, ogProduct, background, characters, alte
 
     console.log(
       "FINDCATEGORY-urix",
-      hiddenCentralCategories
+      sprite,
+      product?.offsets,
+      foundCategory,
+      ogProduct?.categories,
+      product?.offsets?.[foundCategory?.name]
     )
     return { 
       ...x, 
@@ -1535,10 +1577,10 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
               width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "355px" : "500px",
               height: ratios.size == 0 ? undefined : ratios.has(background?.url) ? '100%' : 'unset',
               objectFit: 'contain',
-            }} src={`${background?.coordinateVariation?.alternate ?? background.url}?${Date.now()}`} crossOrigin="anonymous" />
+            }} src={OFFLINE ? (background?.coordinateVariation?.alternate ?? background.url) : `${background?.coordinateVariation?.alternate ?? background.url}?${Date.now()}`} crossOrigin="anonymous" />
           </div>
           {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
-          {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={`${background.coordinateVariation.frame}?${Date.now()}`} style={{
+          {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
             zIndex: 100000000000000,
             position: "absolute",
             top: -1,
@@ -1549,7 +1591,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           }} />}
           {groupDistribution(ogProduct, distribution).map(sprites => <>
             {
-              (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img crossOrigin="anonymous" data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight) / 2} className={sprite.sprite} src={sprite.hidden ? "" : `${sprite.sprite}?${Date.now()}`} style={{
+              (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) ? [] : sprites.map(sprite => <img _={[console.log("ooox", sprite.y), console.log("ooox",sprite.offset), console.log("ooox",sprite.rectHeight)]} crossOrigin="anonymous" data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight) / 2} className={sprite.sprite} src={sprite.hidden ? "" : (OFFLINE ? sprite.sprite : `${sprite.sprite}?${Date.now()}`)} style={{
                 height: "unset",
                 width: "unset",
                 position: "absolute",

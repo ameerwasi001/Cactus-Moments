@@ -1,4 +1,4 @@
-import { baseURL } from './constants'
+import { OFFLINE, baseURL } from './constants'
 
 export const req = async (method, endpoint, body=null, onError=()=>{}, onSuccess=()=>{}) => {
     try {
@@ -2938,4 +2938,4 @@ export function getCountry() {
 	return country;
 }
 
-export const getSmallImage = (url, resize='100') => `https://d1mq3916k6dmt.cloudfront.net/nwOr3tB7UZjp41oQl1eKXbY09VRFJHyz_SujluRquOg/rs:fit:${resize}:${resize}:0/g:no/${btoa(url).replace("=", "").replace('/', '_').replace('+', '-')}.png`
+export const getSmallImage = (url, resize='100') => OFFLINE ? `${url}&size=100` : `https://d1mq3916k6dmt.cloudfront.net/nwOr3tB7UZjp41oQl1eKXbY09VRFJHyz_SujluRquOg/rs:fit:${resize}:${resize}:0/g:no/${btoa(url).replace("=", "").replace('/', '_').replace('+', '-')}.png`

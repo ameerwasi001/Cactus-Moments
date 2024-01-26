@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { closeBox, female, male, maleDummy, radioFilled, radio } from '../../assets'
 import { Select } from 'antd'
 import './genderModel.css'
+import { OFFLINE } from '../../constants'
 
 const { Option } = Select
 

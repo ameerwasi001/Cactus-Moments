@@ -132,14 +132,14 @@ export default function Dashboard() {
     if(!templeteArray?.length) return
 
     for(const item of templeteArray) 
-      fetchObejct(item._id)
+      if(item?.backgrounds?.[0]) setLoadedProducts(loadedProducts => ({ ...loadedProducts, [item._id]: item }))
+      else fetchObejct(item._id)
         .then(product => {
           setLoadedProducts(loadedProducts => ({ ...loadedProducts, [item._id]: product }))
 
           const firstBgUrl = product?.backgrounds?.[0]?.url
           preloadImage(firstBgUrl)
 
-          console.log("window.location.href", window.location.pathname)
           if(window.location.href == '/') {
             const [initDist, _1] = getDistribution(product, product, product?.backgrounds?.[0], [])
             const chars = getInitialCategoryCharacters(product, initDist)
