@@ -68,7 +68,7 @@ const uploadImageOnS3 = async (src) => {
   } else {
     const S3 = new AWS.S3();
     const params = {
-      Bucket: "drivebuddyz",
+      Bucket: "cactus-s3",
       Key: `${10000 + Math.round(Math.random() * 10000)}.png`,
       Body: new Buffer(
         src.replace(/^data:image\/\w+;base64,/, ""),
