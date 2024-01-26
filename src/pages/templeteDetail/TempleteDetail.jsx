@@ -82,8 +82,8 @@ const uploadImageOnS3 = async (src) => {
 }
 
 AWS.config.update({
-  accessKeyId: "AKIAVTRDW7SYZDI52F2K",
-  secretAccessKey: "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",
+  accessKeyId: "AKIAS5LRGSDTKW6H3MVK",
+  secretAccessKey: "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",
   region: "us-east-2",
 });
 
