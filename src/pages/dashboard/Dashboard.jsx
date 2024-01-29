@@ -24,7 +24,7 @@ import { ClipLoader } from "react-spinners";
 import EventEmitter from 'events'
 import { getDistribution, getInitialCategoryCharacters } from "../templeteDetail/TempleteDetail";
 
-const getS3Url = id => `https://drivebuddyz.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
+const getS3Url = id => `https://cactus-s3.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
 const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => JSON.parse(decodeURIComponent(x)))
 
 function getWindowDimensions() {

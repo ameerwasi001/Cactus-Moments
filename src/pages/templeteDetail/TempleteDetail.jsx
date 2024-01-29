@@ -555,7 +555,7 @@ const decodeOffsets = obj => Object.fromEntries(Object.entries(obj).map(([k, v])
 
 const makeSpriteModification = img => {
   if(!img) return null
-  const url = "https://drivebuddyz.s3.us-east-2.amazonaws.com/"
+  const url = "https://cactus-s3.s3.us-east-2.amazonaws.com/"
   const [_, rest] = img.split(url)
   return url + encodeURIComponent(rest)
 }
