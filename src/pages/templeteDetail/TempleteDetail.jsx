@@ -715,21 +715,22 @@ export const getDistribution = (product, ogProduct, background, characters, alte
     const foundCategory = ogProduct?.categories?.find(
       cat => 
         cat?.subcategories?.map(sc => sc?.characters).flat().includes(sprite) || 
+        // cat?.subcategories?.map(sc => sc?.characters).flat()?.find(ch => ch?.split("/")?.at(-1)?.split("-")?.[0] == sprite?.split("/")?.at(-1)?.split("-")?.[0]) ||
         cat?.subcategories?.map(
           sc => sc?.characters?.map(x => {
-            console.log(x, decodeURI(x))
             return decodeURI(x)
           })
         ).flat().includes(sprite) || 
         cat?.subcategories?.map(sc => sc?.characters).flat().includes(encodeURIComponent(sprite)) ||
         cat?.subcategories?.map(sc => sc?.characters).flat().includes(makeSpriteModification(sprite))
     )
-    console.log("NOW=FOUND", foundCategory)
     const foundSubcategory = foundCategory?.subcategories?.find(
       sub => sub?.characters?.includes(sprite) || 
         sub?.characters?.includes(decodeURIComponent(sprite)) || 
+        sub?.characters?.includes(decodeURI(sprite)) || 
         sub?.characters?.includes(encodeURIComponent(sprite)) ||
-        sub?.characters?.includes(makeSpriteModification(sprite))
+        sub?.characters?.includes(makeSpriteModification(sprite)) 
+        || sub?.characters?.find(ch => ch?.split("/")?.at(-1)?.split("-")?.[0] == sprite?.split("/")?.at(-1)?.split("-")?.[0])
     )
     const foundParent = foundCategory?.subcategories?.find(sub => sub?.name == foundSubcategory?.parent)
     const foundFirstChild = foundCategory?.subcategories?.find(sub => sub?.parent == foundSubcategory?.name)
@@ -739,17 +740,39 @@ export const getDistribution = (product, ogProduct, background, characters, alte
     let fixedWidth = foundSubcategory?.fixedWidth
     let categoryLayer = foundSubcategory?.layer
 
-    if(!categoryScale) categoryScale = foundParent?.categoryScale
-    if(!categoryLayer) categoryLayer = foundParent?.layer
-    if(!fixedOffset) fixedOffset = foundParent?.fixedOffset
-    if(!fixedWidth) fixedWidth = foundParent?.fixedWidth
+    console.log("PRIORITY", ogProduct.priority)
+    if(ogProduct.priority) {
+  
+      if(foundParent?.categoryScale) categoryScale = foundParent?.categoryScale
+      if(foundParent?.layer) categoryLayer = foundParent?.layer
+      if(foundParent?.fixedOffset) fixedOffset = foundParent?.fixedOffset
+      if(foundParent?.fixedWidth) fixedWidth = foundParent?.fixedWidth
+  
+      if(foundFirstChild?.categoryScale) categoryScale = foundFirstChild?.categoryScale ?? 0
+      if(foundFirstChild?.fixedOffset) fixedOffset = foundFirstChild?.fixedOffset ?? 0
+      if(foundFirstChild?.fixedWidth) fixedWidth = foundFirstChild?.fixedWidth ?? 0
+  
+      if(!categoryScale) categoryScale = 0
+      if(!fixedOffset) fixedOffset = 0
+      if(!fixedWidth) fixedWidth = 0
+  
+    } else {
+  
+      if(!categoryScale) categoryScale = foundParent?.categoryScale
+      if(!categoryLayer) categoryLayer = foundParent?.layer
+      if(!fixedOffset) fixedOffset = foundParent?.fixedOffset
+      if(!fixedWidth) fixedWidth = foundParent?.fixedWidth
+  
+      if(!categoryScale) categoryScale = foundFirstChild?.categoryScale ?? 0
+      if(!fixedOffset) fixedOffset = foundFirstChild?.fixedOffset ?? 0
+      if(!fixedWidth) fixedWidth = foundFirstChild?.fixedWidth ?? 0
+    } 
 
-    if(!categoryScale) categoryScale = foundFirstChild?.categoryScale ?? 0
-    if(!fixedOffset) fixedOffset = foundFirstChild?.fixedOffset ?? 0
-    if(!fixedWidth) fixedWidth = foundFirstChild?.fixedWidth ?? 0
+    console.log("||>?>?>", sprite, foundCategory, foundParent, foundFirstChild, fixedWidth)  
 
     console.log(
       "FINDCATEGORY-urix",
+      foundSubcategory,
       sprite,
       product?.offsets,
       foundCategory,
@@ -1228,7 +1251,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
         {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
         {groupDistribution(ogProduct, distribution).map(sprites => <>
           {
-            (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) && !showChars ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.y - (sprite.offset - sprite.rectHeight) / 2} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
+            (defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel) && !showChars ? [] : sprites.map(sprite => <img data-categoryLayer={sprite?.categoryLayer} data-truth={sprite.fixedWidth} className={sprite.sprite} src={sprite.hidden ? "" : sprite.sprite} style={{
               height: "unset",
               width: "unset",
               position: "absolute",
