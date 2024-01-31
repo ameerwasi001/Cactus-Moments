@@ -28,11 +28,13 @@ export default function ChooseBackgroundModel(props) {
                         )
                     })}
                 </div>
-                <div id="choose-background-button" onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
-                    <h3>Choisir</h3>
+                <div style={{ position: 'fixed', bottom: 0, width: '90%', display: 'flex', justifyContent: 'center', background: 'white' }}>
+                    <div id="choose-background-button" onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
+                        <h3>Choisir</h3>
+                    </div>
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
 

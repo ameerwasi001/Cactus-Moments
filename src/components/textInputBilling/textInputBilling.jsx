@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { arrowDown, creditCard } from "../../assets";
 import "./textInputBilling.css";
 
@@ -14,8 +14,9 @@ const TextInputBilling = ({
   mainWidth,
   extraDividerStyles,
 }) => {
+  const ref = useRef(null)
   return (
-    <div style={mainWidth} className="text-input-billing-main-container">
+    <div onClick={() => ref?.current?.focus()} style={mainWidth} className="text-input-billing-main-container">
       <div className="text-input-billing-divider-container">
         <h3>{title}</h3>
         <div className="text-input-billing-input-divider" style={extraDividerStyles ? extraDividerStyles : {}}></div>
@@ -25,7 +26,7 @@ const TextInputBilling = ({
         style={inputStyle}
         type={type}
         name={name}
-        id=""
+        ref={ref}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
