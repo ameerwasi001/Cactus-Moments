@@ -2,6 +2,7 @@ import { OFFLINE, baseURL } from './constants'
 
 export const req = async (method, endpoint, body=null, onError=()=>{}, onSuccess=()=>{}) => {
     try {
+		console.log("url", `${baseURL}${endpoint}`)
         const res = await fetch(`${baseURL}${endpoint}`, {
             method, 
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },

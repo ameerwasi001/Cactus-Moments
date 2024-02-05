@@ -25,6 +25,7 @@ export default function Footer() {
                     <h2 onClick={() => navigate('/poster')}>Posters</h2>
                     <h2 onClick={() => navigate('/privacypolicy')}> Politique de confidentialité </h2>
                     <h2 onClick={() => navigate('/terms')}>Termes et conditions</h2>
+                    <h2 onClick={() => navigate('/loginAsVendor')}>Login As Vedor</h2>
                 </div>
                 <div className='cactus-footerItemTopView'>
                     <h1 style={{ marginBottom: 5 }}>Aide</h1>

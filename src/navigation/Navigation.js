@@ -12,6 +12,7 @@ const Navigation = () => {
       <Route path="/searchpage" element={<Pages.SearchPage />} />
       <Route path="/privacypolicy" element={<Pages.Privacypolicy />} />
       <Route path="/terms" element={<Pages.Terms />} />
+      <Route path="/loginAsVendor" element={<Pages.LoginAsVendor />} />
       <Route path="/templetedetail" element={<Pages.TempleteDetail />} />
       <Route path="/billingAddress" element={<Pages.BillingAddress />} />
       <Route path="/payment" element={<Pages.Payment />} />

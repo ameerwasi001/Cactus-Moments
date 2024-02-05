@@ -115,6 +115,9 @@ const Payment = () => {
       if(code != "Noel") return setError("Invalid code")
     }
     setLoading(true)
+
+    const vendorId = JSON.parse(getKey("vendor") ?? '{}')?._id
+
     if(fromCart) {
       let ordered = 0
       const cartData = getKey("cart") ?? []
@@ -150,11 +153,12 @@ const Payment = () => {
             selectedFrame,
             code,
             withCard,
+            vendor: vendorId,
             ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
             orderDate: new Date().toLocaleDateString(),
           },
           product: product._id,
-          selections: {product, phoneOrder, ...restProduct, img: undefined}
+          selections: {product, phoneOrder, ...restProduct, vendor: vendorId, img: undefined}
         }, err => {
           setLoading(false)
           setError(err)
@@ -198,7 +202,7 @@ const Payment = () => {
         orderDate: new Date().toLocaleDateString(),
       },
       product: product._id,
-      selections: {product, phoneOrder: isPhone(), ...restProduct, img: undefined}
+      selections: {product, phoneOrder: isPhone(), ...restProduct, vendor: JSON.parse(getKey("vendor") ?? '{}')?._id, img: undefined}
     }, err => {
       setLoading(false)
       setError(err)

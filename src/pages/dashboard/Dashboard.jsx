@@ -17,7 +17,7 @@ import {
   TempleteSliderView,
   TempleteView,
 } from "../../components";
-import { req } from '../../requests'
+import { getKey, req } from '../../requests'
 import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
@@ -116,7 +116,12 @@ export default function Dashboard() {
       .then(({products}) => {
         console.log(products)
         console.log("setting")
-        const mappedProducts = products?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: { url: p.defaultIllustration }} })
+        const currVendor = JSON.parse(getKey("vendor") ?? 'null')
+        const myProductIds = currVendor?.products
+        const mappedProducts = products?.filter(prod => {
+          if(!myProductIds) return true
+          return myProductIds?.includes(prod._id)
+        })?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: { url: p.defaultIllustration }} })
         setTemplateArray(mappedProducts)
         console.log("done setting", mappedProducts)
         setLoading(false)
