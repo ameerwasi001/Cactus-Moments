@@ -13,6 +13,8 @@ const Navigation = () => {
       <Route path="/privacypolicy" element={<Pages.Privacypolicy />} />
       <Route path="/terms" element={<Pages.Terms />} />
       <Route path="/loginAsVendor" element={<Pages.LoginAsVendor />} />
+      <Route path="/orders" element={<Pages.Orders />} />
+      {/* <Route path="/viewOrder" element={<Pages.ViewOrder />} /> */}
       <Route path="/templetedetail" element={<Pages.TempleteDetail />} />
       <Route path="/billingAddress" element={<Pages.BillingAddress />} />
       <Route path="/payment" element={<Pages.Payment />} />

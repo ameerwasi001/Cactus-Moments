@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { jsPDF } from "jspdf";
 import {
   arrowBack,
   arrowDown,
@@ -666,6 +667,63 @@ const genUUID = () => {
 
 // const findCharacterPositi
 
+const resizeAccordingly = () => {
+  const el = document.getElementById("img-total")
+  const illustration = document.getElementsByClassName("display-image")[0]
+  illustration.style.height = `${el.getBoundingClientRect().height}px`
+}
+
+const getDimensions = (uri, cb) => new Promise((resolve, reject) => {
+  const img = new Image();
+  console.log("statttttinggg", uri)
+  img.onload = function() {
+      console.log("DIMENSIONSS >>", this.height, this.width)
+      cb([this.height, this.width]);
+  }
+  img.src = uri
+  // cb([10000, 7100])
+})
+
+var createPDF = function(imgData, frameData, offset, percentage, name, orientation) {
+  getDimensions(imgData, ([height, width]) => {
+      // getDimensions(frameData, ([h2]) => {
+          // const frameHeight = (h2/100)*percentage
+          // const finalHeight = Math.max(frameHeight, height)
+
+          console.log("DIMENSIONS h >>", height, width, orientation)
+
+          if(orientation == 'p') {
+              const doc = new jsPDF(orientation, 'mm', [3339.63, 4722.71]);
+              doc.addImage(imgData, 'PNG', 0, 0, 3339.63, 4722.71, 'monkey')
+              doc.save(`${name}.pdf`);
+
+          } else {
+              const doc = new jsPDF(orientation, 'px', [width, height]);
+              doc.addImage(imgData, 'PNG', 0, 0, width, height, 'monkey')
+              doc.save(`${name}.pdf`);
+          }
+      // })
+  })
+}
+
+const createCustomPDF = (isIllustrationHorizontal, name, imgData, ph, pw, alignCenter, l, _ih, distX, distY, scale) => {
+  getDimensions(imgData, ([height, width]) => {
+      console.log("DIMENSIONS custom >>", height, width)
+      const doc = new jsPDF(
+          l ? 'l': 'p', 
+          'cm', 
+          [pw, ph]
+      )
+
+      const ratio = width/height
+      const ih = _ih*scale
+      const calculatedWidth = ih*ratio
+
+      doc.addImage(imgData, 'PNG', distX*2, distY*2, calculatedWidth, ih, 'monkey')
+      doc.save(`${name}.pdf`);
+  })
+}
+
 export const getDistribution = (product, ogProduct, background, characters, alternateBackground) => {
   let staticSeenCounters = {}
   const hiddenCentralCategories = {}
@@ -815,8 +873,7 @@ export const getDistribution = (product, ogProduct, background, characters, alte
 
 const preloadImage = img => new Image().src = img
 
-function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }) {
-  const currPricingObject = props ? Object.fromEntries(Object.entries(props).filter(([k]) => k.startsWith('pricing-')).map(([k, str]) => [k, props.product.pricing.find(pricing => pricing?.name == str)]).map(([k, v]) => [k.split("pricing-").join(""), v])) : null
+function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, recents, props }) {
   const navigate = useNavigate();
   const overlayTitleHidden = useRef(null)
   const overlaySubtitleHidden = useRef(null)
@@ -824,6 +881,9 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   const [product, setProduct] = useState(props?.product ?? Object.freeze(JSON.parse(JSONProduct)))
   console.log("navi", product)
   const [distribution, setDistribution] = useState(props?.distribution ?? [])
+
+  const groupedPricing = groupPricing(props?.product?.pricing)
+  const currPricingObject = props ? Object.fromEntries(Object.entries(props).filter(([k]) => k.startsWith('pricing-') || groupedPricing[k]).map(([k, str]) => [k, props.product.pricing.find(pricing => pricing?.name == str)]).map(([k, v]) => [k.split("pricing-").join(""), v])) : null
 
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
@@ -878,6 +938,30 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
 
   const [currRender, setCurrRender] = useState(0)
 
+  // Printing States
+  const [width, setWidth] = useState(0)
+
+  const [printBackground, setPrintBackround] = useState(true)
+  const [printFrame, setPrintFrame] = useState(true)
+
+  const [fit, setFit] = useState(true)
+
+  const [pdfHeight, setPdfHeight] = useState(background?.coordinateVariation?.pdfHeight ?? 98)
+  const [pdfWidth, setPdfWidth] = useState(background?.coordinateVariation?.pdfWidth ?? 23.8)
+  const [frameHeight, setFrameHeight] = useState(101)
+  const [bottomOffset, setBottomOffset] = useState(100)
+  const [frameReadjust, setFrameReadjust] = useState(0)
+  const [frameReadjustX, setFrameReadjustX] = useState(1)
+  const [landscape, setLandscape] = useState(true)
+  const [illustrationHeight, setIllustrationHeight] = useState(background?.coordinateVariation?.illustrationHeight ?? 7.8)
+  const [illustrationDistance, setIllustrationDistance] = useState(background?.coordinateVariation?.illustrationDistance ?? 1)
+  const [illustrationYDistance, setIllustrationYDistance] = useState(background?.coordinateVariation?.illustrationYDistance ?? 2)
+  const [scale, setScale] = useState(background?.coordinateVariation?.illustrationPDFScale ?? 2)
+
+  const bill = props?.bill
+  // End Printing States
+
+
   const rerender = () => {
     setCurrRender(currRender + 1)
   }
@@ -905,6 +989,20 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
   }, [distribution])
 
   console.log("xydist",distribution)
+
+  useEffect(() => {
+    (async () => {
+      const { height, width } = await getImageSize(background.url)
+      const ratio = height / width
+      console.log("CRATIO", height, width, ratio, ratio <= 0.7 && ratio >= 0.3)
+      if (ratio <= 0.8 && ratio >= 0.3) {
+        if (ratio >= 0.7 && product?.productCategry == "Tasse") setWidth(355)
+        else setWidth(500)
+      } else if (ratio >= 1.1 && ratio <= 1.5) {
+        setWidth(355)
+      }
+    })()
+  }, [])
 
   const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
     const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
@@ -1221,7 +1319,8 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     />)}
   </>
 
-  const IllustrationRender = ({ isImageLoaded, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
+  const IllustrationRender = ({ isImageLoaded, printFrame, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
+    console.log("printFrameprintFrame", printFrame)
 
     return <div
       id={isPhone() && !ratios.has(background?.url) && unsetMargin ? 'margin-none' : ''}
@@ -1238,7 +1337,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
     >
       <>
         <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-        {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
+        {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
           zIndex: 100000000000000,
           _: console.log("showChars", distribution, showChars),
           position: "absolute",
@@ -1373,7 +1472,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
           product={product}
           Illustration={IllustrationRender}
           isVertical={!ratios.has(background?.url)}
-          illustrationData={{ distribution, realOffsets, isImageLoaded, product, ogProduct, background, showChars: true }}
+          illustrationData={{ distribution, printFrame, realOffsets, isImageLoaded, product, ogProduct, background, showChars: true }}
           hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={({product, closeModal}) => {
             console.log("chs2")
@@ -1459,6 +1558,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
               realOffsets={realOffsets}
               isImageLoaded={isImageLoaded}
               background={background}
+              printFrame={printFrame}
               ogProduct={ogProduct}
               unsetMargin={true}
               adjustScale={true}
@@ -1476,69 +1576,188 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
             <div className="cactus-templete_detail-form_top_view">
               <div className="cactus-templete_detail-form_title">
                 <h4>Personnalisez l'affiche</h4>
-                {/* <h4>Personnalisez</h4>
-                <h5>Composition de la famille</h5> */}
               </div>
-              <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', width: "350px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
+              {printing ? <>
+                <div style={{ width: printing ? undefined : "50%", display: "flex", flexDirection: "column", }}>
+
+                    <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center" }}>
+                        <input style={{ marginRight: "1rem" }} type="checkbox" checked={printBackground} onClick={() => setPrintBackround(!printBackground)}/>
+                        <div>Print Background</div>
+                    </div>
+
+                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                        <input style={{ marginRight: "1rem" }} type="checkbox" checked={printFrame} onClick={() => setPrintFrame(!printFrame)}/>
+                        <div>Print Frame</div>
+                    </div>
+
+                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                        <div>Frame Height</div>
+                        <input style={{ marginRight: "1rem" }} type="number" value={frameHeight} onChange={ev => setFrameHeight(ev.target.value)}/>
+                    </div>
+
+                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                        <div>Readjust Frame Position Y</div>
+                        <input style={{ marginRight: "1rem" }} type="number" value={frameReadjust} onChange={ev => setFrameReadjust(ev.target.value)}/>
+                    </div>
+
+                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                        <div>Readjust Frame Position X</div>
+                        <input style={{ marginRight: "1rem" }} type="number" value={frameReadjustX} onChange={ev => setFrameReadjustX(ev.target.value)}/>
+                    </div>
+
+                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                        <div>Bottom Offset Y</div>
+                        <input style={{ marginRight: "1rem" }} type="number" value={bottomOffset} onChange={ev => setBottomOffset(ev.target.value)}/>
+                    </div>
+
+                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                        <input style={{ marginRight: "1rem" }} type="checkbox" checked={fit} onClick={() => setFit(!fit)}/>
+                        <div>Fit</div>
+                    </div>
+
+                    {!fit && <>
+                        <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>PDF Height</div>
+                            <input style={{ marginRight: "1rem" }} type="number" value={pdfHeight} onChange={ev => setPdfHeight(ev.target.value)}/>
+                        </div>
+                        <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>PDF Width</div>
+                            <input style={{ marginRight: "1rem" }} type="number" value={pdfWidth} onChange={ev => setPdfWidth(ev.target.value)}/>
+                        </div>
+                        <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>Illustration Height</div>
+                            <input style={{ marginRight: "1rem" }} type="number" value={illustrationHeight} onChange={ev => setIllustrationHeight(ev.target.value)}/>
+                        </div>
+                        {/* <div style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>Align Middle Vertically</div>
+                            <input style={{ marginRight: "1rem" }} type="checkbox" checked={alignMiddle} onClick={() => setAlignMiddle(!alignMiddle)}/>
+                        </div> */}
+                        <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>Landscape</div>
+                            <input style={{ marginRight: "1rem" }} type="checkbox" checked={landscape} onClick={() => setLandscape(!landscape)}/>
+                        </div>
+                        <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>Illustration X Distance</div>
+                            <input style={{ marginRight: "1rem" }} type="number" value={illustrationDistance} onChange={ev => setIllustrationDistance(ev.target.value)}/>
+                        </div>
+                        <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>Illustration Y Distance</div>
+                            <input style={{ marginRight: "1rem" }} type="number" value={illustrationYDistance} onChange={ev => setIllustrationYDistance(ev.target.value)}/>
+                        </div>
+                        <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                            <div>Illustration Scale</div>
+                            <input style={{ marginRight: "1rem" }} type="number" value={scale} onChange={ev => setScale(ev.target.value)}/>
+                        </div>
+                    </>}
+
+                    {/* {isFulfilled ? <p>The order has been fulfilled</p> : <button style={{ width: "200px" }} className='btn btn-primary' onClick={async () => {
+                        setIsFulfilled(true)
+                        await req(`/user/order/${order._id}`, "PATCH", { fulfilled: true })
+                    }}>Fulfill</button>} */}
+                </div>
+                <div className="cactus-templete_detail-order_button"
+                  style={{ cursor: loading2 ? "default" : undefined }}
+                  onClick={async () => {
+                    if (loading2) return
+
+                    window.scrollTo(0, 0)
+                    const illustration = document.getElementsByClassName("display-image")[0];
+                    const realBg = document.getElementById("real-background")
+                    illustration.style.display = "flex"
+                    illustration.style.height = `${realBg.getBoundingClientRect()?.height}px`
+                    illustration.style.width = `${realBg.getBoundingClientRect()?.width}px`
+                    console.log(illustration.style)
+
+                    // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "none")
+
+                    console.log("ok!!")
+                    console.log("WWWWHHH", width)
+                    // if(width == 500) resizeAccordingly()
+                    // illustration.style.zoom = "1000%"
+                    // illustration.style.transform = "rotate(90deg)"
+                    console.log("WWWWHHH2", width)
+                    const canvas = await html2canvas(illustration, {
+                        // allowTaint: true,
+                        // foreignObjectRendering: true,
+                        scale: 20,
+                        useCORS: true,
+                    })
+                    console.log("WWWWHHH3", width)
+                    const img = canvas.toDataURL();
+                    // illustration.style.zoom = "100%";
+                    // console.log("WWWWHHH4", width)
+                    if(fit) createPDF(img, background.coordinateVariation.frame, bottomOffset, frameHeight, title, width == 355 ? 'p' : 'l')
+                    else createCustomPDF(width == 355, title, img, pdfHeight, pdfWidth, null, landscape, illustrationHeight, illustrationDistance, illustrationYDistance, scale);
+                    // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
+
+                    illustration.style.display = "none"
+                  }}>
+                  {loading2 ? <ScaleLoader color="#fff" /> : <h5>Print</h5>}
+                </div>
+              </> : <>
+                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                  <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', width: "350px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
                     <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "2rem" }}>Modifier le nombre de personnages</h3>
-                </button>
-              </div>
-              <CustomInputWithDropdown
-                type={"name"}
-                value={"Modifier le nom"}
-                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage || errorModal}
-                subtitle={subtitle}
-                onChangeSubtitle={setSubtitle}
-                title={title}
-                onChangeTitle={setTitle}
-                dropdownValue={showEditNameDropdown}
-                onClickEditNameDropdown={() =>
-                  setShowEditNameDropdown(!showEditNameDropdown)
-                }
-              />
-              <CustomInputWithDropdown
-                onClickButton={() => setChooseBackgroundModel(true)}
-                type={"background"}
-                value={"Modifier l'arrière-plan"}
-                modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage || errorModal}
-                dropdownValue={showEditBackgroundDropdown}
-                dropdownData={{image: product.backgrounds[product.defaultBackground]}}
-                onClickEditNameDropdown={() =>
-                  setShowEditBackgroundDropdown(!showEditBackgroundDropdown)
-                }
-              />
-              {
-                accImageIndexes(hiddenCentralCategories, product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => (hiddenCentralCategories[`${name} ${i+1}`] && hasStaticPositions(product)) ? <></> : <CustomInputWithDropdown
-                  containerStyle={{ display: product.categories.find(cat => cat.name == name)?.hidden ? "none" : undefined }}
-                  onClickButton={() => setChooseGenderModel({_: console.log("PARENT-ARRANGEMENT", ), type: name, totalIndex, index: i, array: arrangeByParent(product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
-                    const giveni = findIndex(cat => cat.name == name,  product.categories)
-                    const j = id
-                    return {
-                      id,
-                      parent: sub.parent,
-                      title: sub.name,
-                      array: sub.characters.map((x, n) => { return { id: n+1, index: totalIndex, image: product.categories.find(cat => cat.name == name)?.hidden ? "" : x , i: giveni, j, k: n } }),
-                      icon: sub.image,
-                    }
-                  }))})}
-                  type={"adult"}
-                  categoryName={name}
-                  modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
-                  value={`Modifier ${name} ${i+1}`}
-                  dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
-                  dropdownData={{ image: characters[totalIndex] }}
-                  onClickEditNameDropdown={() => {
-                      setShowEditAdultDropdown(showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name ? undefined : {category: name, totalIndex, index: totalIndex})
-                    }
+                  </button>
+                </div>
+                <CustomInputWithDropdown
+                  type={"name"}
+                  value={"Modifier le nom"}
+                  modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage || errorModal}
+                  subtitle={subtitle}
+                  onChangeSubtitle={setSubtitle}
+                  title={title}
+                  onChangeTitle={setTitle}
+                  dropdownValue={showEditNameDropdown}
+                  onClickEditNameDropdown={() =>
+                    setShowEditNameDropdown(!showEditNameDropdown)
                   }
-                />))
-              }
-              <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', height: "45px", width: "100px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => document.getElementsByClassName('cactus-templete_detail-main_image')[0]?.scrollIntoView()}>
+                />
+                <CustomInputWithDropdown
+                  onClickButton={() => setChooseBackgroundModel(true)}
+                  type={"background"}
+                  value={"Modifier l'arrière-plan"}
+                  modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage || errorModal}
+                  dropdownValue={showEditBackgroundDropdown}
+                  dropdownData={{ image: product.backgrounds[product.defaultBackground] }}
+                  onClickEditNameDropdown={() =>
+                    setShowEditBackgroundDropdown(!showEditBackgroundDropdown)
+                  }
+                />
+                {
+                  accImageIndexes(hiddenCentralCategories, product.categories.map((cat, i) => [cat.name, getCharacters(cat).map((img, ind) => [img, ind])])).map(([name, images], ix) => images.map(([image, totalIndex], i) => (hiddenCentralCategories[`${name} ${i + 1}`] && hasStaticPositions(product)) ? <></> : <CustomInputWithDropdown
+                    containerStyle={{ display: product.categories.find(cat => cat.name == name)?.hidden ? "none" : undefined }}
+                    onClickButton={() => setChooseGenderModel({
+                      _: console.log("PARENT-ARRANGEMENT",), type: name, totalIndex, index: i, array: arrangeByParent(product.categories.find(cat => cat.name === name).subcategories.map((sub, id) => {
+                        const giveni = findIndex(cat => cat.name == name, product.categories)
+                        const j = id
+                        return {
+                          id,
+                          parent: sub.parent,
+                          title: sub.name,
+                          array: sub.characters.map((x, n) => { return { id: n + 1, index: totalIndex, image: product.categories.find(cat => cat.name == name)?.hidden ? "" : x, i: giveni, j, k: n } }),
+                          icon: sub.image,
+                        }
+                      }))
+                    })}
+                    type={"adult"}
+                    categoryName={name}
+                    modalOpened={defaultModel || showPaymentModel || chooseBackgroundModel || chooseGenderModel || selectedImage}
+                    value={`Modifier ${name} ${i + 1}`}
+                    dropdownValue={showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name}
+                    dropdownData={{ image: characters[totalIndex] }}
+                    onClickEditNameDropdown={() => {
+                      setShowEditAdultDropdown(showEditAdultDropdown?.index === totalIndex && showEditAdultDropdown?.category == name ? undefined : { category: name, totalIndex, index: totalIndex })
+                    }
+                    }
+                  />))
+                }
+                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                  <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', height: "45px", width: "100px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => document.getElementsByClassName('cactus-templete_detail-main_image')[0]?.scrollIntoView()}>
                     <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "1.5rem" }}>Voir affiche</h3>
-                </button>
-              </div>
+                  </button>
+                </div>
+              </>}
             </div>
             <div className="order-buttons" style={{ display: "flex" }}>
               <div
@@ -1603,7 +1822,7 @@ function TempleteDetail({ ogProduct, setOgProduct, JSONProduct, recents, props }
             }} src={OFFLINE ? (background?.coordinateVariation?.alternate ?? background.url) : `${background?.coordinateVariation?.alternate ?? background.url}?${Date.now()}`} crossOrigin="anonymous" />
           </div>
           {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
-          {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
+          {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
             zIndex: 100000000000000,
             position: "absolute",
             top: -1,
@@ -1669,6 +1888,7 @@ export default function TempleteDetailWrapper() {
   // const { product: JSONProductFromURL, recents, editData } = state
   const JSONProductFromURL = state?.product
   const editData = state?.editData
+  const printing = state?.printing
   const recents = []
   const [JSONProduct, setJSONProduct] = useState(JSONProductFromURL)
   const [ogProduct, setOgProduct] = useState(JSONProductFromURL ? Object.freeze(JSON.parse(JSONProductFromURL)) : null)
@@ -1690,7 +1910,7 @@ export default function TempleteDetailWrapper() {
     })
   }, [])
 
-  return ogProduct ? <TempleteDetail ogProduct={ogProduct} setOgProduct={x => {
+  return ogProduct ? <TempleteDetail printing={printing} ogProduct={ogProduct} setOgProduct={x => {
     setOgProduct(x)
     setJSONProduct(JSON.stringify(x))
   }} JSONProduct={JSONProduct} recents={recents} props={selectionData ? {

@@ -112,16 +112,16 @@ export default function Dashboard() {
   }, [search])
 
   useEffect(() => {
-    req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry mainDesc defaultIllustration price")}`)
+    req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry hidden mainDesc defaultIllustration price")}`)
       .then(({products}) => {
         console.log(products)
         console.log("setting")
         const currVendor = JSON.parse(getKey("vendor") ?? 'null')
         const myProductIds = currVendor?.products
-        const mappedProducts = products?.filter(prod => {
+        const mappedProducts = products?.filter(p => !p.hidden)?.filter(prod => {
           if(!myProductIds) return true
           return myProductIds?.includes(prod._id)
-        })?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: { url: p.defaultIllustration }} })
+        })?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, hidden: p.hidden, image: { url: p.defaultIllustration }} })
         setTemplateArray(mappedProducts)
         console.log("done setting", mappedProducts)
         setLoading(false)
@@ -203,7 +203,7 @@ export default function Dashboard() {
           navigate(`/?category=${x}`)
         }}/>
         <div id="main-products" className="cactus-dashboard-templete_top_view">
-          {loading || productLoading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
+          {loading || productLoading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => !p.hidden).filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
               return (
                 <TempleteView
                   isPhone={isPhone()}

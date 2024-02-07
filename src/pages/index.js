@@ -9,3 +9,4 @@ export { default as TempleteDetail } from "./templeteDetail/TempleteDetail";
 export { default as BillingAddress } from "./billingAddress/billingAdress";
 export { default as Payment } from "./payment/payment";
 export { default as LoginAsVendor } from "./loginAsVendor/LoginAsVendor"
+export { default as Orders } from "./orders/orders"

@@ -321,6 +321,16 @@
   z-index: 100000 !important;
 }
 
+.input-container-main {
+  display: flex;
+}
+
+.input-container-main > div {
+  font-size: 15px;
+  font-family: 'K2D';
+  width: 20rem
+}
+
 /* -------------Media Query--------------- */
 
 @media screen and (max-width: 980px) {
