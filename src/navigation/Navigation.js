@@ -18,6 +18,7 @@ const Navigation = () => {
       <Route path="/templetedetail" element={<Pages.TempleteDetail />} />
       <Route path="/billingAddress" element={<Pages.BillingAddress />} />
       <Route path="/payment" element={<Pages.Payment />} />
+      <Route path="/:vendor" element={<Pages.Dashboard />} />
     </Routes>
   );
 };
