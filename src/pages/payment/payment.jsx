@@ -112,7 +112,7 @@ const Payment = () => {
       // if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
     }
     if(selectedMethod == "code") {
-      if(code != "Noel") return setError("Invalid code")
+      if(code != "Cactus") return setError("Invalid code")
     }
     setLoading(true)
 
