@@ -71,6 +71,10 @@ export function setKey(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
 }
 
+export function delKey(key) {
+	localStorage.removeItem(key)
+}
+
 export function getCountry() {
 	var countries = {
 		AD: "Andorra",

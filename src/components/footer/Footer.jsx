@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { footerSend, facebook, instagram, linkedIn, } from '../../assets'
 import './footer.css'
-import { getKey } from '../../requests'
+import { getKey, delKey } from '../../requests'
 
 export default function Footer() {
     const navigate = useNavigate()
+    const [render, setRender] = useState(0)
+
+    const rerender = () => setRender(render+1)
+
     return (
         <div className='cactus-footerTopView'>
             <div className='cactus-footerContainer' >
@@ -26,7 +30,11 @@ export default function Footer() {
                     <h2 onClick={() => navigate('/poster')}>Posters</h2>
                     <h2 onClick={() => navigate('/privacypolicy')}> Politique de confidentialité </h2>
                     <h2 onClick={() => navigate('/terms')}>Termes et conditions</h2>
-                    <h2 onClick={() => navigate(getKey('vendor') ? '/orders' : '/loginAsVendor')}>{getKey('vendor') ? 'Orders' : 'Login As Vedor'}</h2>
+                    {getKey('vendor') && <h2 onClick={() => navigate('/orders')}>Orders</h2>}
+                    <h2 onClick={() => {
+                        getKey('vendor') ? delKey('vendor') : navigate('/loginAsVendor')
+                        rerender()
+                    }}>{getKey('vendor') ? 'Logout' : 'Login As Vedor'}</h2>
                 </div>
                 <div className='cactus-footerItemTopView'>
                     <h1 style={{ marginBottom: 5 }}>Aide</h1>

@@ -120,11 +120,11 @@ const Payment = () => {
                                             // setForms(forms.map((form, j) => i == j ? {...form, fulfilled: true} : form))
                                             await req("PATCH", `/user/order/${form.order}`, { fulfilled: true })
                                         }}>Fulfill</button>}
-                                        <button className="btn btn-danger" onClick={async ev => {
+                                        {/* <button className="btn btn-danger" onClick={async ev => {
                                             ev.stopPropagation()
                                             // setForms(forms.filter((_, j) => i != j))
                                             await req("DELETE", `/user/order/${form.order}`)
-                                        }}>Delete</button>
+                                        }}>Delete</button> */}
                                     </div>
                                 </li>}</>)}
                         </ul>

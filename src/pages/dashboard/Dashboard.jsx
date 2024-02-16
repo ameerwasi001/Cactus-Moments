@@ -163,7 +163,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     const vendor = JSON.parse(getKey('vendor') ?? null)
-    console.log("VEDNOR", vendor?.name)
     if(vendor?.name) navigate(`/${vendor?.name}`)
   }, [])
 

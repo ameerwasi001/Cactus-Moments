@@ -3,6 +3,7 @@ import { closeBox, female, male, maleDummy, radioFilled, radio } from '../../ass
 import { Select } from 'antd'
 import './genderModel.css'
 import { OFFLINE } from '../../constants'
+import { getKey } from '../../requests'
 
 const { Option } = Select
 
@@ -73,7 +74,11 @@ export default function DefaultModel(props) {
             id: 3,
             text: "Commande sur place"
         },
-    ]
+    ].filter(opt => {
+        if(!(JSON.parse(getKey('vendor') ?? null))) return true
+        return JSON.parse(getKey('vendor') ?? null) && opt.id == 3
+
+    })
     const [selectedOption, setSelectedOption] = useState(null)
 
     return (
