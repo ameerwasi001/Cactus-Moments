@@ -1819,7 +1819,11 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, recent
               width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "355px" : "500px",
               height: ratios.size == 0 ? undefined : ratios.has(background?.url) ? '100%' : 'unset',
               objectFit: 'contain',
-            }} src={OFFLINE ? (background?.coordinateVariation?.alternate ?? background.url) : `${background?.coordinateVariation?.alternate ?? background.url}?${Date.now()}`} crossOrigin="anonymous" />
+            }} src={
+              OFFLINE ? 
+                (background?.coordinateVariation?.alternate ?? background.url) : 
+                `${printBackground ? (background?.coordinateVariation?.print ?? background?.url) : (background?.coordinateVariation?.alternate ?? background?.url)}?${Date.now()}`
+            } crossOrigin="anonymous" />
           </div>
           {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
           {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
