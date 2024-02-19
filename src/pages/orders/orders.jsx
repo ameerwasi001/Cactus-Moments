@@ -25,7 +25,7 @@ const stripePromise = loadStripe('pk_live_51OEy34JbX5shavtnvHumbLoNAoDYgQl7QYTSa
 
 const Payment = () => {
     const [orders, setOrders] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [status, setStatus] = useState("")
     const [notStatus, setNotStatus] = useState("")
     const [date, setDate] = useState(new Date().toISOString().split("T")[0])
@@ -37,7 +37,10 @@ const Payment = () => {
         if (!vendor) return navigate('/')
 
         req('GET', '/user/order', null)
-            .then((data) => setOrders(data.orders))
+            .then((data) => {
+                setLoading(false)
+                setOrders(data.orders)
+            })
     }, [])
 
     useEffect(() => {
@@ -57,7 +60,9 @@ const Payment = () => {
                     <h2>Orders</h2>
                     <input type="date" value={date} onChange={ev => setDate(ev.target.value)} />
                 </div>
-                    {loading && orders ? <div style={{ display: "flex", width: "100%", height: "100vh", justifyContent: "center", alignItems: "center" }}>Loading...</div> : <div className="analytics">
+                    {loading ? <div style={{ display: "flex", width: "100%", height: "70vh", justifyContent: "center", alignItems: "center" }}>
+                        <ScaleLoader color="#2b453e"/>
+                    </div> : <div className="analytics">
                         <div className='alert alert-danger' style={{ display: error ? 'block' : 'none' }}>{JSON.stringify(error).replace('"', '')}</div>
                         <div className="m-4"></div>
                         <ul className="list-group m-2" style={{ width: '80vw' }}>

@@ -7,7 +7,7 @@ import DropDownDate from "../../components/dropDownDate/dropDownDate";
 import Navbar from "../../components/navBar/Navbar";
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
 import { ScaleLoader } from "react-spinners";
-import { req, setKey } from "../../requests";
+import { getKey, req, setKey } from "../../requests";
 import swal from 'sweetalert';
 
 const mrArr = [
@@ -41,6 +41,8 @@ const monthArr = [
 ];
 
 const BillingAdress = () => {
+  const vendor = JSON.parse(getKey('vendor') ?? null)
+
   const { product, adults, children } = getAllParams()
   const { state } = useLocation()
   const selections = state?.selections
@@ -68,7 +70,7 @@ const BillingAdress = () => {
   });
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState(vendor?.email ? vendor?.email : "")
   const [password, setPassword] = useState("")
   const [number, setNumber] = useState("")
   const [city, setCity] = useState("")
@@ -133,13 +135,13 @@ const BillingAdress = () => {
               <>
                 <div className="billing-address-input-container1" style={{ width: onlyEmail ? "90%": undefined }}>
 
-                  <TextInputBilling
+                  {!vendor && <TextInputBilling
                     inputStyle={{ width: "65%" }}
                     title={"Email"}
                     type={"email"}
                     value={email}
                     onChange={ev => setEmail(ev.target.value)}
-                  />
+                  />}
                   <TextInputBilling
                     inputStyle={{ width: "65%" }}
                     title={"Password"}
@@ -164,9 +166,12 @@ const BillingAdress = () => {
                 0.5 
             }}
             onClick={async () => {
+              const alreadySignedIn = !!JSON.parse(getKey('vendor') ?? null)
               setLoading(true)
               const { vendors: [vendor] } = await req('GET', `/user/vendor?query=${encodeURIComponent(JSON.stringify({ email, password }))}`)
               if(vendor) {
+                if(alreadySignedIn) return navigate('/orders')
+
                 setKey("vendor", JSON.stringify(vendor))
                 navigate('/')
               }
