@@ -45,21 +45,7 @@ const Payment = () => {
     }, [])
 
 
-    const applyFilter3 = form => form.createdAt?.split("T")?.[0] == date || !date
-
-    const applyFilter2 = form => {
-        // if(notStatus == "") return applyFilter3(form)
-        // if(form.status == notStatus) return false
-        // if(form[notStatus]) return false
-        return applyFilter3(form)
-    }
-
-    const applyFilter = form => {
-        // if(status == "") return applyFilter2(form)
-        // if(form.status == status) return applyFilter2(form)
-        // if(form[status]) return applyFilter2(form)
-        return true
-    }
+    const applyFilter = form => form.createdAt?.split("T")?.[0] == date || !date
 
     return (
         null,
@@ -67,6 +53,10 @@ const Payment = () => {
             <>
                 <NavBar />
                 <div style={{ marginTop: '20px', marginBottom: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <div className="order-cactus-topbar" style={{ display: 'flex', width: '78.5%', justifyContent: 'space-between' }}>
+                    <h2>Orders</h2>
+                    <input type="date" value={date} onChange={ev => setDate(ev.target.value)} />
+                </div>
                     {loading && orders ? <div style={{ display: "flex", width: "100%", height: "100vh", justifyContent: "center", alignItems: "center" }}>Loading...</div> : <div className="analytics">
                         <div className='alert alert-danger' style={{ display: error ? 'block' : 'none' }}>{JSON.stringify(error).replace('"', '')}</div>
                         <div className="m-4"></div>

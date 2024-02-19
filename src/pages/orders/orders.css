@@ -32,3 +32,14 @@
     color: white;
     border-radius: 10px;
 }
+
+.order-cactus-topbar {
+    display: flex;
+    width: 78.5%;
+    justify-content: space-between;
+}
+
+.order-cactus-topbar > h2 {
+    font-family: 'K2D';
+    font-size: 25px;
+}
