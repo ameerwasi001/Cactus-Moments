@@ -32,16 +32,20 @@ const Navbar = (props) => {
 
   const DropDown = ({ title, list: openDropdown, onClick }) => {
     return <div className="navbar-dropdown-container">
-      {openDropdown?.title == title && <div className="navbar-dropdown">
-        {loading ? <ClipLoader color="black" /> : openDropdown?.data?.map(od => <p className={onClick ? "" : "important-font-weight"} style={{ cursor: onClick ? "pointer" : "default" }} onClick={() => onClick ? onClick(od) : null}>{od.mainDesc}</p>)}
-      </div>}
-    </div>
+        {openDropdown?.title == title && <div className="navbar-dropdown">
+          {loading ? <ClipLoader color="black" /> : openDropdown?.data?.map(od => <p className={onClick ? "" : "important-font-weight"} style={{ cursor: onClick ? "pointer" : "default" }} onClick={() => onClick ? onClick(od) : null}>{od.mainDesc}</p>)}
+        </div>}
+      </div>
   }
 
   const Menu = () => (
     <>
       {showPaymentModel || detailModal || commanderModel ? (
         commanderModel ? <InfoListModel
+        payClciked={() => {
+          setCommanderModel(false)
+          setShowPaymentModel(true)
+        }}
         autoSelect={true}
         containerStyle={{ padding: 'unset', paddingTop: '1rem', margin: 'unset', height: '100vh', width: '100vw' }}
         additionalData={detailModal}
@@ -99,7 +103,11 @@ const Navbar = (props) => {
       ) : <>
         <div className="cactus__navbar-links_text_view">
           <h1
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/")
+              console.log(document.getElementById("top"))
+              document.getElementById("top")?.scrollIntoView()
+            }}
             style={{
               borderBottomStyle:
                 window.location.pathname === "/"
@@ -188,34 +196,35 @@ const Navbar = (props) => {
         <div className="cactus__navbar-links_text_view">
           <h1
             onClick={() => {
-              setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
-                (p, i) => p == "check" ? <div className="cart-item">
-                  <div></div>
-                  <div className="cart-checkout-button" style={{ marginRight: "auto" }} onClick={() => {
-                    setCommanderModel(true)
-                  }}>Voir Panier</div>
-                  <div className="cart-checkout-button" onClick={() => {
-                    setShowPaymentModel(true)
-                  }}>Payer</div>
-                </div> : p == "nodata" ? <div className="cart-item-none">Votre panier est vide.</div> : <div className="cart-item">
-                  <p onClick={() => {
-                    setDetailModal({ ...p, _id: i })
-                  }}>{p?.selections?.product?.mainDesc} - {p?.selections?.title} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
-                  <img src={crossImg} className="cart-item-cross" onClick={ev => {
-                    ev.stopPropagation()
-                    const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
-                    const cart = (getKey("cart") ?? []).filter((_, j) => j != i)
-                    // delete cart[p?.selections?.product?._id]
-                    setKey("cart", cart)
-                    console.log("opendrop", cart)
-                    setOpenDropdown(openDropdown => ({
-                      // title: "cart",
-                      ...(openDropdown ?? {}),
-                      data
-                    }))
-                  }}/>
-                </div>
-              ).map(mainDesc => ({ mainDesc })) })
+              // setOpenDropdown(openDropdown?.title == "cart" ? null : { title: "cart", data: [...(getKey("cart") ?? []), (getKey("cart") ?? {}).length ? "check" : "nodata"].map(
+              //   (p, i) => p == "check" ? <div className="cart-item">
+              //     <div></div>
+              //     <div className="cart-checkout-button" style={{ marginRight: "auto" }} onClick={() => {
+              //       setCommanderModel(true)
+              //     }}>Voir Panier</div>
+              //     <div className="cart-checkout-button" onClick={() => {
+              //       setShowPaymentModel(true)
+              //     }}>Payer</div>
+              //   </div> : p == "nodata" ? <div className="cart-item-none">Votre panier est vide.</div> : <div className="cart-item">
+              //     <p onClick={() => {
+              //       setDetailModal({ ...p, _id: i })
+              //     }}>{p?.selections?.product?.mainDesc} - {p?.selections?.title} et €{Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)}</p>
+              //     <img src={crossImg} className="cart-item-cross" onClick={ev => {
+              //       ev.stopPropagation()
+              //       const data = openDropdown?.data?.filter(x => x.mainDesc != p?.selections?.product?.mainDesc)
+              //       const cart = (getKey("cart") ?? []).filter((_, j) => j != i)
+              //       // delete cart[p?.selections?.product?._id]
+              //       setKey("cart", cart)
+              //       console.log("opendrop", cart)
+              //       setOpenDropdown(openDropdown => ({
+              //         // title: "cart",
+              //         ...(openDropdown ?? {}),
+              //         data
+              //       }))
+              //     }}/>
+              //   </div>
+              // ).map(mainDesc => ({ mainDesc })) })
+              setCommanderModel(true)
             }}
             style={{
               borderBottomStyle:
@@ -239,43 +248,45 @@ const Navbar = (props) => {
     </>
   );
 
-  return showPaymentModel || detailModal || commanderModel ? <Menu/> : (
-    <div className="cactus__navbar">
-      <div className="cactus__navbar-links_logo">
-        <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>
-        <p style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Cactus Moments</p>
-      </div>
-      <div className="cactus__navbar-links">
-        <div className="cactus_navbar-links_container">
-          <Menu />
+  return <div className={openDropdown ? "complete-cover" : ""} onClick={() => openDropdown ? setOpenDropdown(null) : null}>
+    {showPaymentModel || detailModal || commanderModel ? <Menu/> : (
+      <div className="cactus__navbar">
+        <div className="cactus__navbar-links_logo">
+          <img src={logo} alt="Logo" style={{ cursor: "pointer" }} onClick={() => navigate("/")}/>
+          <p style={{ cursor: "pointer" }} onClick={() => navigate("/")}>Cactus Moments</p>
+        </div>
+        <div className="cactus__navbar-links">
+          <div className="cactus_navbar-links_container">
+            <Menu />
+          </div>
+        </div>
+        <div className="cactus__navbar-menu">
+          {toggleMenu ? (
+            <img
+              alt="Close"
+              onClick={() => setToggleMenu(!toggleMenu)}
+              src={close}
+              className="cactus__navbar_closeIcon"
+            />
+          ) : (
+            <img
+              alt="Menu"
+              onClick={() => setToggleMenu(!toggleMenu)}
+              src={menu}
+              className="cactus__navbar_menuIcon"
+            />
+          )}
+          {toggleMenu && (
+            <div className="cactus__navbar-menu_container scale-up-center">
+              <div className="cactus__navbar-menu_container_links">
+                <Menu />
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      <div className="cactus__navbar-menu">
-        {toggleMenu ? (
-          <img
-            alt="Close"
-            onClick={() => setToggleMenu(!toggleMenu)}
-            src={close}
-            className="cactus__navbar_closeIcon"
-          />
-        ) : (
-          <img
-            alt="Menu"
-            onClick={() => setToggleMenu(!toggleMenu)}
-            src={menu}
-            className="cactus__navbar_menuIcon"
-          />
-        )}
-        {toggleMenu && (
-          <div className="cactus__navbar-menu_container scale-up-center">
-            <div className="cactus__navbar-menu_container_links">
-              <Menu />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+    )}
+  </div>;
 };
 
 export default Navbar;

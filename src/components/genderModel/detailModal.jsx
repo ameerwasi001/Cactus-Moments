@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { closeBox, female, male, maleDummy, radioFilled, radio } from '../../assets'
 import { Select } from 'antd'
+import { getAllParams, setParam } from "../../urlParams";
 import './genderModel.css'
-import { getKey, setKey } from '../../requests'
+import { getKey, setKey, req } from '../../requests'
+import { useNavigate } from 'react-router-dom'
+import { ScaleLoader } from "react-spinners";
 
 const { Option } = Select
 
@@ -77,20 +80,54 @@ export default function DefaultModel(props) {
     const pricingGrouped = groupPrcing(props?.additionalData?.selections?.product?.pricing)
 
     const [price, setPrice] = useState(props?.additionalData?.selections?.product?.price)
-    const [options, setOptions] = useState(Object.entries(props?.additionalData?.selections ?? {})
-        .filter(([k]) => k.startsWith("pricing-"))
-        .map(([k, answer]) => ({
+    const navigate = useNavigate()
+    const img = props?.additionalData?.selections?.img
+    const [options, setOptions] = useState(
+        Object.entries(props?.additionalData?.selections ?? {})
+            .filter(([k]) => k.startsWith("pricing-"))
+            .map(([k, answer]) => ({
             question: k.replace("pricing-", ""), 
             answer,
             answers: pricingGrouped[k.replace("pricing-", "")],
-        })))
+        }))
+    )
 
     const [selectedOption, setSelectedOption] = useState(null)
+
+    const [loading, setLoading] = useState(false)
 
     return (
         <div onClick={() => props.closeModal()} style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
             <div onClick={ev => ev.stopPropagation()} style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
-                <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
+                <div className='cactus-gender_model_side_top_view' style={{ width: '100%', alignItems: 'center' }}>
+                    {img && !loading && <img onClick={async () => {
+                        const productId = props?.additionalData?.selections?.product?._id
+
+                        const redirectData = {
+                            product: JSON.stringify(props?.additionalData?.selections?.product),
+                            props: encodeURIComponent(JSON.stringify({
+                                ...props?.additionalData?.selections
+                            })),
+                            order: props.additionalData.id,
+                        }
+
+                        if(window.location.href.includes(`templetedetail?title=${props?.additionalData?.selections?.product?.mainDesc}`)) return navigate('/', { state: { redirect: redirectData } })
+
+                        setLoading(true)
+                        const { product } = await req("GET", `/user/product/${productId}`)
+                        setLoading(false)
+
+                        const params = {
+                            editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
+                            product: JSON.stringify(product),
+                        }
+                        const url = `/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`
+                        if(window.location.href.includes(`templetedetail?title=${product?.mainDesc}`)) navigate('/', { state: { redirect: {...params, redirectData} } })
+                        else navigate(url, { state: params })
+                    }} src={img} style={{ width: "200px" }}/>}
+                    {img && loading && <div className='click-loader-container'>
+                        <ScaleLoader color='#000'/>
+                    </div>}
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
                         {options.map((option, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '20rem', alignItems: 'center', justifyContent: 'space-between' }}>

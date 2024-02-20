@@ -1,7 +1,8 @@
-import { baseURL } from './constants'
+import { OFFLINE, baseURL } from './constants'
 
 export const req = async (method, endpoint, body=null, onError=()=>{}, onSuccess=()=>{}) => {
     try {
+		console.log("url", `${baseURL}${endpoint}`)
         const res = await fetch(`${baseURL}${endpoint}`, {
             method, 
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -68,6 +69,10 @@ export function getKey(key) {
 
 export function setKey(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
+}
+
+export function delKey(key) {
+	localStorage.removeItem(key)
 }
 
 export function getCountry() {
@@ -2937,3 +2942,5 @@ export function getCountry() {
 	const country = countries[_country];
 	return country;
 }
+
+export const getSmallImage = (url, resize='100') => OFFLINE ? `${url}&size=100` : `https://d1mq3916k6dmt.cloudfront.net/nwOr3tB7UZjp41oQl1eKXbY09VRFJHyz_SujluRquOg/rs:fit:${resize}:${resize}:0/g:no/${btoa(url).replace("=", "").replace('/', '_').replace('+', '-')}.png`

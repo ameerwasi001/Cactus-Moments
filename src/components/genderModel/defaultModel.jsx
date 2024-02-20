@@ -5,6 +5,16 @@ import './genderModel.css'
 
 const { Option } = Select
 
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
+}
+  
+const isPhone = () => getWindowDimensions().width < 421    
+
 const findIndex = (f, arr) => {
     for(let i = 0; i < arr.length; i++)
       if(f(arr[i])) return i
@@ -73,7 +83,7 @@ export default function DefaultModel(props) {
     const ogProduct = props.ogProduct
     ogProduct.max = parseInt(ogProduct.max)
     const mins = Object.fromEntries(Object.entries(minCategoryGivenStatics(ogProduct)).map(([k, _]) => [k, 0]))
-    console.log("_PRODUCT111", product)
+    console.log("_PRODUCT111", props.product.categories)
     const [categories, setCategories] = useState(props.autoSelect ? getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct) : processMaxes(props.product.categories))
     // const [categories, setCategories] = useState(getCategoryMaxes(ogProduct.max, props.product.categories, ogProduct))
     const [overSelected, setOverselected] = useState(false)
@@ -85,11 +95,46 @@ export default function DefaultModel(props) {
         else setOverselected(false)
     }, [categories])
 
+    useEffect(() => {
+        props.onClick({ product: makeProduct(categories), closeModal: false })
+    }, [])
+
+    const makeProduct = (newCategories) => {
+        const newProduct = JSON.parse(JSON.stringify(product))
+        if(hasStaticPositions) newProduct.categories = ogProduct.categories.map(cat => ({
+            ...cat, 
+            modifiedMax: newCategories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)?.max,
+            archiveMax: newCategories.find(cat2 => cat2.name == cat.name)?.max,
+            hidden: !newCategories.filter(x => x.max > 0).find(cat2 => cat2.name == cat.name)
+        }))
+        else newProduct.categories = newCategories
+        return newProduct
+    }
+
     return (
-        <div style={{height:'100%', overflow:'hidden'}} className="cactus-gender-model_top_view">
-            <div style={{ minHeight:'70%', minWidth: '30rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
+        <div style={{height:'100%', overflow:'', display: isPhone() ? "unset" : "flex"}} className="cactus-gender-model_top_view">
+            <props.Illustration {...props.illustrationData} style={
+                isPhone() ? {
+                    margin: "unset",
+                    marginLeft: "-75px",
+                    marginTop: "-70px",
+                    scale: props.isVertical ? "0.5" : "0.5", 
+                    ...(props.isVertical ? {} : { 
+                        marginLeft: "0px",
+                        marginTop: "-100px"
+                     })
+                } : { marginRight: "3rem" }}/>
+            <div style={{
+                minHeight:'70%', 
+                minWidth: '30rem', 
+                width: 'unset', 
+                justifyContent: 'center', 
+                flexDirection: 'column', 
+                ...(isPhone() ? { marginTop: '-240px', ...(props.isVertical ? {} : { marginTop: '-175px' }) } : {}) 
+            }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
+                        <h2 style={{ marginBottom: "2rem", fontFamily: 'K2D' }}>Choisissez le nombre de personnages</h2>
                         {ogProduct.categories.map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '10rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <h2>{category?.name}</h2>
@@ -98,8 +143,11 @@ export default function DefaultModel(props) {
                                     newCategories[n].max = val
                                     console.log("NEW-CAT", newCategories)
                                     setCategories(newCategories)
+
+                                    if(getMax(newCategories) > ogProduct.max) return
+                                    const newProduct = makeProduct(newCategories)
+                                    props.onClick({ product: newProduct, closeModal: false })
                                 }}>
-                                    {console.log("CNAME", category?.name, -mins[category?.name])}
                                     {[0, ...(new Array(parseInt(category?.max ?? 0)).fill(0).map((_, i) => i+1))].slice(-mins[category?.name]).map(i => <Option value={i}>{i}</Option>)}
                                 </Select>
                             </div>
@@ -115,7 +163,7 @@ export default function DefaultModel(props) {
                             }))
                             else newProduct.categories = categories
                             console.log("_PRODUCT111_2", categories, newProduct)
-                            props.onClick(newProduct)
+                            props.onClick({ product: newProduct, closeModal: true })
                         }}>
                             <h3>Choisir</h3>
                         </button>

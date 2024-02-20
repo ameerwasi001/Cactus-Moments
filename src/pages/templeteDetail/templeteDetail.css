@@ -148,6 +148,29 @@
   filter: invert(1);
 }
 
+.overlay-loader-container {
+  z-index: 100000000;
+  position: absolute;
+  width: 354px;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.main_cactus-loader-container-template {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#margin-none {
+  margin: unset !important;
+}
+
 .cactus-templete_detail-detail_top_view h3 {
   padding-top: 1rem;
   font-family: "K2D";
@@ -232,6 +255,30 @@
   justify-content: center;
 }
 
+.cactus-gender_model_side_top_view > img {
+  cursor: pointer;
+}
+
+.click-loader-container {
+  width: 200px;
+  margin-bottom: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.commander-modal-img {
+  height: 100px;
+  min-width: 150px;
+  object-fit: contain;
+  cursor: pointer;
+  /* object-position: top left; */
+}
+
+.display-image {
+  display: none;
+}
+
 /* Modal CSS */
 
 .thumbnail-container {
@@ -272,6 +319,16 @@
 
 .swal-modal {
   z-index: 100000 !important;
+}
+
+.input-container-main {
+  display: flex;
+}
+
+.input-container-main > div {
+  font-size: 15px;
+  font-family: 'K2D';
+  width: 20rem
 }
 
 /* -------------Media Query--------------- */
@@ -318,7 +375,23 @@
   }
 }
 
-@media screen and (max-width: 520px) {
+@media screen and (max-width: 1300px) {
+  .cactus-dashboard-banner_image_view img {
+    width: 92%;
+    height: 54%;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  
+  .video-model {
+    height: unset;
+  }
+
+  .add-product-modal-container-product-description-detail-video {
+    margin-left: unset;
+    margin: 1.5rem;
+  }
   .cactus-templete_detail-form_dropdown_top_view {
     width: 30rem;
   }
@@ -331,7 +404,7 @@
     width: 315px;
   }
 
-  .cactus-templete_detail-main_image {
+  .cactus-templete_detail-main_image_main_mode {
     margin-left: 7rem !important;
   }
 

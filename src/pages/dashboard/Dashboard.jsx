@@ -7,6 +7,7 @@ import {
   dummyThree,
   dummyTwo,
   homeImage2,
+  homeImage2Responsive,
   shape,
 } from "../../assets";
 import {
@@ -16,13 +17,14 @@ import {
   TempleteSliderView,
   TempleteView,
 } from "../../components";
-import { req } from '../../requests'
+import { getKey, req } from '../../requests'
 import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
 import EventEmitter from 'events'
+import { getDistribution, getInitialCategoryCharacters } from "../templeteDetail/TempleteDetail";
 
-const getS3Url = id => `https://drivebuddyz.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
+const getS3Url = id => `https://cactus-s3.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
 const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => JSON.parse(decodeURIComponent(x)))
 
 function getWindowDimensions() {
@@ -40,11 +42,14 @@ function paginate(array, page_size, page_number) {
   else return array
 }
 
+const preloadImage = img => new Image().src = img
+
 const emitter = new EventEmitter()
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
+  const [productLoading, setProductLoading] = useState(true)
   const [templeteArray, setTemplateArray] = useState([]);
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -54,35 +59,69 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("poster")
   const [currPage, setCurrPage] = useState(1)
   const recordsPerPage = 10
-  const { search } = useLocation()
+  const { search, state } = useLocation()
 
-  console.log("PRODID", search)
+  const redirect = state?.redirect
+
+  console.log("PRODID", redirect)
+
+  useEffect(() => {
+    const f = async () => {
+      console.log("PRODID2", redirect)
+
+      if(!redirect) {
+        setProductLoading(false)
+        return
+      }
+
+      setProductLoading(true)
+      const el = document.getElementById("main-products")
+      el?.scrollIntoView()
+      const { product } = await req("GET", `/user/product/${JSON.parse(redirect.product)?._id}`)
+      setProductLoading(false)
+      navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { 
+        state: {
+          editData: encodeURIComponent(JSON.stringify({ ...redirect })),
+          product: JSON.stringify(product),
+        }
+      })
+    } 
+    f()
+  }, [])
 
   useEffect(() => {
     const f = async () => {
       const productId = search?.split("productId=")?.[1]
       const categoryName = search?.split("category=")?.[1]
-      if(productId) {
+      if(redirect) {
+      } else if(productId) {
         const el = document.getElementById("main-products")
         el?.scrollIntoView()
         setLoading(true)
         const { product } = await req("GET", `/user/product/${productId}`)
         setLoading(false)
-        navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+        navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { state: { product: JSON.stringify(product) } })
       } else if(categoryName) {
         setSelectedCategory(categoryName)
         document?.getElementById("main-templates")?.scrollIntoView()
+      } else {
+        window.scrollTo(0, 0)
       }
     }
     f()
   }, [search])
 
   useEffect(() => {
-    req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry mainDesc defaultIllustration price")}`)
+    req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry hidden mainDesc defaultIllustration price")}`)
       .then(({products}) => {
         console.log(products)
         console.log("setting")
-        const mappedProducts = products?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, image: { url: p.defaultIllustration }} })
+        const currVendor = JSON.parse(getKey("vendor") ?? 'null')
+        const myProductIds = currVendor?.products
+        const mappedProducts = products?.filter(p => !p.hidden)?.filter(prod => {
+          if(!myProductIds) return true
+          return myProductIds?.includes(prod._id)
+        })?.filter(prod => prod.name)?.map((p, id) => { return {...p, id, hidden: p.hidden, image: { url: p.defaultIllustration }} })
         setTemplateArray(mappedProducts)
         console.log("done setting", mappedProducts)
         setLoading(false)
@@ -96,18 +135,35 @@ export default function Dashboard() {
 
   useEffect(() => {
     if(!templeteArray?.length) return
+
     for(const item of templeteArray) 
-      fetchObejct(item._id)
+      if(item?.backgrounds?.[0]) setLoadedProducts(loadedProducts => ({ ...loadedProducts, [item._id]: item }))
+      else fetchObejct(item._id)
         .then(product => {
           setLoadedProducts(loadedProducts => ({ ...loadedProducts, [item._id]: product }))
-          console.log("PRODUCT-EMIT", item._id)
+
+          const firstBgUrl = product?.backgrounds?.[0]?.url
+          preloadImage(firstBgUrl)
+
+          if(window.location.href == '/') {
+            const [initDist, _1] = getDistribution(product, product, product?.backgrounds?.[0], [])
+            const chars = getInitialCategoryCharacters(product, initDist)
+            const [distribution, _2] = getDistribution(product, product, product?.backgrounds?.[0], chars)
+            for(const ch of distribution) preloadImage(ch?.sprite)
+          }
+
           emitter.emit(item._id, product)
         })
+      
   }, [templeteArray])
 
   useEffect(() => {
-    // TODO: Remove all listeneres for all events, somehow
     return () => emitter.removeAllListeners()
+  }, [])
+
+  useEffect(() => {
+    const vendor = JSON.parse(getKey('vendor') ?? null)
+    if(vendor?.name) navigate(`/${vendor?.name}`)
   }, [])
 
   return (
@@ -117,12 +173,12 @@ export default function Dashboard() {
         <div className="cactus-dashboard-banner_top_view">
           <div className="cactus-dashboard-banner_text_view">
             {/* <h5>Welcome to Cactus Moments</h5> */}
-            <h1>
-            Choisissez et personnalisez votre{" "}
-              <span style={{ color: "#2B453E" }}>illustration</span> !
+            <h1 id="top">
+            Personnalisez votre illustration {" "}
+              <span style={{ color: "#2B453E" }}>préférée</span> !
             </h1>
             <h5>
-            Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
+              Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
             </h5>
             {isPhone() ? <div style={{ marginTop: "2rem" }}></div> : <div className="cactus-dashboard-banner_buttons_view">
               <div className="cactus-dashboard-banner_see_more_view" onClick={() => document.getElementById("main-templates")?.scrollIntoView()}>
@@ -144,7 +200,7 @@ export default function Dashboard() {
             </div>}
           </div>
           <div className="cactus-dashboard-banner_image_view">
-            <img alt="" src={homeImage2} />
+            <img alt="" src={isPhone() ? homeImage2Responsive : homeImage2} />
           </div>
         </div>
         <TempleteSliderView title={"Nos illustrations"} viewAll setSelectedCategory={x => {
@@ -152,9 +208,10 @@ export default function Dashboard() {
           navigate(`/?category=${x}`)
         }}/>
         <div id="main-products" className="cactus-dashboard-templete_top_view">
-          {loading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
+          {loading || productLoading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => !p.hidden).filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
               return (
                 <TempleteView
+                  isPhone={isPhone()}
                   onClick={async () => {                                                                                                                                                                                                   
                     setLoading(true)
                     const el = document.getElementById("main-products")
@@ -163,7 +220,7 @@ export default function Dashboard() {
                     const onProductLoaded = product => {
                       console.log("Loaded, naviating")
                       setLoading(false)
-                      navigate(`/templetedetail?${setParam({"product": JSON.stringify(product)})}`)
+                      navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { state: { product: JSON.stringify(product) } })
                     }
 
                     const product = loadedProducts[item._id]

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { closeBox, female, male, maleDummy, radioFilled, radio } from '../../assets'
 import { Select } from 'antd'
 import './genderModel.css'
+import { OFFLINE } from '../../constants'
+import { getKey } from '../../requests'
 
 const { Option } = Select
 
@@ -64,15 +66,19 @@ export default function DefaultModel(props) {
             id: 1,
             text: "Paiement par carte bancaire avec livraison à domicile. Frais d’envoi : France 6€, autre pays européen : 10€. Livraison gratuite à partir de 50€."
         },
-        {
-            id: 2,
-            text: "Paiement par carte et récupération de l'achat au marché de Noël d'Arras 2023 (sans frais de livraison)"
-        },
+        // {
+        //     id: 2,
+        //     text: "Paiement par carte et récupération de l'achat au marché de Noël d'Arras 2023 (sans frais de livraison)"
+        // },
         {
             id: 3,
             text: "Commande sur place"
         },
-    ]
+    ].filter(opt => {
+        if(!(JSON.parse(getKey('vendor') ?? null))) return true
+        return JSON.parse(getKey('vendor') ?? null) && opt.id == 3
+
+    })
     const [selectedOption, setSelectedOption] = useState(null)
 
     return (
@@ -82,7 +88,7 @@ export default function DefaultModel(props) {
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
                         {options.map(opt => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '30rem', alignItems: 'center', fontFamily: "K2D" }}>
-                                <img src={opt.id == selectedOption ? radioFilled : radio} style={{ marginRight: "1rem", cursor: "pointer" }} onClick={() => setSelectedOption(selectedOption == opt.id ? null : opt.id)} />
+                                <img className='choice-fill' src={opt.id == selectedOption ? radioFilled : radio} style={{ marginRight: "1rem", cursor: "pointer" }} onClick={() => setSelectedOption(selectedOption == opt.id ? null : opt.id)} />
                                 <h2>{opt?.text}</h2>
                             </div>
                         </div>)}

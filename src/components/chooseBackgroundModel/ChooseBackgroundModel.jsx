@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { closeBox, onlyBg } from '../../assets'
+import { getSmallImage } from '../../requests'
 import './chooseBackgroundModel.css'
 
 export default function ChooseBackgroundModel(props) {
@@ -18,17 +19,22 @@ export default function ChooseBackgroundModel(props) {
                 <div className='cactus-choose_bg_model-images_top_view'>
                     {dataArray.map((item) => {
                         return (
-                            <div style={{ borderWidth: selectedBg.id === item.id ? 2 : 0, }} className='cactus-choose_bg_model-images_view' onClick={() => setSelectedBg(item)} key={item.id}>
-                                <img src={item.image.url} />
+                            <div style={{ borderWidth: selectedBg.id === item.id ? 2 : 0, }} className='cactus-choose_bg_model-images_view' onClick={() => {
+                                setSelectedBg(item)
+                                if(props.isPhone) document.getElementById("choose-background-button")?.scrollIntoView()
+                            }} key={item.id}>
+                                <img src={getSmallImage(item.image.url, '400')} />
                             </div>
                         )
                     })}
                 </div>
-                <div onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
-                    <h3>Choisir</h3>
+                <div style={{ position: 'fixed', bottom: 0, width: '90%', display: 'flex', justifyContent: 'center', background: 'white' }}>
+                    <div id="choose-background-button" onClick={() => props.onClick(selectedBg)} className='cactus-composition_model_button_view'>
+                        <h3>Choisir</h3>
+                    </div>
                 </div>
             </div>
-        </div >
+        </div>
     )
 }
 

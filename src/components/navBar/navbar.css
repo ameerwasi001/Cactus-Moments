@@ -140,6 +140,15 @@
   position: relative;
 }
 
+.complete-cover {
+  position: absolute;
+  width: 100vw;
+  height: 100vw;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
 .navbar-dropdown {
   position: absolute;
   background-color: white;
@@ -149,6 +158,7 @@
   -moz-box-shadow: -3px 4px 5px -1px rgba(0,0,0,0.23);
   max-height: 80vh;
   overflow-y: auto;
+  margin-left: -90px;
 }
 
 .important-font-weight {
@@ -207,7 +217,7 @@
   } */
 
   .character-box {
-    width: 22% !important;
+    width: 20% !important;
     height: 18rem !important;
   }
 

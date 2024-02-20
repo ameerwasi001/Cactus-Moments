@@ -114,6 +114,7 @@ const BillingAdress = () => {
                     className="billing-address-radio-btn-container"
                   >
                     <img
+                      className="choice-fill"
                       src={selectMr.title == item.title ? radioFilled : radio}
                     />
                     <p>{item.title}</p>

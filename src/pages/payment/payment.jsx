@@ -9,8 +9,17 @@ import { loadStripe } from '@stripe/stripe-js';
 import swal from 'sweetalert';
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import html2canvas from 'html2canvas';
 import "./payment.css";
 
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+const isPhone = () => getWindowDimensions().width < 421  
 const getPrice = () => (getKey("cart") ?? []).map(p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)).reduce((a, b) => a+b, 0)
 const stripePromise = loadStripe('pk_live_51OEy34JbX5shavtnvHumbLoNAoDYgQl7QYTSa6eN4uiyopxogrzJJPnKacaLVq6UKXWJAAKsqIZfaidfW1g3BJGy00WbYEtGiE');
 
@@ -103,19 +112,24 @@ const Payment = () => {
       // if(cvv.length != 3) return setError("The expiry formst must be MM/YY")
     }
     if(selectedMethod == "code") {
-      if(code != "Noel") return setError("Invalid code")
+      if(code != "Cactus") return setError("Invalid code")
     }
     setLoading(true)
+
+    const vendorId = JSON.parse(getKey("vendor") ?? '{}')?._id
+
     if(fromCart) {
       let ordered = 0
       const cartData = getKey("cart") ?? []
       const promises = []
+      const phoneOrder = isPhone()
       for(const order of cartData) {
         const { product, ...restProduct } = order.selections
         promises.push(req('POST', '/user/order', {
           product: product._id,
           bill: {
             cardNumber,
+            phoneOrder,
             cvv,
             expiry,
             courtesyTitle,
@@ -139,11 +153,12 @@ const Payment = () => {
             selectedFrame,
             code,
             withCard,
+            vendor: vendorId,
             ...Object.fromEntries(Object.entries(restProduct).filter(([k, v]) => typeof v != "object")),
             orderDate: new Date().toLocaleDateString(),
           },
           product: product._id,
-          selections: {product, ...restProduct}
+          selections: {product, phoneOrder, ...restProduct, vendor: vendorId, img: undefined}
         }, err => {
           setLoading(false)
           setError(err)
@@ -152,7 +167,7 @@ const Payment = () => {
           if(ordered == cartData.length) {
             setLoading(false)
             setNext(false)
-            setKey("cart", [])
+            // setKey("cart", [])
           }
         }))
       }
@@ -162,6 +177,7 @@ const Payment = () => {
         cardNumber,
         cvv,
         expiry,
+        phoneOrder: isPhone(),
         courtesyTitle,
         day,
         country,
@@ -186,7 +202,7 @@ const Payment = () => {
         orderDate: new Date().toLocaleDateString(),
       },
       product: product._id,
-      selections: {product, ...restProduct}
+      selections: {product, phoneOrder: isPhone(), ...restProduct, vendor: JSON.parse(getKey("vendor") ?? '{}')?._id, img: undefined}
     }, err => {
       setLoading(false)
       setError(err)

@@ -134,8 +134,7 @@
 .cactus-dashboard-banner_image_view img {
   width: 92%;
   height: 92%;
-  object-fit: cover;
-  border-radius: 5rem;
+  /* border-radius: 5rem; */
 }
 
 .cactus-dashboard-templete_top_view {
@@ -244,12 +243,13 @@
 
 @media screen and (max-width: 950px) {
   .cactus-dashboard-banner_image_view img {
+    background-image: url('.././../assets/home-image2-responsive.png') !important;
     object-fit: contain;
     width: 37rem;
     height: 37rem;
   }
   .cactus-dashboard-banner_top_view {
-    padding: 7.6rem 5rem 13rem 5rem;
+    padding: 7.6rem 5rem 2rem 5rem;
   }
   .cactus-dashboard-banner_text_view h1 {
     line-height: 6.3rem;
@@ -400,6 +400,7 @@
 @media screen and (max-width: 520px) {
   .cactus-dashboard-templete_title_view {
     padding: 0;
+    justify-content: center;
   }
   .cactus-dashboard-templete_image_view {
     margin: unset;
@@ -427,7 +428,9 @@
 }
 
 @media screen and (max-width: 390px) {
-  
+  .cactus-dashboard-templete_title_view {
+    justify-content: center;
+  }
   .cactus-dashboard-templete_title_view h2 {
     max-width: 12rem;
     font-size: 1.2rem;
@@ -442,5 +445,6 @@
   }
   .cactus-dashboard-templete_title_view {
     padding: 0.2rem 0.4rem;
+    justify-content: center;
   }
 }
