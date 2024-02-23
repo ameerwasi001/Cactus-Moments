@@ -873,7 +873,7 @@ export const getDistribution = (product, ogProduct, background, characters, alte
 
 const preloadImage = img => new Image().src = img
 
-function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, recents, props }) {
+function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderId, recents, props }) {
   const navigate = useNavigate();
   const overlayTitleHidden = useRef(null)
   const overlaySubtitleHidden = useRef(null)
@@ -957,6 +957,13 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, recent
   const [illustrationDistance, setIllustrationDistance] = useState(background?.coordinateVariation?.illustrationDistance ?? 1)
   const [illustrationYDistance, setIllustrationYDistance] = useState(background?.coordinateVariation?.illustrationYDistance ?? 2)
   const [scale, setScale] = useState(background?.coordinateVariation?.illustrationPDFScale ?? 2)
+
+  const [quality, setQuality] = useState({ label: 'A4', value: 4 })
+  const [qualityOptions, setQualityOptions] = useState([
+    { label: 'A4', value: 4 },
+    { label: 'A3', value: 8 },
+    { label: 'A2', value: 12 },
+  ])
 
   const bill = props?.bill
   // End Printing States
@@ -1596,6 +1603,16 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, recent
                     </div>
 
                     <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                        <div>Quality</div>
+                        <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
+                          console.log("evx", { label: qualityOptions.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
+                          setQuality({ label: qualityOptions.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
+                        }}>
+                          {qualityOptions.map(q => <option value={q.value}>{q.label}</option>)}
+                        </select>
+                    </div>
+
+                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                         <div>Readjust Frame Position Y</div>
                         <input style={{ marginRight: "1rem" }} type="number" value={frameReadjust} onChange={ev => setFrameReadjust(ev.target.value)}/>
                     </div>
@@ -1679,7 +1696,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, recent
                     const canvas = await html2canvas(illustration, {
                         // allowTaint: true,
                         // foreignObjectRendering: true,
-                        scale: 20,
+                        scale: parseInt(quality?.value)*2,
                         useCORS: true,
                     })
                     console.log("WWWWHHH3", width)
@@ -1691,6 +1708,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, recent
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
 
                     illustration.style.display = "none"
+                    console.log(quality, quality?.label)
+                    await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
                   }}>
                   {loading2 ? <ScaleLoader color="#fff" /> : <h5>Print</h5>}
                 </div>
@@ -1893,6 +1912,7 @@ export default function TempleteDetailWrapper() {
   const JSONProductFromURL = state?.product
   const editData = state?.editData
   const printing = state?.printing
+  const orderId = state?.orderId
   const recents = []
   const [JSONProduct, setJSONProduct] = useState(JSONProductFromURL)
   const [ogProduct, setOgProduct] = useState(JSONProductFromURL ? Object.freeze(JSON.parse(JSONProductFromURL)) : null)
@@ -1914,7 +1934,9 @@ export default function TempleteDetailWrapper() {
     })
   }, [])
 
-  return ogProduct ? <TempleteDetail printing={printing} ogProduct={ogProduct} setOgProduct={x => {
+  console.log("okxk", parsedProps)
+
+  return ogProduct ? <TempleteDetail orderId={orderId} printing={printing} ogProduct={ogProduct} setOgProduct={x => {
     setOgProduct(x)
     setJSONProduct(JSON.stringify(x))
   }} JSONProduct={JSONProduct} recents={recents} props={selectionData ? {

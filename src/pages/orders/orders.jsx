@@ -91,6 +91,7 @@ const Payment = () => {
                                         }
                                         navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, {
                                             state: {
+                                                orderId: form.order,
                                                 printing: true,
                                                 editData: encodeURIComponent(JSON.stringify({ ...redirectData })),
                                                 product: JSON.stringify(product),
