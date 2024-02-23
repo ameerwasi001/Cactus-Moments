@@ -1182,7 +1182,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
 
    const getImgHeight = (url, scale, cb) => {
     var img = new Image();
-    img.style.scale = scale
+    img.style.scale = scale;
 
     const foundCategory = ogProduct?.categories?.find(
       cat => 
