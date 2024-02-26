@@ -30,16 +30,12 @@ export default function Footer() {
                     <h2 onClick={() => navigate('/poster')}>Posters</h2>
                     <h2 onClick={() => navigate('/privacypolicy')}> Politique de confidentialité </h2>
                     <h2 onClick={() => navigate('/terms')}>Termes et conditions</h2>
-                    {getKey('vendor') && <h2 onClick={() => navigate('/loginAsVendor')}>Orders</h2>}
+                    {getKey('vendor') && <h2 onClick={() => navigate('/loginAsVendor')}>Commandes</h2>}
                     <h2 onClick={() => {
                         const isVendor = getKey('vendor')
-                        if(isVendor) {
-                            delKey('vendor')
-                            rerender()
-                            navigate('/')
-                        }
+                        if(isVendor) navigate('/loginAsVendor?logout')
                         else navigate('/loginAsVendor')
-                    }}>{getKey('vendor') ? 'Logout' : 'Login As Vedor'}</h2>
+                    }}>{getKey('vendor') ? 'Se déconnecter du compte magasin' : 'Connexion au compte magasin'}</h2>
                 </div>
                 <div className='cactus-footerItemTopView'>
                     <h1 style={{ marginBottom: 5 }}>Aide</h1>

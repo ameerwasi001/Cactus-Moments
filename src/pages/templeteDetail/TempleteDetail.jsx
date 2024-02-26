@@ -958,7 +958,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   const [illustrationYDistance, setIllustrationYDistance] = useState(background?.coordinateVariation?.illustrationYDistance ?? 2)
   const [scale, setScale] = useState(background?.coordinateVariation?.illustrationPDFScale ?? 2)
 
-  const [quality, setQuality] = useState({ label: 'A4', value: 4 })
+  const [quality, setQuality] = useState({ label: 'A4', value: product?.productCategry == 'poster' ? 4 : 2 })
   const [qualityOptions, setQualityOptions] = useState([
     { label: 'A4', value: 4 },
     { label: 'A3', value: 8 },
@@ -1556,7 +1556,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
           </div>
           <div className="cactus-templete_detail-main_image_view">
             <div className="cactus-templete_detail-main_image_button_view">
-              <h5>{product.mainDesc}</h5>
+              {/* <h5>{product.mainDesc}</h5> */}
+              <h5>{product.productCategry}</h5>
             </div>
             <IllustrationRender
               containerClasses={['cactus-templete_detail-main_image_main_mode']}
@@ -1579,11 +1580,11 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
             </div>
           </div>
           <div className="cactus-templete_detail-detail_top_view">
-            {!isPhone() && <PricingDataComponent/>}
+            {!isPhone() && !printing && <PricingDataComponent/>}
             <div className="cactus-templete_detail-form_top_view">
-              <div className="cactus-templete_detail-form_title">
+              {!printing && <div className="cactus-templete_detail-form_title">
                 <h4>Personnalisez l'affiche</h4>
-              </div>
+              </div>}
               {printing ? <>
                 <div style={{ width: printing ? undefined : "50%", display: "flex", flexDirection: "column", }}>
 
@@ -1602,7 +1603,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                         <input style={{ marginRight: "1rem" }} type="number" value={frameHeight} onChange={ev => setFrameHeight(ev.target.value)}/>
                     </div>
 
-                    <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                    {product?.productCategry == 'poster' && <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                         <div>Quality</div>
                         <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
                           console.log("evx", { label: qualityOptions.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
@@ -1610,7 +1611,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                         }}>
                           {qualityOptions.map(q => <option value={q.value}>{q.label}</option>)}
                         </select>
-                    </div>
+                    </div>}
 
                     <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                         <div>Readjust Frame Position Y</div>
@@ -1711,7 +1712,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     console.log(quality, quality?.label)
                     await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
                   }}>
-                  {loading2 ? <ScaleLoader color="#fff" /> : <h5>Print</h5>}
+                  {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger</h5>}
                 </div>
               </> : <>
                 <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
@@ -1778,7 +1779,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 </div>
               </>}
             </div>
-            <div className="order-buttons" style={{ display: "flex" }}>
+            {!printing && <div className="order-buttons" style={{ display: "flex" }}>
               <div
                 onClick={async () => {
                   if(loading1) return
@@ -1809,7 +1810,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
               }}>
                 {loading2 ? <ScaleLoader color="#fff" /> : <h5>Ajouter au panier</h5>}
               </div>
-            </div>
+            </div>}
           </div>
           {isPhone() && <div className="cactus-templete_poster-desc" style={{
             // width: ratios.has(background.url) ? "350px" : "500px",

@@ -11,7 +11,8 @@ export default function TempleteSliderView(props) {
         req('GET', '/user/productType').then(({productTypes}) => setTemplateArray([{
             id: 1,
             name: 'Poster',
-            image: dummyRoundOne
+            image: dummyRoundOne,
+            priority: 1,
         }, ...productTypes.filter(x => !!x.name).map((x, i) => ({ ...x, id: i+2 }))]))
     }, [])
 
@@ -28,7 +29,7 @@ export default function TempleteSliderView(props) {
                     <img src={arrowBack} alt='' />
                 </div>
                 <div className="cactus-dashboard-slider_templete_top_view">
-                    {templateArray.map((item) => {
+                    {templateArray.sort((a, b) => a.priority > b.priority ? 1 :- 1).map((item) => {
                         return (
                             <div key={item.id} className="cactus-dashboard-slider_templete_view">
                                 <img src={item.image} alt="" onClick={() => props.setSelectedCategory(item.name.toLowerCase())}/>

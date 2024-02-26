@@ -57,7 +57,7 @@ const Payment = () => {
                 <NavBar />
                 <div style={{ marginTop: '20px', marginBottom: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <div className="order-cactus-topbar" style={{ display: 'flex', width: '78.5%', justifyContent: 'space-between' }}>
-                    <h2>Orders</h2>
+                    <h2>Commandes</h2>
                     <input type="date" value={date} onChange={ev => setDate(ev.target.value)} />
                 </div>
                     {loading ? <div style={{ display: "flex", width: "100%", height: "70vh", justifyContent: "center", alignItems: "center" }}>

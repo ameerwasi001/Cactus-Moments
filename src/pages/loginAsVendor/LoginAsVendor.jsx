@@ -7,7 +7,7 @@ import DropDownDate from "../../components/dropDownDate/dropDownDate";
 import Navbar from "../../components/navBar/Navbar";
 import TextInputBilling from "../../components/textInputBilling/textInputBilling";
 import { ScaleLoader } from "react-spinners";
-import { getKey, req, setKey } from "../../requests";
+import { delKey, getKey, req, setKey } from "../../requests";
 import swal from 'sweetalert';
 
 const mrArr = [
@@ -109,7 +109,7 @@ const BillingAdress = () => {
       <Navbar />
       <div className="billing-address-main-container">
         <div className="billing-address-add-billing-main-container">
-          <h1>{mostRequired ? 'Adresse de facturation' : `Adresse d'envoi`}</h1>
+          <h1>{mostRequired ? (getKey('vendor') ? 'Commandes magasin' : 'Adresse de connexion magasin') : `Adresse d'envoi`}</h1>
 
           <div id="err" style={{ display: error ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>
           {!onlyEmail && <div className="billing-address-select-mr-container">
@@ -144,7 +144,7 @@ const BillingAdress = () => {
                   />}
                   <TextInputBilling
                     inputStyle={{ width: "65%" }}
-                    title={"Password"}
+                    title={"Mot de passe"}
                     type={"password"}
                     value={password}
                     onChange={ev => setPassword(ev.target.value)}
@@ -170,6 +170,10 @@ const BillingAdress = () => {
               setLoading(true)
               const { vendors: [vendor] } = await req('GET', `/user/vendor?query=${encodeURIComponent(JSON.stringify({ email, password }))}`)
               if(vendor) {
+                if(alreadySignedIn && window.location.href.includes('?logout')) {
+                  delKey('vendor')
+                  navigate('/')
+                }
                 if(alreadySignedIn) return navigate('/orders')
 
                 setKey("vendor", JSON.stringify(vendor))
@@ -185,7 +189,7 @@ const BillingAdress = () => {
             }}
             className="billing-address-move-next-btn-container"
           >
-            {loading ? <ScaleLoader color="#fff"/> : <p>Login</p>}
+            {loading ? <ScaleLoader color="#fff"/> : <p>Connexion</p>}
           </div>
         </div>
       </div>
