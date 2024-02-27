@@ -33,10 +33,10 @@ function getWindowDimensions() {
   };
 }
 
-const isPhone = () => getWindowDimensions().width < 421  
+const isPhone = () => getWindowDimensions().width < 421
 
 function paginate(array, page_size, page_number) {
-  if(isPhone()) return array.slice((page_number - 1) * page_size, page_number * page_size);
+  if (isPhone()) return array.slice((page_number - 1) * page_size, page_number * page_size);
   else return array
 }
 
@@ -60,15 +60,20 @@ export default function Dashboard() {
 
   console.log("PRODID", redirect)
 
+  useEffect(() => {
+    const vendor = JSON.parse(getKey('vendor') ?? null)
+    if (vendor?.name) navigate(`/${vendor?.name}`)
+  }, [])
+
   return (
     <div className="cactus-dashboard-main_container">
-      <NavBar templateArray={templeteArray}/>
+      <NavBar templateArray={templeteArray} />
       <div className="cactus-dashboard-container">
         <div className="cactus-dashboard-banner_top_view">
           <div className="cactus-dashboard-banner_text_view">
             {/* <h5>Welcome to Cactus Moments</h5> */}
             <h1 id="top">
-            Personnalisez votre illustration {" "}
+              Personnalisez votre illustration {" "}
               <span style={{ color: "#2B453E" }}>préférée</span> !
             </h1>
             <h5>
@@ -100,43 +105,43 @@ export default function Dashboard() {
         <TempleteSliderView title={"Nos illustrations"} viewAll setSelectedCategory={x => {
           setSelectedCategory(x)
           navigate(`/?category=${x}`)
-        }}/>
+        }} />
         <div id="main-products" className="cactus-dashboard-templete_top_view">
           {loading || productLoading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => !p.hidden).filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
-              return (
-                <TempleteView
-                  isPhone={isPhone()}
-                  onClick={async () => {                                                                                                                                                                                                   
-                    setLoading(true)
-                    const el = document.getElementById("main-products")
-                    el?.scrollIntoView()
+            return (
+              <TempleteView
+                isPhone={isPhone()}
+                onClick={async () => {
+                  setLoading(true)
+                  const el = document.getElementById("main-products")
+                  el?.scrollIntoView()
 
-                    const onProductLoaded = product => {
-                      console.log("Loaded, naviating")
-                      setLoading(false)
-                      navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { state: { product: JSON.stringify(product) } })
-                    }
+                  const onProductLoaded = product => {
+                    console.log("Loaded, naviating")
+                    setLoading(false)
+                    navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { state: { product: JSON.stringify(product) } })
+                  }
 
-                    const product = loadedProducts[item._id]
+                  const product = loadedProducts[item._id]
 
-                    if(product) onProductLoaded(product) 
-                    else emitter.on(item._id, onProductLoaded)
-                  }}
-                  item={item}
-                />
-              );
+                  if (product) onProductLoaded(product)
+                  else emitter.on(item._id, onProductLoaded)
+                }}
+                item={item}
+              />
+            );
           })}
         </div>
         <div>
           {
             isPhone() && <div className="template-pagination">
               {
-                new Array(Math.ceil(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).length/recordsPerPage))
+                new Array(Math.ceil(templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()).length / recordsPerPage))
                   .fill(0)
                   .map((_, i) => <p onClick={() => {
-                    setCurrPage(i+1)
+                    setCurrPage(i + 1)
                     document.getElementById("main-products")?.scrollIntoView()
-                  }} style={{ color: currPage == i+1? "grey" : "blue", cursor: currPage == i+1? "default" : "pointer" }}>{i+1}</p>)
+                  }} style={{ color: currPage == i + 1 ? "grey" : "blue", cursor: currPage == i + 1 ? "default" : "pointer" }}>{i + 1}</p>)
               }
             </div>
           }
@@ -155,7 +160,7 @@ export default function Dashboard() {
               trips, outing, couple trips etc
             </h3> */}
             <h4>
-            Nous sommes Robin et Ann, le duo derrière Cactus Moments. Passionnés par le sport et la création artistique, nous sommes dévoués à transformer vos moments sportifs, familiaux et entre amis en souvenirs personnalisés.{" "}
+              Nous sommes Robin et Ann, le duo derrière Cactus Moments. Passionnés par le sport et la création artistique, nous sommes dévoués à transformer vos moments sportifs, familiaux et entre amis en souvenirs personnalisés.{" "}
             </h4>
             <div className="cactus-dashboard-contact_us_form_button_view-container">
               {/* <div

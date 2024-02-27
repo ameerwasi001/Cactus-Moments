@@ -141,11 +141,6 @@ const useProduct = () => {
         return () => emitter.removeAllListeners()
     }, [])
 
-    useEffect(() => {
-        const vendor = JSON.parse(getKey('vendor') ?? null)
-        if (vendor?.name) navigate(`/${vendor?.name}`)
-    }, [])
-
     return {
         search,
         templeteArray,

@@ -123,7 +123,7 @@ const Navbar = (props) => {
             onClick={() => {
               // document?.getElementById("main-templates")?.scrollIntoView()
               // setOpenDropdown(openDropdown?.title == "poster" ? null : { title: "poster", data: templateArray })
-              navigate("/?category=poster")
+              navigate("?category=poster")
             }}
             style={{
               borderBottomStyle:
@@ -241,8 +241,8 @@ const Navbar = (props) => {
           onClick={() => navigate("/searchpage", { state: { templateArray: props.templateArray } })}
           className="cactus__navbar-links_input_view"
         >
-          <input placeholder="Recherche" />
-          <img alt="" src={search} />
+          <input placeholder="Recherche" onClick={() => navigate('/searchpage')} />
+          <img alt="" src={search} onClick={() => navigate('/searchpage')}/>
         </div>
       </>}
     </>
