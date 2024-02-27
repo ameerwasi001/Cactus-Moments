@@ -238,10 +238,10 @@ const Navbar = (props) => {
           <DropDown title="cart" list={openDropdown}/>
         </div>
         <div
-          onClick={() => navigate("/searchpage")}
+          onClick={() => navigate("/searchpage", { state: { templateArray: props.templateArray } })}
           className="cactus__navbar-links_input_view"
         >
-          <input disabled placeholder="Recherche" />
+          <input placeholder="Recherche" />
           <img alt="" src={search} />
         </div>
       </>}

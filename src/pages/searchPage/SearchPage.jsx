@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   arrowDown,
   dummyOne,
@@ -7,53 +7,31 @@ import {
   dummyTwo,
   search,
 } from "../../assets";
-import { Footer, NavBar, TempleteView } from "../../components";
+import { Footer, NavBar, TempleteSliderView, TempleteView } from "../../components";
 import "./searchPage.css";
+import useProduct from "../dashboard/useProduct";
+import { ClipLoader } from "react-spinners";
+
+const searchIcon = search
 
 export default function SearchPage() {
   const navigate = useNavigate();
-  const templeteArray = [
-    {
-      id: 1,
-      image: dummyOne,
-      price: "35$",
-    },
-    {
-      id: 2,
-      image: dummyTwo,
-      price: "35$",
-    },
-    {
-      id: 3,
-      image: dummyThree,
-      price: "35$",
-    },
-    {
-      id: 4,
-      image: dummyOne,
-      price: "35$",
-    },
-    {
-      id: 5,
-      image: dummyThree,
-      price: "35$",
-    },
-    {
-      id: 6,
-      image: dummyOne,
-      price: "35$",
-    },
-    {
-      id: 7,
-      image: dummyThree,
-      price: "35$",
-    },
-    {
-      id: 8,
-      image: dummyTwo,
-      price: "35$",
-    },
-  ];
+  const [searchData, setSearchData] = useState('')
+  const {
+    search,
+    filteredProducts: templateArray,
+    loadedProducts,
+    productLoading,
+    emitter,
+    state,
+    redirect,
+    loading,
+    setLoading,
+    selectedCategory,
+    setSelectedCategory,
+  } = useProduct()
+
+  const inputRef = useRef()
 
   return (
     <div className="cactus-search-main_container">
@@ -64,31 +42,44 @@ export default function SearchPage() {
           <div
             style={{ display: "flex", justifyContent: "center", width: "100%" }}
           >
-            <div className="cactus-search-search_view">
-              <img src={search} className={"cactus-search-search_icon"} />
-              <input placeholder="Search" />
-              <div className="cactus-search-min_divider_view" />
-              <h3>Family Outing</h3>
-              <img
-                src={arrowDown}
-                className={"cactus-search-arrow_down_icon"}
-              />
+            <div onClick={() => inputRef?.click()} className="cactus-search-search_view">
+              <img src={searchIcon} className="cactus-search-search_icon" />
+              <input ref={inputRef} onChange={ev => setSearchData(ev.target.value)} value={searchData} placeholder="Search" />
             </div>
           </div>
         </div>
-        <div className="cactus-search-title_view">
-          <h2>Family Trip</h2>
-        </div>
-        <div className="cactus-dashboard-templete_top_view">
-          {templeteArray.map((item) => {
+        <TempleteSliderView title={"Nos illustrations"} viewAll setSelectedCategory={x => {
+          setSelectedCategory(x)
+          setSearchData("")
+          navigate(`?category=${x}`)
+        }}/>
+        {loading || productLoading ? <div style={{ width: '100vw', background: 'white', display: 'flex', justifyContent: 'center', paddingBottom: '2rem' }}>
+          <ClipLoader color="black" />
+        </div> : <div className="cactus-dashboard-templete_top_view">
+          {templateArray.filter(p => p?.mainDesc?.includes(searchData)).map((item) => {
             return (
               <TempleteView
-                onClick={() => navigate("/templetedetail")}
+                onClick={async () => {                                                                                                                                                                                                   
+                  setLoading(true)
+                  const el = document.getElementById("main-products")
+                  el?.scrollIntoView()
+
+                  const onProductLoaded = product => {
+                    console.log("Loaded, naviating")
+                    setLoading(false)
+                    navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { state: { product: JSON.stringify(product) } })
+                  }
+
+                  const product = loadedProducts[item._id]
+
+                  if(product) onProductLoaded(product) 
+                  else emitter.on(item._id, onProductLoaded)
+                }}
                 item={item}
               />
             );
           })}
-        </div>
+        </div>}
         <Footer />
       </div>
     </div>

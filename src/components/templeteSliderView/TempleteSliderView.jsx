@@ -8,12 +8,16 @@ export default function TempleteSliderView(props) {
     console.log(props)
 
     useEffect(() => {
-        req('GET', '/user/productType').then(({productTypes}) => setTemplateArray([{
-            id: 1,
-            name: 'Poster',
-            image: dummyRoundOne,
-            priority: 1,
-        }, ...productTypes.filter(x => !!x.name).map((x, i) => ({ ...x, id: i+2 }))]))
+        req('GET', '/user/productType').then(({productTypes}) => {
+            const arr = [{
+                id: 1,
+                name: 'Poster',
+                image: dummyRoundOne,
+                priority: 1,
+            }, ...productTypes.filter(x => !!x.name).map((x, i) => ({ ...x, id: i+2 }))]
+            props.setSelectedCategory(arr[0]?.name)
+            setTemplateArray(arr)
+        })
     }, [])
 
     return (
