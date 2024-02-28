@@ -49,3 +49,8 @@ export { default as homeImage2 } from "./home-image2.png";
 export { default as homeImage2Responsive } from "./home-image2-responsive.png";
 export { default as emptyCart } from "./emptyCart.png";
 export { default as closeBlack } from "./closeBlack.png";
+export { default as productCheckboxUnchecked } from "./product-checkbox-unchecked.png";
+export { default as productCheckboxChecked } from "./product-checkbox-checked.png";
+export { default as leftArrowSign } from "./left-arrow-sign.png";
+export { default as rightArrowSign } from "./right-arrow-sign.png";
+export { default as filtersIcon } from "./filters.png";

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { dummyRoundOne, dummyRoundTwo, dummyRoundThree, arrowBack, arrowNext } from '../../assets'
+import { dummyRoundOne, search, dummyRoundThree, arrowBack, arrowNext, rightArrowSign, leftArrowSign, filtersIcon } from '../../assets'
 import './templeteSliderView.css'
 import { req } from '../../requests'
 
@@ -15,6 +15,7 @@ export default function TempleteSliderView(props) {
                 image: dummyRoundOne,
                 priority: 1,
             }, ...productTypes.filter(x => !!x.name).map((x, i) => ({ ...x, id: i+2 }))]
+                .sort((a, b) => a.priority > b.priority ? 1 :- 1)
             props.setSelectedCategory(arr[0]?.name)
             setTemplateArray(arr)
         })
@@ -30,7 +31,7 @@ export default function TempleteSliderView(props) {
             </div>
             <div className="cactus-dashboard-slider_view">
                 <div className="cactus-dashboard-slider_arrow_image">
-                    <img src={arrowBack} alt='' />
+                    <img src={leftArrowSign} alt='' />
                 </div>
                 <div className="cactus-dashboard-slider_templete_top_view">
                     {templateArray.sort((a, b) => a.priority > b.priority ? 1 :- 1).map((item) => {
@@ -43,7 +44,17 @@ export default function TempleteSliderView(props) {
                     })}
                 </div>
                 <div className="cactus-dashboard-slider_arrow_image">
-                    <img src={arrowNext} alt='' />
+                    <img src={rightArrowSign} alt='' />
+                </div>
+            </div>
+            <div style={{ display: 'flex', marginTop: '2rem', alignItems: 'center', flexDirection: props.isPhone ? 'column' : 'row' }}>
+                <h2 style={{ fontFamily: 'K2D', fontSize: '3rem', fontWeight: '600', marginLeft: props.isPhone ? undefined : '-20px', marginBottom: props.isPhone ? '20px' : undefined }}>Popular Templates</h2>
+                <div className="cactus-search-search_view">
+                    <img src={search} className="cactus-search-search_icon" />
+                    <input onChange={ev => props.setSearchData(ev.target.value)} value={props.searchData} placeholder="Search" />
+                    {props.isPhone && <div className='cactus-search-filters-icon' onClick={() => props.setFiltersOpen(!props.filtersOpen)}>
+                        <img src={filtersIcon}/>
+                    </div>}
                 </div>
             </div>
         </div>

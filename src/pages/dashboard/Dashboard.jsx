@@ -8,6 +8,8 @@ import {
   dummyTwo,
   homeImage2,
   homeImage2Responsive,
+  productCheckboxChecked,
+  productCheckboxUnchecked,
   shape,
 } from "../../assets";
 import {
@@ -54,11 +56,20 @@ export default function Dashboard() {
     productLoading,
     setSelectedCategory,
     selectedCategory,
+    categories,
+    selectedCategories,
+    setSelectedCategories,
+    filteredProducts,
+    setMin,
+    setMax,
+    min,
+    max,
+    searchData,
+    setSearchData,
   } = useProduct()
   const [currPage, setCurrPage] = useState(1)
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const recordsPerPage = 10
-
-  console.log("PRODID", redirect)
 
   useEffect(() => {
     const vendor = JSON.parse(getKey('vendor') ?? null)
@@ -79,15 +90,12 @@ export default function Dashboard() {
             <h5>
               Trouvez des idées cadeaux pour toutes les occasions avec notre gamme de posters, tasses, sacs et d’autres accessoires, tous personnalisables.
             </h5>
-            {isPhone() ? <div style={{ marginTop: "2rem" }}></div> : <div className="cactus-dashboard-banner_buttons_view">
+            {/* {isPhone() ? <div style={{ marginTop: "2rem" }}></div> : <div className="cactus-dashboard-banner_buttons_view">
               <div className="cactus-dashboard-banner_see_more_view" onClick={() => document.getElementById("main-templates")?.scrollIntoView()}>
                 <h2>Voir plus</h2>
               </div>
-              {/* <div className="cactus-dashboard-banner_contact_button">
-                <h3>Contact Us</h3>
-              </div> */}
-            </div>}
-            {!isPhone() && <div className="cactus-dashboard-banner_counter_top_view">
+            </div>} */}
+            {!isPhone() && <div className="cactus-dashboard-banner_counter_top_view" style={{ marginTop: '30px' }}>
               <div className="cactus-dasboard-banner_counter_view">
                 <h4>30+</h4>
                 <h6>affiches</h6>
@@ -102,35 +110,53 @@ export default function Dashboard() {
             <img alt="" src={isPhone() ? homeImage2Responsive : homeImage2} />
           </div>
         </div>
-        <TempleteSliderView title={"Nos illustrations"} viewAll setSelectedCategory={x => {
+        <TempleteSliderView isPhone={isPhone()} title={"Catégorie"} setFiltersOpen={setFiltersOpen} filtersOpen={filtersOpen} searchData={searchData} setSearchData={setSearchData} viewAll setSelectedCategory={x => {
           setSelectedCategory(x)
-          navigate(`/?category=${x}`)
+          navigate(`?category=${x}`)
         }} />
-        <div id="main-products" className="cactus-dashboard-templete_top_view">
-          {loading || productLoading ? <ClipLoader color="black" /> : paginate(templeteArray.filter(p => !p.hidden).filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()), recordsPerPage, currPage).map((item) => {
-            return (
-              <TempleteView
-                isPhone={isPhone()}
-                onClick={async () => {
-                  setLoading(true)
-                  const el = document.getElementById("main-products")
-                  el?.scrollIntoView()
+        <div className="cactus-prouct-container">
+          {((filtersOpen && isPhone()) || !isPhone()) && <div className="cactus-prouct-main-container">
+            <h2>Nombre de personnages</h2>
+            <div className="cactus-product-min-max-container">
+              <input type="number" placeholder="Min" value={min} onChange={ev => setMin(ev.target.value)}/>
+              <p>to</p>
+              <input type="number" placeholder="Max" value={max} onChange={ev => setMax(ev.target.value)}/>
+            </div>
+            <div className="cactus-category-container">
+              {categories.map(item => <div className="cactus-product-category">
+                <img onClick={() => selectedCategories.has(item) ? setSelectedCategories(new Set([...selectedCategories].filter(x => x != item))) : setSelectedCategories(new Set([...selectedCategories, item]))} src={selectedCategories.has(item) ? productCheckboxChecked : productCheckboxUnchecked} />
+                <p>{item}</p>
+                <p></p>
+              </div>)}
+            </div>
+          </div>}
+          <div id="main-products" className="cactus-dashboard-templete_top_view">
+            {console.log(min, max)}
+            {loading || productLoading ? <ClipLoader color="black" /> : paginate(filteredProducts.filter(p => !p.hidden), recordsPerPage, currPage).map((item) => {
+              return (
+                <TempleteView
+                  isPhone={isPhone()}
+                  onClick={async () => {
+                    setLoading(true)
+                    const el = document.getElementById("main-products")
+                    el?.scrollIntoView()
 
-                  const onProductLoaded = product => {
-                    console.log("Loaded, naviating")
-                    setLoading(false)
-                    navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { state: { product: JSON.stringify(product) } })
-                  }
+                    const onProductLoaded = product => {
+                      console.log("Loaded, naviating")
+                      setLoading(false)
+                      navigate(`/templetedetail?title=${product?.mainDesc}&productCategry=${product?.productCategry}`, { state: { product: JSON.stringify(product) } })
+                    }
 
-                  const product = loadedProducts[item._id]
+                    const product = loadedProducts[item._id]
 
-                  if (product) onProductLoaded(product)
-                  else emitter.on(item._id, onProductLoaded)
-                }}
-                item={item}
-              />
-            );
-          })}
+                    if (product) onProductLoaded(product)
+                    else emitter.on(item._id, onProductLoaded)
+                  }}
+                  item={item}
+                />
+              )
+            })}
+          </div>
         </div>
         <div>
           {

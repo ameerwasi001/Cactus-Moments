@@ -34,16 +34,27 @@ const useProduct = () => {
     const { search, state } = useLocation()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
+    const [searchData, setSearchData] = useState('')
     const [templeteArray, setTemplateArray] = useState([]);
     const [loadedProducts, setLoadedProducts] = useState({})
     const [productLoading, setProductLoading] = useState(true)
     const [selectedCategory, setSelectedCategory] = useState("poster")
-    const filteredProducts = useMemo(
-        () => templeteArray.filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase()),
-        [templeteArray, selectedCategory]
+    const [min, setMin] = useState(null)
+    const [max, setMax] = useState(null)
+    const categories = useMemo(
+        () => [...(new Set(templeteArray.map(p => p.category)))].filter(x => !!x),
+        [templeteArray]
     )
-    const redirect = state?.redirect
+    const [selectedCategories, setSelectedCategories] = useState(new Set())
+    const filteredProducts = templeteArray
+        .filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase())
+        .filter(p => selectedCategories.size == 0 ? true : selectedCategories.has(p.category))
+        .filter(p => min === null || isNaN(parseInt(min)) ? true : parseInt(min) <= parseInt(p.max))
+        .filter(p => max === null || isNaN(parseInt(max)) ? true : parseInt(max) >= parseInt(p.max))
+        .filter(p => p.mainDesc?.toLowerCase()?.includes(searchData?.toLowerCase()))
+        .filter(p => p.max !== undefined)
 
+    const redirect = state?.redirect
 
     useEffect(() => {
         const f = async () => {
@@ -92,7 +103,7 @@ const useProduct = () => {
     }, [search])
 
     useEffect(() => {
-        req('GET', `/user/product?select=${encodeURIComponent("_id name productCategry hidden mainDesc defaultIllustration price")}`)
+        req('GET', `/user/product?select=${encodeURIComponent("_id name max category productCategry hidden mainDesc defaultIllustration price")}`)
             .then(({ products }) => {
                 console.log(products)
                 console.log("setting")
@@ -154,6 +165,19 @@ const useProduct = () => {
         selectedCategory,
         setSelectedCategory,
         filteredProducts,
+
+        categories,
+        selectedCategories,
+        setSelectedCategories,
+        // setCategory,
+
+        min,
+        setMin,
+        max,
+        setMax,
+
+        searchData,
+        setSearchData,
     }
 }
 
