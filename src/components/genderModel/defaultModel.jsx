@@ -111,6 +111,17 @@ export default function DefaultModel(props) {
         return newProduct
     }
 
+    const setValue = (n, f) => () => {
+        const newCategories = JSON.parse(JSON.stringify(categories))
+        newCategories[n].max = f(newCategories[n].max)
+        console.log("NEW-CAT", newCategories)
+        setCategories(newCategories)
+    
+        if(getMax(newCategories) > ogProduct.max) return
+        const newProduct = makeProduct(newCategories)
+        props.onClick({ product: newProduct, closeModal: false })
+    }
+
     return (
         <div style={{height:'100%', overflow:'', display: isPhone() ? "unset" : "flex"}} className="cactus-gender-model_top_view">
             <props.Illustration {...props.illustrationData} style={
@@ -138,20 +149,12 @@ export default function DefaultModel(props) {
                         <h2 style={{ marginBottom: "1rem", fontFamily: 'K2D', fontSize: '18px', textAlign: 'center' }}>Personnaliser</h2>
                         <h2 style={{ marginBottom: "2rem", fontFamily: 'K2D' }}>Choisissez le nombre de personnages</h2>
                         {ogProduct.categories.map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
-                            <div style={{ display: 'flex', width: '10rem', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <h2>{category?.name}</h2>
-                                <div onChange={val => {
-                                    const newCategories = JSON.parse(JSON.stringify(categories))
-                                    newCategories[n].max = val
-                                    console.log("NEW-CAT", newCategories)
-                                    setCategories(newCategories)
-
-                                    if(getMax(newCategories) > ogProduct.max) return
-                                    const newProduct = makeProduct(newCategories)
-                                    props.onClick({ product: newProduct, closeModal: false })
-                                }}>
-                                    <div>+</div>
-                                    {categories.find(c => c.name === category?.name)?.max}
+                            <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <h2 style={{ opacity: 0.6, fontSize: '18px' }}>{category?.name}</h2>
+                                <div className='plus-minus-conunter-container' style={{ display: 'flex' }}>
+                                    <p style={{ opacity: categories.find(c => c.name === category?.name)?.max >= 1 ? 1 : 0.6 }} onClick={setValue(n, x => x >= 1 ? x-1 : x)}>-</p>
+                                    <div>{categories.find(c => c.name === category?.name)?.max}</div>
+                                    <p style={{ opacity: categories.find(c => c.name === category?.name)?.max < parseInt(category?.max ?? 0) ? 1 : 0.6 }} onClick={setValue(n, x => x >= parseInt(category?.max ?? 0) ? x : x + 1)}>+</p>
                                 </div>
                             </div>
                         </div>)}

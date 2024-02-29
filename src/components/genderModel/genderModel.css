@@ -141,6 +141,33 @@
   cursor: pointer;
 }
 
+.cactus-gender_model_view * {
+  font-family: 'K2D';
+}
+
+.plus-minus-conunter-container {
+  display: flex;
+  align-items: center;
+}
+
+.plus-minus-conunter-container > p {
+  background-color: #2b453e;
+  color: white;
+  width: 35px;
+  display: flex;
+  justify-content: center;
+  clip-path: circle();
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.plus-minus-conunter-container > div {
+  font-size: 15px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+}
+
 /* ------------Media Query------------- */
 
 @media screen and (max-width: 820px) {
