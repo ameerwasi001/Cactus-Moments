@@ -196,6 +196,7 @@
 
 .cactus-prouct-main-container {
   margin-left: 2rem;
+  /* max-width: 230px; */
 }
 
 .cactus-prouct-main-container > p {
@@ -205,7 +206,7 @@
 
 .cactus-prouct-main-container > h2 {
   font-size: 24px;
-  width: 28rem;
+  /* width: 28rem; */
   margin-bottom: 5rem;
 }
 
