@@ -30,10 +30,10 @@ export default function TempleteSliderView(props) {
                 }
             </div>}
             <div className="cactus-dashboard-slider_view">
-                <div className="cactus-dashboard-slider_arrow_image">
-                    <img src={leftArrowSign} alt='' />
+                <div className="cactus-dashboard-slider_arrow_image" onClick={() => document.getElementById("category-slider").scrollLeft -= 100}>
+                    <img src={leftArrowSign} alt=''/>
                 </div>
-                <div className="cactus-dashboard-slider_templete_top_view">
+                <div id="category-slider" className="cactus-dashboard-slider_templete_top_view">
                     {templateArray.sort((a, b) => a.priority > b.priority ? 1 :- 1).map((item) => {
                         return (
                             <div onClick={() => props.setSelectedCategory(item.name.toLowerCase(), { navigate: true })} key={item.id} className="cactus-dashboard-slider_templete_view">
@@ -43,11 +43,11 @@ export default function TempleteSliderView(props) {
                         )
                     })}
                 </div>
-                <div className="cactus-dashboard-slider_arrow_image">
-                    <img src={rightArrowSign} alt='' />
+                <div className="cactus-dashboard-slider_arrow_image" onClick={() => document.getElementById("category-slider").scrollLeft += 100}>
+                    <img src={rightArrowSign} alt=''/>
                 </div>
             </div>
-            {/* <div style={{ display: 'flex', marginTop: '2rem', alignItems: 'center', flexDirection: props.isPhone ? 'column' : 'row' }}>
+            {props.isPhone && <div style={{ display: 'flex', marginTop: '2rem', alignItems: 'center', flexDirection: props.isPhone ? 'column' : 'row' }}>
                 <h2 style={{ fontFamily: 'K2D', fontSize: '3rem', fontWeight: '600', marginLeft: props.isPhone ? undefined : '-20px', marginBottom: props.isPhone ? '20px' : undefined }}>Popular Templates</h2>
                 <div className="cactus-search-search_view">
                     <img src={search} className="cactus-search-search_icon" />
@@ -56,7 +56,7 @@ export default function TempleteSliderView(props) {
                         <img src={filtersIcon}/>
                     </div>}
                 </div>
-            </div> */}
+            </div>}
         </div>
     )
 }

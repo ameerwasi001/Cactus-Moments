@@ -1313,12 +1313,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
 
   const PricingDataComponent = () => <div className="pricing-main-component-container">
     <div className="pricing-main-component">
-      <div>
+      <div id="pricing-main-component-text-container">
         <h1>{title}</h1>
-        <h2>{product.desc}</h2>
+        {!isPhone() && <h2>{product.desc}</h2>}
       </div>
       <div>
-        <h3>{(0 + parseFloat(Object.values(selectedPricingOptions).map(({ price }) => parseFloat(price)).reduce((a, b) => a + b, 0))).toFixed(2)} €</h3>
+        <h3 id="pricing-main-component-h3">{(0 + parseFloat(Object.values(selectedPricingOptions).map(({ price }) => parseFloat(price)).reduce((a, b) => a + b, 0))).toFixed(2)} €</h3>
       </div>
     </div>
     <div className="pricing-main-component-pricing-dropdowns">
@@ -1336,17 +1336,18 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     </div>
   </div>
 
-  const IllustrationRender = ({ isImageLoaded, printFrame, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
+  const IllustrationRender = ({ isImageLoaded, givenId, printFrame, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
     console.log("printFrameprintFrame", printFrame)
 
     return <div
-      id={isPhone() && !ratios.has(background?.url) && unsetMargin ? 'margin-none' : ''}
+      id={isPhone() && !ratios.has(background?.url) && unsetMargin ? givenId : givenId}
       style={JSON.parse(JSON.stringify({
         height: '500px',
         transform: isPhone() && !ratios.has(background?.url) && adjustScale ? 'scale(0.7)' : undefined,
         width: isPhone() && ratios.has(background?.url) ? '350px' : '500px',
         position: "relative",
         margin: 0,
+        marginRight: isPhone() && ratios.has(background?.url) ? '-100px' : '-100px',
         padding: 0,
         ...(style ?? {})
       }))}
@@ -1532,10 +1533,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
       )}
 
       <div className="cactus-dashboard-container">
-        <div className="cactus-templet_detail_top_container">
-          {isPhone() && <div className="cactus-templete_detail-detail_top_view">
-            <PricingDataComponent />
-          </div>}
+        <div className="cactus-templet_detail_top_container" style={ isPhone() && ratios.has(background?.url) ? { padding: '1rem' } : {}}>
           <div className="cactus-templete_detail-detail_top_view">
             {!isPhone() && !printing && <PricingDataComponent />}
             <div className="cactus-templete_detail-form_top_view">
@@ -1672,9 +1670,9 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                   <div id="cactus-personalize-text-container">
                     <h3>Personnaliser</h3>
-                    <h2>Composition de la famille</h2>
+                    {!isPhone() && <h2>Composition de la famille</h2>}
                   </div>
-                  <button className='cactus-default-select-btn' style={{ borderRadius: '7px', marginRight: '10px', color: 'whitesmoke', width: "250px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
+                  <button className='cactus-default-select-btn' style={{ borderRadius: '7px', marginRight: '10px', color: 'whitesmoke', width: isPhone() ? "180px" : "250px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
                     <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "2rem" }}>Changer les personnages</h3>
                   </button>
                 </div>
@@ -1771,16 +1769,18 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
             </div>}
           </div>
           <div>
-            <div className="cactus-templete_detail-main_image_view">
-              <div className="cactus-templete_detail-main_image_button_view">
+            <div className="cactus-templete_detail-main_image_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '-112px' } : {}}>
+              <div className="cactus-templete_detail-main_image_button_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '100px' } : {}}>
                 {/* <h5>{product.mainDesc}</h5> */}
                 <h5>{product.productCategry}</h5>
               </div>
               <IllustrationRender
-                containerClasses={['cactus-templete_detail-main_image_main_mode']}
+                givenId='cactus-vertical'
+                containerClasses={['cactus-templete_detail-main_image_main_mode', ratios.has(background?.url) ? 'cactus-vertical'  : '']}
                 distribution={distribution}
                 product={product}
                 realOffsets={realOffsets}
+                style={{ marginRight: isPhone() && ratios.has(background?.url) ? '-2px' : '-102px' }}
                 isImageLoaded={isImageLoaded}
                 background={background}
                 printFrame={printFrame}
@@ -1789,7 +1789,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 adjustScale={true}
                 showChars={false}
               />
-              <div className="cactus-templete_detail_side_templetes_view">
+              <div className="cactus-templete_detail_side_templetes_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '60px' } : {}}>
                 <img
                   src={arrowLeft}
                   style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px' }}
@@ -1814,25 +1814,26 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 </div>
                 <img
                   src={arrowRight}
-                  style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px' }}
+                  style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px', transform: 'rotate(0deg)' }}
                   className="cactus-templete_detail_side__view_arrow_down"
                   onClick={() => document.getElementById("cactus-list").scrollLeft += 100}
                 />
               </div>
             </div>
           </div>
-          {isPhone() && <div className="cactus-templete_poster-desc" style={{
+          {isPhone() && <PricingDataComponent/>}
+          {/* {isPhone() && <div className="cactus-templete_poster-desc" style={{
             // width: ratios.has(background.url) ? "350px" : "500px",
             width: "500px",
           }}>
             <p>{product.posterDesc}</p>
-          </div>}
+          </div>} */}
         </div>
-        <div className="cactus-templete_poster-desc">
+        {/* {!isPhone() && <div className="cactus-templete_poster-desc">
           <p style={{ marginTop: isPhone() ? '0px' : undefined }}>{isPhone() ? '' : product.posterDesc}</p>
-        </div>
+        </div>} */}
         <Footer />
-        <div id={isPhone() && !ratios.has(background?.url) ? 'margin-none' : ''} style={JSON.parse(JSON.stringify({
+        <div id={isPhone() && !ratios.has(background?.url) ? '' : ''} style={JSON.parse(JSON.stringify({
           height: '500px',
           transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined,
           width: isPhone() && ratios.has(background?.url) ? '350px' : '500px',
