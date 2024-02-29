@@ -140,7 +140,7 @@ export default function DefaultModel(props) {
                         {ogProduct.categories.map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '10rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <h2>{category?.name}</h2>
-                                <Select value={categories.find(c => c.name === category?.name)?.max} onChange={val => {
+                                <div onChange={val => {
                                     const newCategories = JSON.parse(JSON.stringify(categories))
                                     newCategories[n].max = val
                                     console.log("NEW-CAT", newCategories)
@@ -150,8 +150,9 @@ export default function DefaultModel(props) {
                                     const newProduct = makeProduct(newCategories)
                                     props.onClick({ product: newProduct, closeModal: false })
                                 }}>
-                                    {[0, ...(new Array(parseInt(category?.max ?? 0)).fill(0).map((_, i) => i+1))].slice(-mins[category?.name]).map(i => <Option value={i}>{i}</Option>)}
-                                </Select>
+                                    <div>+</div>
+                                    {categories.find(c => c.name === category?.name)?.max}
+                                </div>
                             </div>
                         </div>)}
                         <button className='cactus-default-select-btn' style={{ color: 'whitesmoke', opacity: getMax(categories) > ogProduct.max ? "0.5" : undefined, pointer: getMax(categories) > ogProduct.max ? "default" : "cursor", alignSelf: 'center' }} onClick={() => {
