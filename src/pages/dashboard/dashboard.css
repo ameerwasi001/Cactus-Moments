@@ -134,6 +134,7 @@
 }
 
 .cactus-dashboard-banner_image_view img {
+  object-fit: contain;
   width: 55%;
   height: 93%;
   /* border-radius: 5rem; */
