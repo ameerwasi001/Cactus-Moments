@@ -6,6 +6,7 @@ import {
   dummyOne,
   dummyThree,
   dummyTwo,
+  filtersIcon,
   homeImage2,
   homeImage2Responsive,
   productCheckboxChecked,
@@ -118,9 +119,11 @@ export default function Dashboard() {
           {((filtersOpen && isPhone()) || !isPhone()) && <div className="cactus-prouct-main-container">
             <h2>Nombre de personnages</h2>
             <div className="cactus-product-min-max-container">
-              <input type="number" placeholder="Min" value={min} onChange={ev => setMin(ev.target.value)}/>
+              <input type="number" placeholder="Min" value={min} onChange={ev => setMin(ev.target.value)} />
               <p>to</p>
-              <input type="number" placeholder="Max" value={max} onChange={ev => setMax(ev.target.value)}/>
+              <input type="number" placeholder="Max" value={max} onChange={ev => setMax(ev.target.value)} />
+              <p>Saerch</p>
+              <input type="text" placeholder="Search" value={searchData} onChange={ev => setSearchData(ev.target.value)} />
             </div>
             <div className="cactus-category-container">
               {categories.map(item => <div className="cactus-product-category">

@@ -47,7 +47,7 @@ export default function TempleteSliderView(props) {
                     <img src={rightArrowSign} alt='' />
                 </div>
             </div>
-            <div style={{ display: 'flex', marginTop: '2rem', alignItems: 'center', flexDirection: props.isPhone ? 'column' : 'row' }}>
+            {/* <div style={{ display: 'flex', marginTop: '2rem', alignItems: 'center', flexDirection: props.isPhone ? 'column' : 'row' }}>
                 <h2 style={{ fontFamily: 'K2D', fontSize: '3rem', fontWeight: '600', marginLeft: props.isPhone ? undefined : '-20px', marginBottom: props.isPhone ? '20px' : undefined }}>Popular Templates</h2>
                 <div className="cactus-search-search_view">
                     <img src={search} className="cactus-search-search_icon" />
@@ -56,7 +56,7 @@ export default function TempleteSliderView(props) {
                         <img src={filtersIcon}/>
                     </div>}
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

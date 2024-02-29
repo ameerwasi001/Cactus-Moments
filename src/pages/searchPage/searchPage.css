@@ -28,17 +28,17 @@
 .cactus-search-search_view {
   display: flex;
   flex-direction: row;
-  width: 80%;
+  width: 103%;
   /* top: -4.5rem; */
   /* padding-left: 3rem; */
   /* padding-right: 3.5rem; */
   align-items: center;
   /* position: absolute; */
-  height: 9rem;
+  height: 4rem;
   background: #ffffff;
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.15);
   border-radius: 5px;
-  margin-left: 3rem;
+  margin-left: 0;
 }
 
 .cactus-search-search_icon {
