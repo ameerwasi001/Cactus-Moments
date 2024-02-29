@@ -54,3 +54,5 @@ export { default as productCheckboxChecked } from "./product-checkbox-checked.pn
 export { default as leftArrowSign } from "./left-arrow-sign.png";
 export { default as rightArrowSign } from "./right-arrow-sign.png";
 export { default as filtersIcon } from "./filters.png";
+export { default as arrowLeft } from "./arrow-left.png";
+export { default as arrowRight } from "./arrow-right.png";

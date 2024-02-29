@@ -95,7 +95,7 @@ export default function Dashboard() {
                 <h2>Voir plus</h2>
               </div>
             </div>} */}
-            {!isPhone() && <div className="cactus-dashboard-banner_counter_top_view" style={{ marginTop: '30px' }}>
+            {/* {!isPhone() && <div className="cactus-dashboard-banner_counter_top_view" style={{ marginTop: '30px' }}>
               <div className="cactus-dasboard-banner_counter_view">
                 <h4>30+</h4>
                 <h6>affiches</h6>
@@ -104,13 +104,13 @@ export default function Dashboard() {
                 <h4>70+</h4>
                 <h6>idées cadeaux</h6>
               </div>
-            </div>}
+            </div>} */}
           </div>
           <div className="cactus-dashboard-banner_image_view">
             <img alt="" src={isPhone() ? homeImage2Responsive : homeImage2} />
           </div>
         </div>
-        <TempleteSliderView isPhone={isPhone()} title={"Catégorie"} setFiltersOpen={setFiltersOpen} filtersOpen={filtersOpen} searchData={searchData} setSearchData={setSearchData} viewAll setSelectedCategory={x => {
+        <TempleteSliderView isPhone={isPhone()} title={""} setFiltersOpen={setFiltersOpen} filtersOpen={filtersOpen} searchData={searchData} setSearchData={setSearchData} viewAll setSelectedCategory={x => {
           setSelectedCategory(x)
           navigate(`?category=${x}`)
         }} />

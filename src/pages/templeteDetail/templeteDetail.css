@@ -1,6 +1,7 @@
 .cactus-templet_detail_top_container {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   padding: 5rem;
   background-color: white;
   z-index: 100;
@@ -8,33 +9,84 @@
 
 .cactus-templete_detail_side_templetes_view {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   margin-right: 5rem;
+}
+
+.pricing-main-component {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pricing-main-component h3 {
+  font-size: 33px !important;
+}
+
+.pricing-main-component-pricing-dropdowns {
+  margin-top: 2rem;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pricing-main-component-pricing-dropdowns > div {
+  margin-right: 20px;
 }
 
 .cactus-list {
+  margin-top: 2rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  margin-right: 5rem;
+  justify-content: center;
+  /* margin-right: 5rem; */
+  overflow-x: hidden;
+}
+
+.cactus-list > img {
+  margin-right: 1rem;
+}
+
+#cactus-personalize-text-container {
+  margin-left: 10px;
+}
+
+#cactus-personalize-text-container > h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 1px;
+  padding-bottom: 0px;
+}
+
+#cactus-personalize-text-container > h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 0px;
 }
 
 .cactus-templete_detail_side__view_arrow_up {
-  width: 2.4rem;
-  height: 2.4rem;
-  object-fit: cover;
-  margin-bottom: 2.4rem;
-  transform: rotate(90deg);
+  width: 16px;
+  /* height: 12px; */
+  /* object-fit: cover; */
+  /* margin-bottom: 2.4rem; */
+  /* transform: rotate(0deg); */
+  margin-right: 15px;
   cursor: pointer;
+  z-index: 5000;
 }
 
 .cactus-templete_detail_side__view_arrow_down {
-  width: 2.4rem;
-  height: 2.4rem;
-  object-fit: cover;
+  width: 12px;
+  /* height: 12px; */
+  /* object-fit: cover; */
+  /* margin-bottom: 2.4rem; */
+  /* transform: rotate(0deg); */
+  margin-left: 15px;
   cursor: pointer;
-  transform: rotate(270deg);
+  z-index: 5000;
 }
 
 .cactus-templete_detail_side__view_image_style {
@@ -59,7 +111,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 2rem 2rem 5.4rem 2rem;
+  margin: 2rem 2rem 5.4rem 0rem;
   width: 13.2rem;
   height: 3.9rem;
   background: #2b453e;
@@ -118,6 +170,12 @@
   padding-bottom: 1rem;
 }
 
+.cactus-templete_poster-desc {
+  padding: 30px;
+  width: 100%;
+  background-color: white;
+}
+
 .cactus-templete_poster-desc > p {
   font-family: "K2D";
   font-style: normal;
@@ -126,7 +184,7 @@
   line-height: 3.2rem;
   color: #333333;
   padding-bottom: 2.2rem;
-  margin-top: 8rem;
+  margin-top: 4rem;
 }
 
 .overlay-logo-container {
@@ -183,11 +241,19 @@
 
 .cactus-templete_detail-form_top_view {
   margin-top: 1rem;
-  padding: 3rem 2rem;
-  width: 51.8rem;
+  /* padding: 3rem 2rem; */
+  padding-top: 3rem;
+  padding-right: 0px;
+  padding-left: 0px;
+  width: 58.8rem;
   background: #f5f5f5;
   border-radius: 1rem;
   margin-bottom: 3rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .cactus-templete_detail-form_title {
@@ -329,6 +395,11 @@
   font-size: 15px;
   font-family: 'K2D';
   width: 20rem
+}
+
+.order-buttons {
+  flex-direction: row;
+  justify-content: center;
 }
 
 /* -------------Media Query--------------- */

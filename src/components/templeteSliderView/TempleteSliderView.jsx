@@ -23,12 +23,12 @@ export default function TempleteSliderView(props) {
 
     return (
         <div id="main-templates" className="cactus-dashboard-slider_top_view">
-            <div className="cactus-dashboard-slider_title_view" style={props.style}>
+            {props?.title && <div className="cactus-dashboard-slider_title_view" style={props.style}>
                 <h1>{props.title}</h1>
                 {props.viewAll &&
                     <h2>Voir tout</h2>
                 }
-            </div>
+            </div>}
             <div className="cactus-dashboard-slider_view">
                 <div className="cactus-dashboard-slider_arrow_image">
                     <img src={leftArrowSign} alt='' />
@@ -36,9 +36,9 @@ export default function TempleteSliderView(props) {
                 <div className="cactus-dashboard-slider_templete_top_view">
                     {templateArray.sort((a, b) => a.priority > b.priority ? 1 :- 1).map((item) => {
                         return (
-                            <div key={item.id} className="cactus-dashboard-slider_templete_view">
+                            <div onClick={() => props.setSelectedCategory(item.name.toLowerCase())} key={item.id} className="cactus-dashboard-slider_templete_view">
                                 <img src={item.image} alt="" onClick={() => props.setSelectedCategory(item.name.toLowerCase())}/>
-                                <h2>{item.name}s</h2>
+                                <h2 onClick={() => props.setSelectedCategory(item.name.toLowerCase())}>{item.name}s</h2>
                             </div>
                         )
                     })}
