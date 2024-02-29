@@ -111,9 +111,9 @@ export default function Dashboard() {
             <img alt="" src={isPhone() ? homeImage2Responsive : homeImage2} />
           </div>
         </div>
-        <TempleteSliderView isPhone={isPhone()} title={""} setFiltersOpen={setFiltersOpen} filtersOpen={filtersOpen} searchData={searchData} setSearchData={setSearchData} viewAll setSelectedCategory={x => {
+        <TempleteSliderView isPhone={isPhone()} title={""} setFiltersOpen={setFiltersOpen} filtersOpen={filtersOpen} searchData={searchData} setSearchData={setSearchData} viewAll setSelectedCategory={(x, opts) => {
           setSelectedCategory(x)
-          navigate(`?category=${x}`)
+          if(opts?.navigate) navigate(`?category=${x}`)
         }} />
         <div className="cactus-prouct-container">
           {((filtersOpen && isPhone()) || !isPhone()) && <div className="cactus-prouct-main-container">

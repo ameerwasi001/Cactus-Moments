@@ -16,7 +16,7 @@ export default function TempleteSliderView(props) {
                 priority: 1,
             }, ...productTypes.filter(x => !!x.name).map((x, i) => ({ ...x, id: i+2 }))]
                 .sort((a, b) => a.priority > b.priority ? 1 :- 1)
-            props.setSelectedCategory(arr[0]?.name)
+            props.setSelectedCategory(arr[0]?.name, { navigate: false })
             setTemplateArray(arr)
         })
     }, [])
@@ -36,9 +36,9 @@ export default function TempleteSliderView(props) {
                 <div className="cactus-dashboard-slider_templete_top_view">
                     {templateArray.sort((a, b) => a.priority > b.priority ? 1 :- 1).map((item) => {
                         return (
-                            <div onClick={() => props.setSelectedCategory(item.name.toLowerCase())} key={item.id} className="cactus-dashboard-slider_templete_view">
-                                <img src={item.image} alt="" onClick={() => props.setSelectedCategory(item.name.toLowerCase())}/>
-                                <h2 onClick={() => props.setSelectedCategory(item.name.toLowerCase())}>{item.name}s</h2>
+                            <div onClick={() => props.setSelectedCategory(item.name.toLowerCase(), { navigate: true })} key={item.id} className="cactus-dashboard-slider_templete_view">
+                                <img src={item.image} alt="" onClick={() => props.setSelectedCategory(item.name.toLowerCase(), { navigate: true })}/>
+                                <h2 onClick={() => props.setSelectedCategory(item.name.toLowerCase(), { navigate: true })}>{item.name}s</h2>
                             </div>
                         )
                     })}
