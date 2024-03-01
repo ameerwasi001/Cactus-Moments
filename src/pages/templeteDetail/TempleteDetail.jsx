@@ -1336,11 +1336,15 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     </div>
   </div>
 
-  const IllustrationRender = ({ isImageLoaded, givenId, printFrame, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses }) => {
+  const IllustrationRender = ({ isImageLoaded, givenId, printFrame, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses, marginLeftSet=false }) => {
     console.log("printFrameprintFrame", printFrame)
 
     return <div
       id={isPhone() && !ratios.has(background?.url) && unsetMargin ? givenId : givenId}
+      ref={ref => ratios.has(background?.url) ?
+          ref && isPhone() && marginLeftSet && ref.style.setProperty('margin-left', '0.3rem', 'important') :
+          ref && isPhone() && marginLeftSet && ref.style.setProperty('margin-left', '2.5rem', 'important')
+        }
       style={JSON.parse(JSON.stringify({
         height: '500px',
         transform: isPhone() && !ratios.has(background?.url) && adjustScale ? 'scale(0.7)' : undefined,
@@ -1776,6 +1780,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
               </div>
               <IllustrationRender
                 givenId='cactus-vertical'
+                marginLeftSet={true}
                 containerClasses={['cactus-templete_detail-main_image_main_mode', ratios.has(background?.url) ? 'cactus-vertical'  : '']}
                 distribution={distribution}
                 product={product}
@@ -1789,14 +1794,19 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 adjustScale={true}
                 showChars={false}
               />
-              <div className="cactus-templete_detail_side_templetes_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '60px' } : {}}>
+              <div className="cactus-templete_detail_side_templetes_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '93px' } : {}}>
                 <img
                   src={arrowLeft}
                   style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px' }}
                   className="cactus-templete_detail_side__view_arrow_up"
-                  onClick={() => document.getElementById("cactus-list").scrollLeft -= 100}
+                  onClick={() => document.getElementsByClassName("cactus-list")[0].scrollLeft -= 100}
                 />
-                <div id="cactus-list" className="cactus-list" style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px', width: ratios.has(background?.url) ? '310px' : '500px' }}>
+                <div 
+                  id="cactus-list" 
+                  className="cactus-list" 
+                  style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px', width: ratios.has(background?.url) ? '310px' : '500px' }}
+                  ref={el => el && isPhone() && el.style.setProperty('width', '290px', "important")}
+                >
                   {sideTempleArray.filter(item => item?.image?.coordinateVariation?.preview || item?.image?.url).map((item) => {
                     return (
                       item.image.url ?
@@ -1816,7 +1826,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   src={arrowRight}
                   style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px', transform: 'rotate(0deg)' }}
                   className="cactus-templete_detail_side__view_arrow_down"
-                  onClick={() => document.getElementById("cactus-list").scrollLeft += 100}
+                  onClick={() => document.getElementsByClassName("cactus-list")[0].scrollLeft += 100}
                 />
               </div>
             </div>
