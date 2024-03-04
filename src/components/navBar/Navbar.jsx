@@ -239,7 +239,7 @@ const Navbar = (props) => {
           </h1>
           <DropDown title="cart" list={openDropdown}/>
         </div>
-        <div
+        {/* <div
           // onClick={() => navigate("/", { state: { templateArray: props.templateArray } })}
           className="cactus__navbar-links_input_view"
         >
@@ -248,7 +248,7 @@ const Navbar = (props) => {
             document.getElementById('search-input')?.focus()
           }}/>
           <img alt="" src={search}/>
-        </div>
+        </div> */}
       </>}
     </>
   );

@@ -943,8 +943,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   // Printing States
   const [width, setWidth] = useState(0)
 
-  const [printBackground, setPrintBackround] = useState(true)
-  const [printFrame, setPrintFrame] = useState(true)
+  const [printBackground, setPrintBackround] = useState(false)
+  const [printFrame, setPrintFrame] = useState(false)
 
   const [fit, setFit] = useState(true)
 
@@ -1521,7 +1521,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
         <ChooseBackgroundModel
           isPhone={isPhone()}
           _={console.log("|product", product.backgrounds)}
-          backgrounds={product.backgrounds.filter(x => {console.log("<><>|ch", x.coordinateVariation.evenFor); return true})}
+          backgrounds={product.backgrounds.filter(x => {console.log("<><>|ch", x.coordinateVariation.evenFor); return !x.coordinateVariation.evenFor})}
           onClick={data => {
             if (data.image) setBackground(data.image)
             // const distCopy = [...distribution]
