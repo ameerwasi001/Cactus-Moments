@@ -30,11 +30,11 @@ const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => 
 const emitter = new EventEmitter()
 const preloadImage = img => new Image().src = img
 
-const useProduct = () => {
+const useProduct = (searchString='') => {
     const { search, state } = useLocation()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
-    const [searchData, setSearchData] = useState('')
+    const [searchData, setSearchData] = useState(searchString)
     const [templeteArray, setTemplateArray] = useState([]);
     const [loadedProducts, setLoadedProducts] = useState({})
     const [productLoading, setProductLoading] = useState(true)

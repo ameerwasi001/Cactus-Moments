@@ -22,6 +22,8 @@ const Navbar = (props) => {
   const [withCard, setWithCard] = useState(false)
   const [detailModal, setDetailModal] = useState(null)
 
+  const { searchData, setSearchData } = props
+
   useEffect(() => {
     req('GET', `/user/product?select=-categories`)
       .then(({products}) => {
@@ -238,11 +240,14 @@ const Navbar = (props) => {
           <DropDown title="cart" list={openDropdown}/>
         </div>
         <div
-          onClick={() => navigate("/", { state: { templateArray: props.templateArray } })}
+          // onClick={() => navigate("/", { state: { templateArray: props.templateArray } })}
           className="cactus__navbar-links_input_view"
         >
-          <input placeholder="Recherche" onClick={() => navigate('/')} />
-          <img alt="" src={search} onClick={() => navigate('/')}/>
+          <input placeholder="Recherche" onClick={() => {
+            document.getElementById('search-input')?.scrollIntoView()
+            document.getElementById('search-input')?.focus()
+          }}/>
+          <img alt="" src={search}/>
         </div>
       </>}
     </>

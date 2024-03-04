@@ -625,7 +625,7 @@ function getWindowDimensions() {
   };
 }
 
-const isPhone = () => getWindowDimensions().width < 421
+const isPhone = () => getWindowDimensions().width < 440
 
 function paginate(array, page_size, page_number) {
   return array.slice((page_number - 1) * page_size, page_number * page_size);
@@ -890,7 +890,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   const localDict = localStorage.getItem('backgrounds') ?? '{}'
   const dict = JSON.parse(localDict)
 
-  const [background, setBackground] = useState(product.backgrounds[product.defaultBackground])
+  const [background, setBackground] = useState(props?.background ? props?.background : product.backgrounds[product.defaultBackground])
   const [alternateBackground, setAlternateBackground] = useState(product?.backgrounds?.find(bg => bg?.coordinateVariation?.evenFor == background?.url))
   const [title, setTitle] = useState(props?.title ?? product.name)
   const [subtitle, setSubtitle] = useState(props?.subtitle ?? product.subtitle)
@@ -960,6 +960,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   const [illustrationYDistance, setIllustrationYDistance] = useState(background?.coordinateVariation?.illustrationYDistance ?? 2)
   const [scale, setScale] = useState(background?.coordinateVariation?.illustrationPDFScale ?? 2)
 
+  const [format, setFormat] = useState({ label: 'PNG', value: 'PNG' })
+  const [formats, setFormats] = useState([
+    { label: 'PDF', value: 'PDF' },
+    { label: 'PNG', value: 'PNG' },
+    { label: 'JPEG', value: 'JPEG' }
+  ])
   const [quality, setQuality] = useState({ label: 'A4', value: product?.productCategry == 'poster' ? 4 : 2 })
   const [qualityOptions, setQualityOptions] = useState([
     { label: 'A4', value: 4 },
@@ -1514,7 +1520,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
       {chooseBackgroundModel && (
         <ChooseBackgroundModel
           isPhone={isPhone()}
-          backgrounds={product.backgrounds.filter(x => !x.coordinateVariation.evenFor)}
+          _={console.log("|product", product.backgrounds)}
+          backgrounds={product.backgrounds.filter(x => {console.log("<><>|ch", x.coordinateVariation.evenFor); return true})}
           onClick={data => {
             if (data.image) setBackground(data.image)
             // const distCopy = [...distribution]
@@ -1568,6 +1575,16 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                       {qualityOptions.map(q => <option value={q.value}>{q.label}</option>)}
                     </select>
                   </div>}
+
+                  <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                    <div>Format</div>
+                    <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
+                      console.log("evx", { label: formats.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
+                      setQuality({ label: formats.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
+                    }}>
+                      {formats.map(q => <option value={q.value}>{q.label}</option>)}
+                    </select>
+                  </div>
 
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Readjust Frame Position Y</div>

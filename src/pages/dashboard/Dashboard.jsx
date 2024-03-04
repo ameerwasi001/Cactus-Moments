@@ -36,7 +36,7 @@ function getWindowDimensions() {
   };
 }
 
-const isPhone = () => getWindowDimensions().width < 421
+const isPhone = () => getWindowDimensions().width < 440
 
 function paginate(array, page_size, page_number) {
   if (isPhone()) return array.slice((page_number - 1) * page_size, page_number * page_size);
@@ -67,7 +67,7 @@ export default function Dashboard() {
     max,
     searchData,
     setSearchData,
-  } = useProduct()
+  } = useProduct(window.location.href.split('?search=')[1])
   const [currPage, setCurrPage] = useState(1)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const recordsPerPage = 10
@@ -79,7 +79,7 @@ export default function Dashboard() {
 
   return (
     <div className="cactus-dashboard-main_container">
-      <NavBar templateArray={templeteArray} />
+      <NavBar setSearchData={setSearchData}/>
       <div className="cactus-dashboard-container">
         <div className="cactus-dashboard-banner_top_view">
           <div className="cactus-dashboard-banner_text_view">
@@ -121,7 +121,7 @@ export default function Dashboard() {
             <div className="cactus-product-min-max-container">
               <input type="number" placeholder="0 - 12" max={12} min={0} value={max} onChange={ev => setMax(ev.target.value)} />
               <p>Recherche par thème</p>
-              <input type="text" placeholder="Mots-clés" value={searchData} onChange={ev => setSearchData(ev.target.value)} />
+              <input id='search-input' type="text" placeholder="Mots-clés" value={searchData} onChange={ev => setSearchData(ev.target.value)} />
             </div>
             <div className="cactus-category-container">
               {categories.map(item => <div className="cactus-product-category">

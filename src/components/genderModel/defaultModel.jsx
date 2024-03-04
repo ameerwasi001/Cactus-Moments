@@ -13,7 +13,7 @@ function getWindowDimensions() {
     };
 }
   
-const isPhone = () => getWindowDimensions().width < 421    
+const isPhone = () => getWindowDimensions().width < 440    
 
 const findIndex = (f, arr) => {
     for(let i = 0; i < arr.length; i++)
