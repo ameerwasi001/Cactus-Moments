@@ -49,7 +49,7 @@ const BillingAdress = () => {
   console.log("BILLING", selections?.selectedCardPayment)
   console.log("FSELECT", selections)
   const navigate = useNavigate();
-  const [ischecked, setIschecked] = useState(false);
+  const [ischecked, setIschecked] = useState(true);
   const [selectMr, setSelectMr] = React.useState({ Id: 1, title: "Mr" });
   const [dayselect, setDaySelected] = useState({ label: "1", value: "1" });
   const [countryselect, setCountrySelected] = useState({
@@ -253,7 +253,7 @@ const BillingAdress = () => {
                 term & Conditions Contact us for more details
               </span>
             </p> */}
-            <p>Acceptez nos conditions générales de vente.</p>
+            {/* <p>Acceptez nos conditions générales de vente.</p> */}
           </div>
           <div
             style={{ opacity: 

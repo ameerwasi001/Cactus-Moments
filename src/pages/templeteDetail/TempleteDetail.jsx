@@ -1551,7 +1551,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
               {printing ? <>
                 <div style={{ width: printing ? undefined : "50%", display: "flex", flexDirection: "column", }}>
 
-                  <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center" }}>
+                  {/* <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center" }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={printBackground} onClick={() => setPrintBackround(!printBackground)} />
                     <div>Print Background</div>
                   </div>
@@ -1564,7 +1564,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Frame Height</div>
                     <input style={{ marginRight: "1rem" }} type="number" value={frameHeight} onChange={ev => setFrameHeight(ev.target.value)} />
-                  </div>
+                  </div> */}
 
                   {product?.productCategry == 'poster' && <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Quality</div>
@@ -1586,12 +1586,13 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     </select>
                   </div>
 
+                {/*
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Readjust Frame Position Y</div>
                     <input style={{ marginRight: "1rem" }} type="number" value={frameReadjust} onChange={ev => setFrameReadjust(ev.target.value)} />
                   </div>
 
-                  <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
+                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Readjust Frame Position X</div>
                     <input style={{ marginRight: "1rem" }} type="number" value={frameReadjustX} onChange={ev => setFrameReadjustX(ev.target.value)} />
                   </div>
@@ -1604,7 +1605,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={fit} onClick={() => setFit(!fit)} />
                     <div>Fit</div>
-                  </div>
+                  </div> */}
 
                   {!fit && <>
                     <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
@@ -1647,7 +1648,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     }}>Fulfill</button>} */}
                 </div>
                 <div className="cactus-templete_detail-order_button"
-                  style={{ cursor: loading2 ? "default" : undefined }}
+                  style={{ marginBottom: '10px', cursor: loading2 ? "default" : undefined }}
                   onClick={async () => {
                     if (loading2) return
 
