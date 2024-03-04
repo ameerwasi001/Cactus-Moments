@@ -959,7 +959,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   const [width, setWidth] = useState(0)
 
   const [printBackground, setPrintBackround] = useState(false)
-  const [printFrame, setPrintFrame] = useState(false)
+  const [printFrame, setPrintFrame] = useState(true)
 
   const [fit, setFit] = useState(true)
 
