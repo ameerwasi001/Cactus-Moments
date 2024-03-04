@@ -1551,7 +1551,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
               {printing ? <>
                 <div style={{ width: printing ? undefined : "50%", display: "flex", flexDirection: "column", }}>
 
-                   <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center" }}>
+                   <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={printBackground} onClick={() => setPrintBackround(!printBackground)} />
                     <div>Print Background</div>
                   </div>
