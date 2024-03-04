@@ -686,7 +686,18 @@ const getDimensions = (uri, cb) => new Promise((resolve, reject) => {
   // cb([10000, 7100])
 })
 
-var createPDF = function (imgData, frameData, offset, percentage, name, orientation) {
+const downloadFile = (name, imgUri) => {
+  const link = document.createElement('a')
+  document.body.appendChild(link)
+
+  link.href = imgUri
+  link.target = '_self'
+  link.fileName = name
+  link.download = true
+  link.click()
+}
+
+var createPDF = function (type, imgData, frameData, offset, percentage, name, orientation) {
   getDimensions(imgData, ([height, width]) => {
     // getDimensions(frameData, ([h2]) => {
     // const frameHeight = (h2/100)*percentage
@@ -694,16 +705,20 @@ var createPDF = function (imgData, frameData, offset, percentage, name, orientat
 
     console.log("DIMENSIONS h >>", height, width, orientation)
 
-    if (orientation == 'p') {
-      const doc = new jsPDF(orientation, 'mm', [3339.63, 4722.71]);
-      doc.addImage(imgData, 'PNG', 0, 0, 3339.63, 4722.71, 'monkey')
-      doc.save(`${name}.pdf`);
-
+    if(type == 'PNG' || type == 'JPEG') {
+      downloadFile(`${name}.${type.toLowerCase()}`, imgData)
     } else {
-      const doc = new jsPDF(orientation, 'px', [width, height]);
-      doc.addImage(imgData, 'PNG', 0, 0, width, height, 'monkey')
-      doc.save(`${name}.pdf`);
+      if (orientation == 'p') {
+        const doc = new jsPDF(orientation, 'mm', [3339.63, 4722.71]);
+        doc.addImage(imgData, 'PNG', 0, 0, 3339.63, 4722.71, 'monkey')
+        doc.save(`${name}.pdf`);
+      } else {
+        const doc = new jsPDF(orientation, 'px', [width, height]);
+        doc.addImage(imgData, 'PNG', 0, 0, width, height, 'monkey')
+        doc.save(`${name}.pdf`);
+      }
     }
+    
     // })
   })
 }
@@ -960,7 +975,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   const [illustrationYDistance, setIllustrationYDistance] = useState(background?.coordinateVariation?.illustrationYDistance ?? 2)
   const [scale, setScale] = useState(background?.coordinateVariation?.illustrationPDFScale ?? 2)
 
-  const [format, setFormat] = useState({ label: 'PNG', value: 'PNG' })
+  const [format, setFormat] = useState({ label: 'PDF', value: 'PDF' })
   const [formats, setFormats] = useState([
     { label: 'PDF', value: 'PDF' },
     { label: 'PNG', value: 'PNG' },
@@ -1342,15 +1357,15 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     </div>
   </div>
 
-  const IllustrationRender = ({ isImageLoaded, givenId, printFrame, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses, marginLeftSet=false }) => {
+  const IllustrationRender = ({ isImageLoaded, givenId, printFrame, realOffsets, distribution, ogProduct, adjustScale, unsetMargin, background, product, showChars, style, containerClasses, marginLeftSet = false }) => {
     console.log("printFrameprintFrame", printFrame)
 
     return <div
       id={isPhone() && !ratios.has(background?.url) && unsetMargin ? givenId : givenId}
       ref={ref => ratios.has(background?.url) ?
-          ref && isPhone() && marginLeftSet && ref.style.setProperty('margin-left', '0.3rem', 'important') :
-          ref && isPhone() && marginLeftSet && ref.style.setProperty('margin-left', '2.5rem', 'important')
-        }
+        ref && isPhone() && marginLeftSet && ref.style.setProperty('margin-left', '0.3rem', 'important') :
+        ref && isPhone() && marginLeftSet && ref.style.setProperty('margin-left', '2.5rem', 'important')
+      }
       style={JSON.parse(JSON.stringify({
         height: '500px',
         transform: isPhone() && !ratios.has(background?.url) && adjustScale ? 'scale(0.7)' : undefined,
@@ -1521,7 +1536,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
         <ChooseBackgroundModel
           isPhone={isPhone()}
           _={console.log("|product", product.backgrounds)}
-          backgrounds={product.backgrounds.filter(x => {console.log("<><>|ch", x.coordinateVariation.evenFor); return !x.coordinateVariation.evenFor})}
+          backgrounds={product.backgrounds.filter(x => { console.log("<><>|ch", x.coordinateVariation.evenFor); return !x.coordinateVariation.evenFor })}
           onClick={data => {
             if (data.image) setBackground(data.image)
             // const distCopy = [...distribution]
@@ -1544,14 +1559,14 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
       )}
 
       <div className="cactus-dashboard-container">
-        <div className="cactus-templet_detail_top_container" style={ isPhone() && ratios.has(background?.url) ? { padding: '1rem' } : {}}>
+        <div className="cactus-templet_detail_top_container" style={isPhone() && ratios.has(background?.url) ? { padding: '1rem' } : {}}>
           <div className="cactus-templete_detail-detail_top_view">
             {!isPhone() && !printing && <PricingDataComponent />}
             <div className="cactus-templete_detail-form_top_view">
               {printing ? <>
                 <div style={{ width: printing ? undefined : "50%", display: "flex", flexDirection: "column", }}>
 
-                   <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
+                  <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={printBackground} onClick={() => setPrintBackround(!printBackground)} />
                     <div>Print Background</div>
                   </div>
@@ -1578,15 +1593,15 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
 
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Format</div>
-                    <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
+                    <select style={{ marginRight: "1rem" }} type="number" value={format?.value} onChange={ev => {
                       console.log("evx", { label: formats.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
-                      setQuality({ label: formats.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
+                      setFormat({ label: formats.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
                     }}>
                       {formats.map(q => <option value={q.value}>{q.label}</option>)}
                     </select>
                   </div>
 
-                {/*
+                  {/*
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Readjust Frame Position Y</div>
                     <input style={{ marginRight: "1rem" }} type="number" value={frameReadjust} onChange={ev => setFrameReadjust(ev.target.value)} />
@@ -1678,7 +1693,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     const img = canvas.toDataURL();
                     // illustration.style.zoom = "100%";
                     // console.log("WWWWHHH4", width)
-                    if (fit) createPDF(img, background.coordinateVariation.frame, bottomOffset, frameHeight, title, width == 355 ? 'p' : 'l')
+                    console.log('FORMAT', format.value)
+                    if (fit) createPDF(format.value, img, background.coordinateVariation.frame, bottomOffset, frameHeight, title, width == 355 ? 'p' : 'l')
                     else createCustomPDF(width == 355, title, img, pdfHeight, pdfWidth, null, landscape, illustrationHeight, illustrationDistance, illustrationYDistance, scale);
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
 
@@ -1799,7 +1815,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
               <IllustrationRender
                 givenId='cactus-vertical'
                 marginLeftSet={true}
-                containerClasses={['cactus-templete_detail-main_image_main_mode', ratios.has(background?.url) ? 'cactus-vertical'  : '']}
+                containerClasses={['cactus-templete_detail-main_image_main_mode', ratios.has(background?.url) ? 'cactus-vertical' : '']}
                 distribution={distribution}
                 product={product}
                 realOffsets={realOffsets}
@@ -1819,9 +1835,9 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   className="cactus-templete_detail_side__view_arrow_up"
                   onClick={() => document.getElementsByClassName("cactus-list")[0].scrollLeft -= 100}
                 />
-                <div 
-                  id="cactus-list" 
-                  className="cactus-list" 
+                <div
+                  id="cactus-list"
+                  className="cactus-list"
                   style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px', width: ratios.has(background?.url) ? '310px' : '500px' }}
                   ref={el => el && isPhone() && el.style.setProperty('width', '290px', "important")}
                 >
@@ -1849,7 +1865,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
               </div>
             </div>
           </div>
-          {isPhone() && <PricingDataComponent/>}
+          {isPhone() && <PricingDataComponent />}
           {/* {isPhone() && <div className="cactus-templete_poster-desc" style={{
             // width: ratios.has(background.url) ? "350px" : "500px",
             width: "500px",
