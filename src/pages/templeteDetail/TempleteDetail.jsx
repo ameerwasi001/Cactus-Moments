@@ -710,7 +710,7 @@ var createPDF = function (type, imgData, frameData, offset, percentage, name, or
     } else {
       if (orientation == 'p') {
         const doc = new jsPDF(orientation, 'mm', [3339.63, 4722.71]);
-        doc.addImage(imgData, 'PNG', 0, 0, 3339.63, 4722.71, 'monkey')
+        doc.addImage(imgData, 'PNG', 5, 0, 3339.63, 4722.71, 'monkey')
         doc.save(`${name}.pdf`);
       } else {
         const doc = new jsPDF(orientation, 'px', [width, height]);
@@ -1670,12 +1670,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     window.scrollTo(0, 0)
                     const illustration = document.getElementsByClassName("display-image")[0];
                     const realBg = document.getElementById("real-background")
-                    // const frame = document.getElementById("illustration-frame")
-                    // if(frame) {
-                    //   console.log(realBg.style)
-                    //   realBg.style.height = `${frame.getBoundingClientRect()?.height}px`
-                    //   realBg.style.width = `${frame.getBoundingClientRect()?.width}px`
-                    // }
+                    const frame = document.getElementById("illustration-frame")
+                    if(frame) {
+                      console.log(realBg.style)
+                      // realBg.style.height = `${frame.getBoundingClientRect()?.height}px`
+                      // realBg.style.width = `${frame.getBoundingClientRect()?.width}px`
+                    }
                     illustration.style.display = "flex"
                     illustration.style.height = `${realBg.getBoundingClientRect()?.height}px`
                     illustration.style.width = `${realBg.getBoundingClientRect()?.width}px`
@@ -1704,8 +1704,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     else createCustomPDF(width == 355, title, img, pdfHeight, pdfWidth, null, landscape, illustrationHeight, illustrationDistance, illustrationYDistance, scale);
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
 
-                    illustration.style.display = "none"
-                    console.log(quality, quality?.label)
+                    // illustration.style.display = "none"
+                    // console.log(quality, quality?.label)
                     await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
                   }}>
                   {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger</h5>}
@@ -1911,12 +1911,17 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
           {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
           {!background.coordinateVariation.frame ? <div id="illustration-frame"></div> : <img id="illustration-frame" crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
             zIndex: 100000000000000,
-            position: "absolute",
-            top: -1,
-            left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
-            height: "101%",
-            maxWidth: "355px",
-            width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
+            position: "absolute", 
+            top: `${frameReadjust}px`,
+            _: console.log(
+                "frameReadjust", 
+                parseInt(frameReadjust),
+                frameReadjust
+            ),
+            left: parseInt(frameReadjustX) + (parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1),
+            height: `${frameHeight}%`,
+            maxWidth: "500px",
+            width: background.coordinateVariation.fameScale == undefined ? "200px" : `${background.coordinateVariation.fameScale}px`,
           }} />}
           {groupDistribution(ogProduct, distribution).map(sprites => <>
             {
