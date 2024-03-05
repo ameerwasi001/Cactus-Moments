@@ -1670,6 +1670,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     window.scrollTo(0, 0)
                     const illustration = document.getElementsByClassName("display-image")[0];
                     const realBg = document.getElementById("real-background")
+                    // const frame = document.getElementById("illustration-frame")
+                    // if(frame) {
+                    //   console.log(realBg.style)
+                    //   realBg.style.height = `${frame.getBoundingClientRect()?.height}px`
+                    //   realBg.style.width = `${frame.getBoundingClientRect()?.width}px`
+                    // }
                     illustration.style.display = "flex"
                     illustration.style.height = `${realBg.getBoundingClientRect()?.height}px`
                     illustration.style.width = `${realBg.getBoundingClientRect()?.width}px`
@@ -1903,7 +1909,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
             } crossOrigin="anonymous" />
           </div>
           {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
-          {defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame ? <></> : <img crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
+          {!background.coordinateVariation.frame ? <div id="illustration-frame"></div> : <img id="illustration-frame" crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
             zIndex: 100000000000000,
             position: "absolute",
             top: -1,
