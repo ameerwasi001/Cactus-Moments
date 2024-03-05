@@ -1704,8 +1704,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     else createCustomPDF(width == 355, title, img, pdfHeight, pdfWidth, null, landscape, illustrationHeight, illustrationDistance, illustrationYDistance, scale);
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
 
-                    // illustration.style.display = "none"
-                    // console.log(quality, quality?.label)
+                    illustration.style.display = "none"
+                    console.log(quality, quality?.label)
                     await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
                   }}>
                   {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger</h5>}
