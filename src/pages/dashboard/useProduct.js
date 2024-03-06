@@ -41,14 +41,33 @@ const useProduct = (searchString='') => {
     const [selectedCategory, setSelectedCategory] = useState("poster")
     const [min, setMin] = useState(null)
     const [max, setMax] = useState(null)
+
+    const produCategoryData = templeteArray.map(x => x.productCategories).filter(x => !!x).flat(1).map(X => X.toLowerCase())
     const categories = useMemo(
-        () => [...(new Set(templeteArray.map(p => p.category)))].filter(x => !!x),
+        () => [...(new Set(produCategoryData))],
         [templeteArray]
     )
+    console.log("CATEOID", templeteArray.map(x => x.productCategories), produCategoryData, categories)
+
     const [selectedCategories, setSelectedCategories] = useState(new Set())
     const filteredProducts = templeteArray
-        .filter(p => p.productCategry.toLowerCase() == selectedCategory.toLowerCase())
-        .filter(p => selectedCategories.size == 0 ? true : selectedCategories.has(p.category))
+        // .filter(p => {
+        //     console.log("CATEOID 2>>", p?.productCategories?.join(',')?.toLowerCase())
+        //     return p?.productCategories?.join(',')?.toLowerCase()?.includes(selectedCategory.toLowerCase())
+        // })
+        .filter(p => {
+            if(selectedCategories.size == 0) return true
+            if(!p?.productCategories) return false
+            console.log(
+                "N-CATEOID", 
+                p?.mainDesc,
+                p?.productCategories?.map(x => x.toLowerCase()), 
+                selectedCategories,
+                p?.productCategories?.map(x => x.toLowerCase())?.map(cat => selectedCategories.has(cat)),
+                p?.productCategories?.map(x => x.toLowerCase())?.map(cat => selectedCategories.has(cat))?.reduce((a, b) => a || b, false)
+            )
+            return p?.productCategories?.map(x => x.toLowerCase())?.map(cat => selectedCategories.has(cat))?.reduce((a, b) => a || b, false)
+        })
         .filter(p => min === null || isNaN(parseInt(min)) ? true : parseInt(min) <= parseInt(p.max))
         .filter(p => max === null || isNaN(parseInt(max)) ? true : parseInt(max) >= parseInt(p.max))
         .filter(p => p.mainDesc?.toLowerCase()?.includes(searchData?.toLowerCase()))
@@ -103,7 +122,7 @@ const useProduct = (searchString='') => {
     }, [search])
 
     useEffect(() => {
-        req('GET', `/user/product?select=${encodeURIComponent("_id name max category productCategry hidden mainDesc defaultIllustration price")}`)
+        req('GET', `/user/product?select=${encodeURIComponent("_id name max category productCategories productCategry hidden mainDesc defaultIllustration price")}`)
             .then(({ products }) => {
                 console.log(products)
                 console.log("setting")
