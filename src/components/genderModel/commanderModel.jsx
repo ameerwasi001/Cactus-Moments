@@ -9,6 +9,15 @@ import { ScaleLoader } from 'react-spinners'
 
 const { Option } = Select
 
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
+}
+  
+const isPhone = () => getWindowDimensions().width < 440   
 
 const getSelectionPricing = p => Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a+b, 0)
 const getPrice = () => (getKey("cart") ?? []).map(getSelectionPricing).reduce((a, b) => a+b, 0)
@@ -86,7 +95,7 @@ export default function DefaultModel(props) {
                 </> : <>
                     <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                         <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: loading ? 'center' : undefined }}>
-                            {loading ? <ScaleLoader color='#000' /> : options.map((option, n) => <div style={{ display: 'flex', width: '100%', marginBottom: '10px' }}>
+                            {loading ? <ScaleLoader color='#000' /> : options.map((option, n) => <div style={{ display: 'flex', width: '100%', marginBottom: '10px', flexDirection: isPhone() ? 'column' : 'row', marginBottom: '20px' }}>
                                 <div style={{ display: 'flex', width: '32rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <div style={{ display: 'flex', alignItems: 'center' }}>

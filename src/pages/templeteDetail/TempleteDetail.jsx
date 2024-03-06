@@ -1718,13 +1718,13 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger</h5>}
                 </div>
               </> : <>
-                <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                  <div id="cactus-personalize-text-container">
+                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                  {/* <div id="cactus-personalize-text-container">
                     <h3>Personnaliser</h3>
                     {!isPhone() && <h2>Composition de la famille</h2>}
-                  </div>
-                  <button className='cactus-default-select-btn' style={{ borderRadius: '7px', marginRight: '10px', color: 'whitesmoke', width: isPhone() ? "180px" : "250px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
-                    <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "2rem" }}>Changer les personnages</h3>
+                  </div> */}
+                  <button className='cactus-default-select-btn' style={{ height: '65px', borderRadius: '7px', marginRight: '10px', color: 'whitesmoke', width: isPhone() ? "180px" : "250px", alignSelf: 'center', marginBottom: "10px", display: "flex", justifyContent: "center", alignItems: "center" }} onClick={() => setDefaultModel(true)}>
+                    <h3 style={{ color: "whitesmoke", padding: "0px", fontSize: "2rem" }}>Modifier le nombre de personnages</h3>
                   </button>
                 </div>
                 <CustomInputWithDropdown
