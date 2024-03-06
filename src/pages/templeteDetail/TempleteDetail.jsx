@@ -697,7 +697,7 @@ const downloadFile = (name, imgUri) => {
   link.click()
 }
 
-var createPDF = function (type, imgData, frameData, offset, percentage, name, orientation) {
+var createPDF = function (type, photoFrame, imgData, frameData, offset, percentage, name, orientation) {
   getDimensions(imgData, ([height, width]) => {
     // getDimensions(frameData, ([h2]) => {
     // const frameHeight = (h2/100)*percentage
@@ -709,8 +709,8 @@ var createPDF = function (type, imgData, frameData, offset, percentage, name, or
       downloadFile(`${name}.${type.toLowerCase()}`, imgData)
     } else {
       if (orientation == 'p') {
-        const doc = new jsPDF(orientation, 'mm', [3339.63, 4722.71]);
-        doc.addImage(imgData, 'PNG', 5, 0, 3339.63, 4722.71, 'monkey')
+        const doc = new jsPDF(orientation, 'mm', [3339.63, photoFrame ? 5009.45 : 4722.71]);
+        doc.addImage(imgData, 'PNG', 5, 0, 3339.63, photoFrame ? 5009.45 : 4722.71, 'monkey')
         doc.save(`${name}.pdf`);
       } else {
         const doc = new jsPDF(orientation, 'px', [width, height]);
@@ -959,6 +959,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   const [width, setWidth] = useState(0)
 
   const [printBackground, setPrintBackround] = useState(false)
+  const [photoFrame, setPhotoFrame] = useState(false)
   const [printFrame, setPrintFrame] = useState(true)
 
   const [fit, setFit] = useState(true)
@@ -1380,7 +1381,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     >
       <>
         <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-        {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
+        {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.photoFrame} style={{
           zIndex: 100000000000000,
           _: console.log("showChars", distribution, showChars),
           position: "absolute",
@@ -1571,6 +1572,11 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     <div>Print Background</div>
                   </div>
 
+                  <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
+                    <input style={{ marginRight: "1rem" }} type="checkbox" checked={photoFrame} onClick={() => setPhotoFrame(!photoFrame)} />
+                    <div>Print Photo Frame</div>
+                  </div>
+
                   {/*<div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={printFrame} onClick={() => setPrintFrame(!printFrame)} />
                     <div>Print Frame</div>
@@ -1700,7 +1706,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     // illustration.style.zoom = "100%";
                     // console.log("WWWWHHH4", width)
                     console.log('FORMAT', format.value)
-                    if (fit) createPDF(format.value, img, background.coordinateVariation.frame, bottomOffset, frameHeight, title, width == 355 ? 'p' : 'l')
+                    if (fit) createPDF(format.value, photoFrame, img, background.coordinateVariation.frame, bottomOffset, frameHeight, title, width == 355 ? 'p' : 'l')
                     else createCustomPDF(width == 355, title, img, pdfHeight, pdfWidth, null, landscape, illustrationHeight, illustrationDistance, illustrationYDistance, scale);
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
 
@@ -1909,7 +1915,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
             } crossOrigin="anonymous" />
           </div>
           {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
-          {!background.coordinateVariation.frame ? <div id="illustration-frame"></div> : <img id="illustration-frame" crossOrigin="anonymous" src={OFFLINE ? background.coordinateVariation.frame : `${background.coordinateVariation.frame}?${Date.now()}`} style={{
+          {!background.coordinateVariation.frame ? <div id="illustration-frame"></div> : <img id="illustration-frame" crossOrigin="anonymous" src={`${photoFrame ? background.coordinateVariation.photoFrame : background.coordinateVariation.frame}?${Date.now()}`} style={{
             zIndex: 100000000000000,
             position: "absolute", 
             top: `${frameReadjust}px`,
@@ -1918,10 +1924,10 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 parseInt(frameReadjust),
                 frameReadjust
             ),
-            left: parseInt(frameReadjustX) + (parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1),
+            left: parseInt(frameReadjustX) + (parseInt(background.coordinateVariation?.[photoFrame ? 'photoFameScale' : 'fameScale']) + 1 == 361 ? -3 : -1),
             height: `${frameHeight}%`,
             maxWidth: "500px",
-            width: background.coordinateVariation.fameScale == undefined ? "200px" : `${background.coordinateVariation.fameScale}px`,
+            width: background.coordinateVariation?.[photoFrame ? 'photoFameScale' : 'fameScale'] == undefined ? "200px" : `${background.coordinateVariation?.[photoFrame ? 'photoFameScale' : 'fameScale']}px`,
           }} />}
           {groupDistribution(ogProduct, distribution).map(sprites => <>
             {
