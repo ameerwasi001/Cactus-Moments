@@ -1927,6 +1927,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
             left: parseInt(frameReadjustX) + (parseInt(background.coordinateVariation?.[photoFrame ? 'photoFameScale' : 'fameScale']) + 1 == 361 ? -3 : -1),
             height: `${frameHeight}%`,
             maxWidth: "500px",
+            maxHeight: ratios.has(background?.url) ? undefined : "355px",
             width: background.coordinateVariation?.[photoFrame ? 'photoFameScale' : 'fameScale'] == undefined ? "200px" : `${background.coordinateVariation?.[photoFrame ? 'photoFameScale' : 'fameScale']}px`,
           }} />}
           {groupDistribution(ogProduct, distribution).map(sprites => <>
