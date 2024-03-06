@@ -51,10 +51,9 @@ const useProduct = (searchString='') => {
 
     const [selectedCategories, setSelectedCategories] = useState(new Set())
     const filteredProducts = templeteArray
-        // .filter(p => {
-        //     console.log("CATEOID 2>>", p?.productCategories?.join(',')?.toLowerCase())
-        //     return p?.productCategories?.join(',')?.toLowerCase()?.includes(selectedCategory.toLowerCase())
-        // })
+        .filter(p => {
+            return p?.productCategry?.toLowerCase() == selectedCategory.toLowerCase()
+        })
         .filter(p => {
             if(selectedCategories.size == 0) return true
             if(!p?.productCategories) return false
