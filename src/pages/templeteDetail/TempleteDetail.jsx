@@ -1389,6 +1389,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
           left: parseInt(background.coordinateVariation.fameScale) + 1 == 361 ? -3 : -1,
           height: "101%",
           maxWidth: "500px",
+          maxHeight: ratios.has(background?.url) ? undefined : "355px",
           width: background.coordinateVariation.fameScale == undefined ? "200px" : `${parseInt(background.coordinateVariation.fameScale) + 1}px`,
         }} />}
         {console.log("OFSET>", offsets, groupDistribution(ogProduct, distribution), product?.offsets)}
