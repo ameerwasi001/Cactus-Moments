@@ -248,7 +248,9 @@
   padding-right: 0.6rem;
   padding-bottom: 9rem;
   padding-left: 1rem;
-  justify-content: center;
+  justify-content: flex-start;
+
+  width: 100%;
 }
 
 .cactus-dashboard-about_us_top_view {
