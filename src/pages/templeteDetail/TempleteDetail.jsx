@@ -698,6 +698,7 @@ const downloadFile = (name, imgUri) => {
 }
 
 var createPDF = function (type, photoFrame, imgData, frameData, offset, percentage, name, orientation) {
+  console.log("MAINDATA->>", type, photoFrame,)
   getDimensions(imgData, ([height, width]) => {
     // getDimensions(frameData, ([h2]) => {
     // const frameHeight = (h2/100)*percentage
@@ -706,6 +707,7 @@ var createPDF = function (type, photoFrame, imgData, frameData, offset, percenta
     console.log("DIMENSIONS h >>", height, width, orientation)
 
     if(type == 'PNG' || type == 'JPEG') {
+      console.log(name, type)
       downloadFile(`${name}.${type.toLowerCase()}`, imgData)
     } else {
       if (orientation == 'p') {

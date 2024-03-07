@@ -13,6 +13,7 @@
     "aws-sdk": "^2.1525.0",
     "buffer": "^6.0.3",
     "countries-and-timezones": "^3.5.2",
+    "file-saver": "^2.0.5",
     "font-picker-react": "^3.5.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
