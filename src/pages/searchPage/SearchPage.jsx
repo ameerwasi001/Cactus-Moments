@@ -44,7 +44,7 @@ export default function SearchPage() {
           >
             <div onClick={() => inputRef?.click()} className="cactus-search-search_view">
               <img src={searchIcon} className="cactus-search-search_icon" />
-              <input ref={inputRef} onChange={ev => setSearchData(ev.target.value)} value={searchData} placeholder="Search" />
+              <input ref={inputRef} onChange={ev => setSearchData(ev.target.value)} value={searchData} placeholder="Recherche" />
             </div>
           </div>
         </div>

@@ -91,7 +91,7 @@ export default function DefaultModel(props) {
             <div onClick={ev => ev.stopPropagation()} style={{ minHeight:'70%', alignItems: options.length == 0 ? "center" : null, minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
                 {options.length == 0 ? <>
                     <img src={emptyCart} style={{ height: 300 }}/>
-                    <h2>Your cart is empty</h2>
+                    <h2>Le panier est vide</h2>
                 </> : <>
                     <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                         <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: loading ? 'center' : undefined }}>
@@ -126,7 +126,7 @@ export default function DefaultModel(props) {
                                                             order: order.id,
                                                         }
 
-                                                        if (window.location.href.includes(`templetedetail?title=${order?.selections?.mainDesc}`)) return navigate('/', { state: { redirect: redirectData } })
+                                                        if (window.location.href.includes(`templetedetail`)) return navigate('/', { state: { redirect: redirectData } })
 
                                                         setLoading(true)
                                                         const { product } = await req("GET", `/user/product/${productId}`)

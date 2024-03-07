@@ -51,7 +51,7 @@ export default function TempleteSliderView(props) {
                 <h2 style={{ fontFamily: 'K2D', fontSize: '3rem', fontWeight: '600', marginLeft: props.isPhone ? undefined : '-20px', marginBottom: props.isPhone ? '20px' : undefined }}>Popular Templates</h2>
                 <div className="cactus-search-search_view">
                     <img src={search} className="cactus-search-search_icon" />
-                    <input onChange={ev => props.setSearchData(ev.target.value)} value={props.searchData} placeholder="Search" />
+                    <input onChange={ev => props.setSearchData(ev.target.value)} value={props.searchData} placeholder="Recherche" />
                     {props.isPhone && <div className='cactus-search-filters-icon' onClick={() => props.setFiltersOpen(!props.filtersOpen)}>
                         <img src={filtersIcon}/>
                     </div>}
