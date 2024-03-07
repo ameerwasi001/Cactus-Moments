@@ -157,7 +157,7 @@ export default function DefaultModel(props) {
             }} className='cactus-gender_model_view'>
                 <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                     <div style={{ display: 'flex', marginBottom: isPhone() ? undefined :'3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
-                        <h2 style={{ marginBottom: "1rem", fontFamily: 'K2D', fontSize: '18px', textAlign: 'center' }}>Personnaliser</h2>
+                        {/* <h2 style={{ marginBottom: "1rem", fontFamily: 'K2D', fontSize: '18px', textAlign: 'center' }}>Personnaliser</h2> */}
                         <h2 style={{ marginBottom: "2rem", fontFamily: 'K2D' }}>Choisissez le nombre de personnages</h2>
                         {ogProduct.categories.map((category, n) => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
