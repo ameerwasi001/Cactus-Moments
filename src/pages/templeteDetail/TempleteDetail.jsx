@@ -1895,7 +1895,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
         <div id={isPhone() && !ratios.has(background?.url) ? '' : ''} style={JSON.parse(JSON.stringify({
           height: '500px',
           transform: isPhone() && !ratios.has(background?.url) ? 'scale(0.7)' : undefined,
-          width: isPhone() && ratios.has(background?.url) ? '350px' : '500px',
+          width: isPhone() && ratios.has(background?.url) ? '353px' : '500px',
           position: "relative",
           margin: 0,
           padding: 0,
