@@ -1705,7 +1705,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                       useCORS: true,
                     })
                     console.log("WWWWHHH3", width)
-                    const img = canvas.toDataURL();
+                    const img = canvas.toDataURL(`image/${format.value == 'PNG' || format.value == 'PDF' ? 'png' : 'jpeg'}`);
                     // illustration.style.zoom = "100%";
                     // console.log("WWWWHHH4", width)
                     console.log('FORMAT', format.value)
