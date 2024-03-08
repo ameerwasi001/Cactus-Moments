@@ -1686,7 +1686,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                       // realBg.style.width = `${frame.getBoundingClientRect()?.width}px`
                     }
                     illustration.style.display = "flex"
-                    illustration.style.height = `${realBg.getBoundingClientRect()?.height}px`
+                    illustration.style.height = `${ratios.has(background?.url) ? realBg.getBoundingClientRect()?.height : 355}px`
                     illustration.style.width = `${realBg.getBoundingClientRect()?.width}px`
                     console.log(illustration.style)
 
