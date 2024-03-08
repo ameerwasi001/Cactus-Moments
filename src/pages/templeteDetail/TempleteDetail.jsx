@@ -1383,7 +1383,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     >
       <>
         <canvas id="canvas" height={"500px"} width={'500px'} style={{ backgroundImage: `url("${background?.coordinateVariation?.alternate ?? background.url}")`, width: '100%', height: '100%', backgroundSize: 'contain', backgroundRepeat: 'no-repeat' }}></canvas>
-        {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.photoFrame} style={{
+        {((defaultModel || showPaymentModel || selectedImage || chooseBackgroundModel || chooseGenderModel || !printFrame || !background.coordinateVariation.frame)) ? <></> : <img src={background.coordinateVariation.frame} style={{
           zIndex: 100000000000000,
           _: console.log("showChars", distribution, showChars),
           position: "absolute",
