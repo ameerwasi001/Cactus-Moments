@@ -70,7 +70,7 @@ export default function Dashboard() {
   } = useProduct(window.location.href.split('?search=')[1])
   const [currPage, setCurrPage] = useState(1)
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const recordsPerPage = 10
+  const recordsPerPage = 20
 
   useEffect(() => {
     const vendor = JSON.parse(getKey('vendor') ?? null)
@@ -117,7 +117,7 @@ export default function Dashboard() {
         }} />
         <div className="cactus-prouct-container">
           {((filtersOpen && isPhone()) || !isPhone()) && <div className="cactus-prouct-main-container">
-            <h2>Nombre de personnages</h2>
+            <p>Nombre de personnages</p>
             <div className="cactus-product-min-max-container">
               <input type="number" placeholder="0 - 12" max={12} min={0} value={max} onChange={ev => setMax(ev.target.value)} />
               <p>Recherche par thème</p>
