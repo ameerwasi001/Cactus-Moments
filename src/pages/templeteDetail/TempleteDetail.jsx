@@ -715,8 +715,8 @@ var createPDF = function (type, photoFrame, imgData, frameData, offset, percenta
         doc.addImage(imgData, 'PNG', 5, 0, 3339.63, photoFrame ? 5009.45 : 4722.71, 'monkey')
         doc.save(`${name}.pdf`);
       } else {
-        const doc = new jsPDF(orientation, 'px', [width, height]);
-        doc.addImage(imgData, 'PNG', 0, 0, width, height, 'monkey')
+        const doc = new jsPDF(orientation, 'px', [photoFrame ? 5009.45 : 4722.71, 3339.63]);
+        doc.addImage(imgData, 'PNG', 0, 5, photoFrame ? 5009.45 : 4722.71, 3339.63, 'monkey')
         doc.save(`${name}.pdf`);
       }
     }
