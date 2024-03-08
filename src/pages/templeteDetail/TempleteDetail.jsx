@@ -1713,9 +1713,9 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     else createCustomPDF(width == 355, title, img, pdfHeight, pdfWidth, null, landscape, illustrationHeight, illustrationDistance, illustrationYDistance, scale);
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
 
-                    illustration.style.display = "none"
-                    console.log(quality, quality?.label)
-                    await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
+                    // illustration.style.display = "none"
+                    // console.log(quality, quality?.label)
+                    // await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
                   }}>
                   {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger</h5>}
                 </div>
@@ -1903,12 +1903,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
           <div
             id="canvas-print"
             style={{
-              width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "355px" : "500px",
+              width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "353px" : "500px",
               height: ratios.size == 0 ? undefined : ratios.has(background?.url) ? '100%' : 'unset',
             }}
           >
             <img id="real-background" style={{
-              width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "355px" : "500px",
+              width: ratios.size == 0 ? undefined : ratios.has(background?.url) ? "353px" : "500px",
               height: ratios.size == 0 ? undefined : ratios.has(background?.url) ? '100%' : 'unset',
               objectFit: 'contain',
             }} src={
