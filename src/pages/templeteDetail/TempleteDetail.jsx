@@ -1714,7 +1714,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
 
                     illustration.style.display = "none"
-                    console.log(quality, quality?.label)
+                    // console.log(quality, quality?.label)
                     await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
                   }}>
                   {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger</h5>}
