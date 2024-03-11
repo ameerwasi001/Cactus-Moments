@@ -1704,47 +1704,11 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                       scale: parseInt(quality?.value) * 2,
                       useCORS: true,
                     })
-
-                    {
-                      
-                    }
-
-                    const isPhotoFormat = format.value == 'PNG' || format.value == 'JPEG'
-                    let img = canvas.toDataURL(`image/${format.value == 'PNG' || format.value == 'PDF' ? 'png' : 'jpeg'}`);
-
-                    const ogWidth = width
-                    {
-                      const dimensions = [843, 1191]
-                      const [width, height] = ogWidth == 355 ? dimensions : [...dimensions].reverse()
-                      if(isPhotoFormat) {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d')
-  
-                        canvas.id = "resize-layer";
-                        canvas.width = width;
-                        canvas.height = height;
-                        canvas.style.zIndex = 8;
-                        canvas.style.position = "absolute";
-                        canvas.style.border = "1px solid";
-  
-                        var image = new Image();
-                        image.src = img;
-                        image.width = width;
-                        image.height = height;
-  
-                        const waitedImageLoad = image => new Promise((resolve) => {
-                          image.onload = () => {
-                            ctx.drawImage(image, 0, 0, width, height);
-                            resolve(
-                              canvas.toDataURL(`image/${format.value == 'PNG' || format.value == 'PDF' ? 'png' : 'jpeg'}`)
-                            )
-                          }
-                        })
-                        img = await waitedImageLoad(image)
-                      }
-                    }
+                    console.log("WWWWHHH3", width)
+                    const img = canvas.toDataURL(`image/${format.value == 'PNG' || format.value == 'PDF' ? 'png' : 'jpeg'}`);
                     // illustration.style.zoom = "100%";
                     // console.log("WWWWHHH4", width)
+                    console.log('FORMAT', format.value)
                     if (fit) createPDF(format.value, photoFrame, img, background.coordinateVariation.frame, bottomOffset, frameHeight, title, width == 355 ? 'p' : 'l')
                     else createCustomPDF(width == 355, title, img, pdfHeight, pdfWidth, null, landscape, illustrationHeight, illustrationDistance, illustrationYDistance, scale);
                     // [...document.getElementsByClassName("hidden-text")].forEach(el => el.style.display = "block")
