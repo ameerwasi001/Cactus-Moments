@@ -638,6 +638,9 @@ let firstLoad = true
 //   for
 // }
 
+const getPrice = (p) => 
+  Object.entries(p?.selections ?? {}).filter(([k]) => k.startsWith("pricing-")).map(([_, v]) => parseFloat(v.split(" ")[v.split(" ").length - 1] ?? 0)).reduce((a, b) => a + b, 0)
+
 const getCategoryOfCharacter = (product, sprite) => {
   const foundCategory = product?.categories?.find(
     cat =>
@@ -923,6 +926,9 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
   const [chooseBackgroundModel, setChooseBackgroundModel] = useState(false);
   const [pricingObject, setPricingObject] = useState(groupPricing(product.pricing));
   const [selectedPricingOptions, setSelectedPricingOptions] = useState(currPricingObject ? currPricingObject : (props?.selectedPricingOptions ?? Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, v?.[0]]))))
+
+  const [ogPricingOptions] = useState(selectedPricingOptions)
+  
   const [shownPricingOptions, setShownPricingOptions] = useState(Object.fromEntries(Object.entries(groupPricing(product.pricing)).map(([k, v]) => [k, false])))
   const [chooseGenderModel, setChooseGenderModel] = useState(undefined);
   const [defaultModel, setDefaultModel] = useState(props ? false : true);
@@ -1593,7 +1599,6 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   {product?.productCategry == 'poster' && <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Quality</div>
                     <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
-                      console.log("evx", { label: qualityOptions.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
                       setQuality({ label: qualityOptions.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
                     }}>
                       {qualityOptions.map(q => <option value={q.value}>{q.label}</option>)}
@@ -1717,7 +1722,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     // console.log(quality, quality?.label)
                     await req('PATCH', `/user/order/${orderId}`, { printQuality: quality?.label })
                   }}>
-                  {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger</h5>}
+                    {console.log("selectedPricingOptions >>", selectedPricingOptions)}
+                  {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger {(0 + parseFloat(Object.values(selectedPricingOptions).map(({ price }) => parseFloat(price)).reduce((a, b) => a + b, 0))).toFixed(2)}€</h5>}
                 </div>
               </> : <>
                 <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>

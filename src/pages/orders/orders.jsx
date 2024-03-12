@@ -99,14 +99,14 @@ const Payment = () => {
                                         })
                                     }}
                                 >
-                                    <span>{form?.lastName ? `${form?.firstName} ${form?.lastName}, ${form.createdAt?.split("T")?.[0]}, ${form.mainDesc} - ${form.extraDeliveryCharge ? "Charged Extra Delivery" : ""}` : `${form.mainDesc} - ${form.price}€`} | {form?.code ? "Paid with code" : "Paid by Card"}</span>
+                                    <span>{form?.lastName ? `${form?.firstName} ${form?.lastName}, ${form.createdAt?.split("T")?.[0]}, ${form.mainDesc} - ${form.extraDeliveryCharge ? "Charged Extra Delivery" : ""}` : `${form.mainDesc} - ${form.price}€`} | {form?.code ? "Code" : "Paid by Card"}</span>
                                     <div className="btn-container" style={{ display: "flex", alignItems: 'center' }}>
                                         {form.sent ? <span style={{ marginRight: "1rem" }}>Sent</span> : <button className="btn btn-primary" style={{ marginRight: "1rem" }} onClick={async ev => {
                                             ev.stopPropagation()
                                             setOrders(orders.map((form, j) => i == j ? { ...form, sent: true } : form))
                                             await req("PATCH", `/user/order/${form.order}`, { sent: true })
-                                        }}>Send</button>}
-                                        {form.printed ? <span style={{ marginRight: "1rem" }}>Printed</span> : <button className="btn btn-primary" style={{ marginRight: "1rem" }} onClick={async ev => {
+                                        }}>Fini</button>}
+                                        {/* {form.printed ? <span style={{ marginRight: "1rem" }}>Printed</span> : <button className="btn btn-primary" style={{ marginRight: "1rem" }} onClick={async ev => {
                                             ev.stopPropagation()
                                             setOrders(orders.map((form, j) => i == j ? { ...form, printed: true } : form))
                                             await req("PATCH", `/user/order/${form.order}`, { printed: true })
@@ -115,7 +115,7 @@ const Payment = () => {
                                             ev.stopPropagation()
                                             // setForms(forms.map((form, j) => i == j ? {...form, fulfilled: true} : form))
                                             await req("PATCH", `/user/order/${form.order}`, { fulfilled: true })
-                                        }}>Fulfill</button>}
+                                        }}>Fulfill</button>} */}
                                         {/* <button className="btn btn-danger" onClick={async ev => {
                                             ev.stopPropagation()
                                             // setForms(forms.filter((_, j) => i != j))

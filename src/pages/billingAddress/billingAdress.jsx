@@ -102,7 +102,7 @@ const BillingAdress = () => {
       <Navbar />
       <div className="billing-address-main-container">
         <div className="billing-address-add-billing-main-container">
-          <h1>{mostRequired ? 'Adresse de facturation' : `Adresse d'envoi`}</h1>
+          <h1>{mostRequired ? 'Nom pour la commande' : `Adresse d'envoi`}</h1>
 
           <div id="err" style={{ display: error ? 'flex' : 'none', justifyContent: 'center', alignItems: 'center', minHeight: '20px', background: 'pink', border: '1px red solid', borderRadius: '5px', margin: '5px' }}>{error}</div>
           {!onlyEmail && <div className="billing-address-select-mr-container">
@@ -144,13 +144,19 @@ const BillingAdress = () => {
                     />
                   </>}
 
-                  <TextInputBilling
+                  {onlyEmail ? <TextInputBilling
+                    inputStyle={{ width: "65%" }}
+                    title={"Nom*"}
+                    type={"email"}
+                    value={email}
+                    onChange={ev => setEmail(ev.target.value)}
+                  /> : <TextInputBilling
                     inputStyle={{ width: "65%" }}
                     title={"Adresse mail*"}
                     type={"email"}
                     value={email}
                     onChange={ev => setEmail(ev.target.value)}
-                  />
+                  />}
                   {!onlyEmail && <>
                     <TextInputBilling
                       inputStyle={{ width: "75%" }}
@@ -260,7 +266,7 @@ const BillingAdress = () => {
               (
                 (!mostRequired && (ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))) ||
                 (mostRequired && ischecked && email.includes("@") && Object.entries({lastName, number, email}).map(([_, v]) => !!v).reduce((a, b) => a && b, true)) ||
-                (onlyEmail && ischecked && email && email.includes("@"))
+                (onlyEmail && ischecked && email && email.length >= 1)
               ) ? 
                 1 : 
                 0.5 
@@ -272,7 +278,7 @@ const BillingAdress = () => {
               if(!onlyEmail) {
                 const notEmpty = {day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}
                 const notEmptyForCode = {lastName, number, email}
-                if(!email.includes("@")) return 
+                if(!onlyEmail && !email.includes("@")) return 
                 if(!mostRequired) Object.entries(notEmpty).forEach(([f, x]) => {
                   if(!x) error = `${f} is required`
                   window.scrollTo(0, 0)
@@ -286,7 +292,7 @@ const BillingAdress = () => {
                   return setError(error)
                 }
               } else {
-                if(!email || !email.includes("@")) {
+                if(!email || email.length < 1) {
                   error = "Email is Required"
                   window.scrollTo(0, 0)
                   return setError(error)

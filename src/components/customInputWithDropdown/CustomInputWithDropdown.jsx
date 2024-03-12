@@ -10,7 +10,7 @@ export default function CustomInputWithDropdown(props) {
 
     return (
         <div className="cactus-templete_detail-form_dropdown_top_view" style={props.containerStyle}>
-            <div className="cactus-templete_detail-form_dropdown_title_view">
+            <div onClick={props.onClickEditNameDropdown} style={{ cursor: 'pointer' }} className="cactus-templete_detail-form_dropdown_title_view">
                 <h4 onClick={props.onClickEditNameDropdown} style={props.modalOpened ? {} : { zIndex: 1000000000000 }}>{props.value}</h4>
                 <img onClick={props.onClickEditNameDropdown} src={props.dropdownValue ? arrowUp : arrowDownTwo} />
             </div>
