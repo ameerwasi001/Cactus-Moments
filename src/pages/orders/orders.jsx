@@ -99,7 +99,8 @@ const Payment = () => {
                                         })
                                     }}
                                 >
-                                    <span>{form?.lastName ? `${form?.firstName} ${form?.lastName}, ${form.createdAt?.split("T")?.[0]}, ${form.mainDesc} - ${form.extraDeliveryCharge ? "Charged Extra Delivery" : ""}` : `${form.mainDesc} - ${form.price}€`} | {form?.code ? "Code" : "Paid by Card"}</span>
+                                    {console.log("firrrrmmmmooo", form)}
+                                    <span>{form?.lastName ? `${form?.firstName} ${form?.lastName}, ${form.createdAt?.split("T")?.[0]}, ${form.mainDesc} - ${form.extraDeliveryCharge ? "Charged Extra Delivery" : ""}` : `${form.mainDesc} - ${form.price}€`} | {form?.firstName} {form?.lastName} | {form?.code ? "Code" : "Paid by Card"}</span>
                                     <div className="btn-container" style={{ display: "flex", alignItems: 'center' }}>
                                         {form.sent ? <span style={{ marginRight: "1rem" }}>Sent</span> : <button className="btn btn-primary" style={{ marginRight: "1rem" }} onClick={async ev => {
                                             ev.stopPropagation()

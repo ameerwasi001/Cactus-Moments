@@ -1578,12 +1578,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
 
                   <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={printBackground} onClick={() => setPrintBackround(!printBackground)} />
-                    <div>Print Background</div>
+                    <div>Format photo 20/30 30/40 40/60</div>
                   </div>
 
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={photoFrame} onClick={() => setPhotoFrame(!photoFrame)} />
-                    <div>Print Photo Frame</div>
+                    <div>Pour impression sur tasse et objet</div>
                   </div>
 
                   {/*<div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
@@ -1597,7 +1597,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   </div> */}
 
                   {product?.productCategry == 'poster' && <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
-                    <div>Quality</div>
+                    <div>Qualité d’impression</div>
                     <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
                       setQuality({ label: qualityOptions.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
                     }}>

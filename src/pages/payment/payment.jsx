@@ -183,7 +183,7 @@ const Payment = () => {
         country,
         month,
         year,
-        firstName,
+        firstName: firstName ? firstName : email,
         lastName,
         email,
         number,
@@ -311,7 +311,7 @@ const Payment = () => {
                 <h2>
                   Total <span style={{ color: "#666666" }}> TTC </span>
                 </h2>
-                <h2>€{price ?? 10}</h2>
+                <h2>{price ?? 10}€</h2>
               </div>
               <div className="payment-method-credit-card-main-container">
                 <div className="payment-method-credit-card-title-container">
@@ -362,7 +362,7 @@ const Payment = () => {
                 <h3>Voici les étapes à suivre pour finaliser votre commande :</h3>
                 <ol>
                   <li>Rendez-vous à la caisse.</li>
-                  <li>Indiquez votre.</li>
+                  <li>Indiquez votre nom.</li>
                   <li>Une fois le paiement confirmé, nous commencerons immédiatement à préparer votre commande.</li>
                 </ol>
                 <h6>Voici un récapitulatif de votre commande :</h6>
