@@ -1568,9 +1568,11 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
         }} />
       )}
 
-      <div className="cactus-dashboard-container">
+      <div className="cactus-dashboard-container" style={{ background: 'white' }}>
+        <h3 style={{ fontFamily: 'K2D', marginBottom: '2rem', cursor: 'pointer', marginTop: '2rem', marginLeft: '2rem', background: 'white' }} onClick={() => navigate('/orders')}>&lt; Commands</h3>
         <div className="cactus-templet_detail_top_container" style={isPhone() && ratios.has(background?.url) ? { padding: '1rem' } : {}}>
           <div className="cactus-templete_detail-detail_top_view">
+
             {!isPhone() && !printing && <PricingDataComponent />}
             <div className="cactus-templete_detail-form_top_view">
               {printing ? <>
@@ -1578,12 +1580,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
 
                   <div className="input-container-main" style={{ marginTop: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={printBackground} onClick={() => setPrintBackround(!printBackground)} />
-                    <div>Format photo 20/30 30/40 40/60</div>
+                    <div>Pour impression sur tasse et objet</div>
                   </div>
 
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center", marginBottom: '10px' }}>
                     <input style={{ marginRight: "1rem" }} type="checkbox" checked={photoFrame} onClick={() => setPhotoFrame(!photoFrame)} />
-                    <div>Pour impression sur tasse et objet</div>
+                    <div>Format photo 20/30 30/40 40/60</div>
                   </div>
 
                   {/*<div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
@@ -1726,6 +1728,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   {loading2 ? <ScaleLoader color="#fff" /> : <h5>Télécharger {(0 + parseFloat(Object.values(selectedPricingOptions).map(({ price }) => parseFloat(price)).reduce((a, b) => a + b, 0))).toFixed(2)}€</h5>}
                 </div>
               </> : <>
+              
                 <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
                   {/* <div id="cactus-personalize-text-container">
                     <h3>Personnaliser</h3>
