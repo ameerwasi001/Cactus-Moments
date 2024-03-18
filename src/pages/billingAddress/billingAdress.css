@@ -151,4 +151,7 @@
   .billing-address-move-next-btn-container p {
     font-size: 1.8rem;
   }
+  .billing-address-add-billing-main-container {
+    font-size: 18px;
+  }
 }

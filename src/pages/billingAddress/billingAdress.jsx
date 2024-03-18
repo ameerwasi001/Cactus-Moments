@@ -165,9 +165,16 @@ const BillingAdress = () => {
                       value={number}
                       onChange={ev => setNumber(ev.target.value)}
                     />
+                    <TextInputBilling
+                      inputStyle={{ width: "65%" }}
+                      title={"Adresse line 2"}
+                      type={"text"}
+                      value={address2}
+                      onChange={ev => setAddres2(ev.target.value)}
+                    />
                   </>}
                   
-                  {!onlyEmail && <div className="text-input-billing-main-container">
+                  {/* {!onlyEmail && <div className="text-input-billing-main-container">
                     <div className="text-input-billing-divider-container">
                       <h3>Date de naissance*</h3>
                       <div className="text-input-billing-input-divider"></div>
@@ -192,7 +199,7 @@ const BillingAdress = () => {
                       setSelected={setYearSelect}
                       bg={{ width: "10rem" }}
                     />
-                  </div>}
+                  </div>} */}
                 </div>
                 {!onlyEmail && <div className="billing-address-input-container2">
                   <div
@@ -234,13 +241,6 @@ const BillingAdress = () => {
                     value={address1}
                     onChange={ev => setAddres1(ev.target.value)}
                   />
-                  <TextInputBilling
-                    inputStyle={{ width: "65%" }}
-                    title={"Adresse line 2"}
-                    type={"text"}
-                    value={address2}
-                    onChange={ev => setAddres2(ev.target.value)}
-                  />
                 </div>}
               </>
             }
@@ -264,7 +264,7 @@ const BillingAdress = () => {
           <div
             style={{ opacity: 
               (
-                (!mostRequired && (ischecked && email.includes("@") && Object.entries({day: dayselect.value, country: countryselect.value, month: monthSelect.value, year: yearSelect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))) ||
+                (!mostRequired && (ischecked && email.includes("@") && Object.entries({country: countryselect.value, firstName, lastName, email, number, city, postCode, addressLine1: address1}).map(([_, v]) => !!v).reduce((a, b) => a && b, true))) ||
                 (mostRequired && ischecked && email.includes("@") && Object.entries({lastName, number, email}).map(([_, v]) => !!v).reduce((a, b) => a && b, true)) ||
                 (onlyEmail && ischecked && email && email.length >= 1)
               ) ? 

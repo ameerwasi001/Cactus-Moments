@@ -143,7 +143,7 @@ export default function DefaultModel(props) {
                 flexDirection: 'column', 
                 background: '#F1F1F1',
                 ...(isPhone() ? {
-                    height: '30%',
+                    // height: '30%',
                     width: '15rem',
                     marginLeft: '4rem',
                     // ,
