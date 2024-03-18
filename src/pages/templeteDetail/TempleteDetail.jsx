@@ -1043,6 +1043,21 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     })()
   }, [])
 
+  // const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
+  //   const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
+  //   const subtitleHiddenEl = document.querySelector(`#${elementId} > div`)
+  //   if (!subtitleHiddenEl) return null
+  //   const { height } = subtitleHiddenEl.getBoundingClientRect()
+  //   console.log("ARROFSUBTITLEooo", subtitles, height)
+  //   const finalPosition = y
+  //   const subtitleSegments = [...subtitles].reverse().map((seg, i) => ({
+  //     text: seg,
+  //     position: finalPosition - i * height
+  //   })).reverse()
+
+  //   return subtitleSegments
+  // }
+
   const getSegments = (y, subtitleMaxChars, subtitle, elementId) => {
     const subtitles = splitByNumOfChars(subtitle ?? "", subtitleMaxChars)
     const subtitleHiddenEl = document.querySelector(`#${elementId} > div`)
@@ -1052,7 +1067,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     const finalPosition = y
     const subtitleSegments = [...subtitles].reverse().map((seg, i) => ({
       text: seg,
-      position: finalPosition - i * height
+      position: finalPosition + i * height
     })).reverse()
 
     return subtitleSegments
@@ -1071,7 +1086,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
 
     return <>
       <div id="title-container" style={{ position: "absolute" }}>
-        {titleSegments.map(({ text: title, position }) => <TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title" style={{ top: `${subtitleSegments[0]?.position - dist}px` }} />)}
+        {titleSegments.map(({ text: title, position }) => <TitleComponent title={title} background={background} elementId="overlay-title-hidden" givenId="overlay-title" style={{ top: `${titleSegments[0]?.position}px` }} />)}
       </div>
       <div id="subtitle-container" style={{ position: "absolute" }}>
         {subtitleSegments.map(({ text: subtitle, position }) => <TitleComponent title={subtitle} background={background} elementId="overlay-subtitle-hidden" givenId="overlay-subtitle" style={{
@@ -1084,6 +1099,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
           fontSize: `${background.coordinateVariation.smallTextSize}pt`,
           fontFamily: background.smallFont,
           color: background.coordinateVariation.smallColor,
+          zIndex: 100000000000,
         }} />)}
       </div>
     </>
@@ -1569,7 +1585,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
       )}
 
       <div className="cactus-dashboard-container" style={{ background: 'white' }}>
-        <h3 style={{ fontFamily: 'K2D', marginBottom: '2rem', cursor: 'pointer', marginTop: '2rem', marginLeft: '2rem', background: 'white' }} onClick={() => navigate('/orders')}>&lt; Commands</h3>
+        {printing && <h3 style={{ fontFamily: 'K2D', marginBottom: '2rem', cursor: 'pointer', marginTop: '2rem', marginLeft: '2rem', background: 'white' }} onClick={() => navigate('/orders')}>&lt; Commands</h3>}
         <div className="cactus-templet_detail_top_container" style={isPhone() && ratios.has(background?.url) ? { padding: '1rem' } : {}}>
           <div className="cactus-templete_detail-detail_top_view">
 
