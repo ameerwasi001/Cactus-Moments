@@ -12,6 +12,8 @@ import {
   dummyTwo,
   dummyWithBg,
   edit,
+  leftArrowSign,
+  rightArrowSign,
 } from "../../assets";
 import {
   ChooseBackgroundModel,
@@ -1870,8 +1872,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
               />
               <div className="cactus-templete_detail_side_templetes_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '93px' } : {}}>
                 <img
-                  src={arrowLeft}
-                  style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px' }}
+                  src={leftArrowSign}
+                  style={{ width: '16px', marginTop: ratios.has(background?.url) ? undefined : '-100px', transform: 'rotate(180deg)' }}
                   className="cactus-templete_detail_side__view_arrow_up"
                   onClick={() => document.getElementsByClassName("cactus-list")[0].scrollLeft -= 100}
                 />
@@ -1897,8 +1899,8 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   })}
                 </div>
                 <img
-                  src={arrowRight}
-                  style={{ marginTop: ratios.has(background?.url) ? undefined : '-100px', transform: 'rotate(0deg)' }}
+                  src={rightArrowSign}
+                  style={{ width: '16px', marginTop: ratios.has(background?.url) ? undefined : '-100px' }}
                   className="cactus-templete_detail_side__view_arrow_down"
                   onClick={() => document.getElementsByClassName("cactus-list")[0].scrollLeft += 100}
                 />
