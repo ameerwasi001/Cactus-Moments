@@ -1065,7 +1065,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     const { height } = subtitleHiddenEl.getBoundingClientRect()
     console.log("ARROFSUBTITLEooo", subtitles, height)
     const finalPosition = y
-    const subtitleSegments = [...subtitles].reverse().map((seg, i) => ({
+    const subtitleSegments = [...subtitles].map((seg, i) => ({
       text: seg,
       position: finalPosition + i * height
     })).reverse()
