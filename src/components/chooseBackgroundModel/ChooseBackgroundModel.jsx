@@ -23,7 +23,7 @@ export default function ChooseBackgroundModel(props) {
                                 setSelectedBg(item)
                                 if(props.isPhone) document.getElementById("choose-background-button")?.scrollIntoView()
                             }} key={item.id}>
-                                <img src={getSmallImage(item.image.url, '400')} />
+                                <img src={getSmallImage(item?.image?.coordinateVariation?.alternate ? item?.image?.coordinateVariation?.alternate : item?.image?.url, '400')} />
                             </div>
                         )
                     })}

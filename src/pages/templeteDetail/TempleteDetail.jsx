@@ -1564,7 +1564,10 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
         <ChooseBackgroundModel
           isPhone={isPhone()}
           _={console.log("|product", product.backgrounds)}
-          backgrounds={product.backgrounds.filter(x => { console.log("<><>|ch", x.coordinateVariation.evenFor); return !x.coordinateVariation.evenFor })}
+          backgrounds={
+            product.backgrounds
+            .filter(x => { console.log("<><>|ch", x.coordinateVariation.evenFor); return !x.coordinateVariation.evenFor })
+          }
           onClick={data => {
             if (data.image) setBackground(data.image)
             // const distCopy = [...distribution]
