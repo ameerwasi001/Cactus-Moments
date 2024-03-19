@@ -251,6 +251,7 @@
   justify-content: flex-start;
 
   width: 100%;
+  justify-content: center;
 }
 
 .cactus-dashboard-about_us_top_view {
@@ -354,6 +355,10 @@
   font-family: 'K2D';
 }
 
+@media screen and (max-width: 1390px) {
+
+}
+
 @media screen and (max-width: 950px) {
   .cactus-dashboard-banner_image_view img {
     background-image: url('.././../assets/home-image2-responsive.png') !important;
@@ -395,10 +400,10 @@
     justify-content: center;
     flex-wrap: wrap;
   }
-  .cactus-dashboard-banner_image_view img {
+  /* .cactus-dashboard-banner_image_view img {
     width: 33rem;
     height: 33rem;
-  }
+  } */
   .cactus-dashboard-banner_image_view {
     justify-content: center;
     margin-top: 3rem;

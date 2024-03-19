@@ -1847,7 +1847,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                     // dangerMode: true,
                   }).then(_ => setErrorModal(null))
                 }}>
-                {loading2 ? <ScaleLoader color={isPhone() ? "#2b453e" : "#fff"} /> : <h5 style={{ color: '#2b453e', fontWeight: '700' }}>Ajouter au panier</h5>}
+                {loading2 ? <ScaleLoader color={"#2b453e"} /> : <h5 style={{ color: '#2b453e', fontWeight: '700' }}>Ajouter au panier</h5>}
               </div>
             </div>}
           </div>
