@@ -30,7 +30,8 @@ const Payment = () => {
   const fromCart = !_product
   console.log("product-price", fromCart, _product, restProduct)
   const _price = parseFloat(fromCart ? getPrice() : _product?.price)
-  const deliveryIncrement = getCountry() == "France" ? 6 : 10
+  console.log("countey", getCountry())
+  const deliveryIncrement = getCountry() == "FR" ? 6 : 10
   console.log(deliveryIncrement)
   const price = showBillingScreenForCard ? 
     (_price < 50 ? (_price + deliveryIncrement) : _price) : 
