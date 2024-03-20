@@ -81,7 +81,7 @@ export default function DefaultModel(props) {
                                 <div style={{ display: 'flex', width: '32rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <img
+                                            {/* <img
                                                 src={arrowBack}
                                                 className="cactus-templete_detail_side__view_arrow_up"
                                                 style={{
@@ -93,7 +93,7 @@ export default function DefaultModel(props) {
                                                     setScrollList({ ...scrollList, [`cactus-current-list-${n}`]: Math.max((scrollList[`cactus-current-list-${n}`] ?? 1) - 1, 1) })
                                                     document.getElementById(`cactus-current-list-${n}`).scrollLeft -= 150
                                                 }}
-                                            />
+                                            /> */}
                                             <div id={`cactus-current-list-${n}`} style={{ display: 'flex', width: '150px', overflowX: 'hidden' }}>
                                                 {option?.images && option?.images?.length && option.images.map(({ img, order }) => <div style={{ display: 'flex', width: "150px" }}>
                                                     <img className="commander-modal-img" onClick={async () => {
@@ -155,7 +155,7 @@ export default function DefaultModel(props) {
                                                     </div>
                                                 </div>)}
                                             </div>
-                                            <img
+                                            {/* <img
                                                 src={arrowBack}
                                                 className="cactus-templete_detail_side__view_arrow_up"
                                                 style={{
@@ -167,7 +167,7 @@ export default function DefaultModel(props) {
                                                     setScrollList({ ...scrollList, [`cactus-current-list-${n}`]: Math.min((scrollList[`cactus-current-list-${n}`] ?? 1) + 1, option?.images?.length) })
                                                     document.getElementById(`cactus-current-list-${n}`).scrollLeft += 150
                                                 }}
-                                            />
+                                            /> */}
                                         </div>
                                         {/* <p>{scrollList[`cactus-current-list-${n}`] ?? 1}/{option?.images?.length}</p> */}
                                         <p style={{ fontSize: "12px" }}>€{getSelectionPricing(option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]?.order)}</p>
