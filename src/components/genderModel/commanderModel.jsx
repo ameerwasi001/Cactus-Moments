@@ -42,34 +42,16 @@ const getOrderPricingOptions = order => {
 }
 
 const selectOptions = opts => {
-    const obj = {}
-    const objp = {}
-    const objimg = {}
-    const objorders = {}
-
-    for(const order of opts) objp[order?.selections?.product?.mainDesc] = 0
-    for(const order of opts) objimg[order?.selections?.product?.mainDesc] = []
-    for(const order of opts) objorders[order?.selections?.product?.mainDesc] = []
-
-
-    for(const order of opts) {
-        if(order?.selections?.img) objimg[order?.selections?.product?.mainDesc].push(order?.selections?.img)
-        if(order?.selections?.img) {
-            objorders[order?.selections?.img] = order
-        }
-        obj[order?.selections?.product?.mainDesc] = (obj[order?.selections?.product?.mainDesc] ?? 0) + findPrice(order)
-        objp[order?.selections?.product?.mainDesc] += 1
-    }
-    console.log("UPLOADED-IMG ", objimg)
-    return Object.entries(obj).map(([k, v]) => ({
-        name: k,
-        question: `${k} x ${objp[k]}`,
-        answer: `${v}€`,
-        images: objimg[k].map(img => ({
-            img,
-            order: objorders[img],
-            pricingOptions: getOrderPricingOptions(objorders[img])
-        })) 
+    console.log("iopts", opts)
+    return opts.map(obj => ({
+        name: obj?.selections?.product?.mainDesc,
+        question: `${obj?.selections?.product?.mainDesc}`,
+        answer: `${1}€`,
+        images: [{
+            img: obj?.selections?.img,
+            order: obj,
+            pricingOptions: getOrderPricingOptions(obj)
+        }]
     }))
 }
 
