@@ -142,6 +142,8 @@
 .cactus-templete_detail-detail_top_view {
   display: flex;
   flex-direction: column;
+
+  max-width: 40%;
 }
 
 .cactus-templete_detail-detail_top_view h1 {
