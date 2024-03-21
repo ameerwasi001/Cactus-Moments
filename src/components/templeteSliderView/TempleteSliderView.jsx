@@ -30,7 +30,7 @@ export default function TempleteSliderView(props) {
                 }
             </div>}
             <div className="cactus-dashboard-slider_view">
-                <div className="cactus-dashboard-slider_arrow_image" onClick={() => document.getElementById("category-slider").scrollLeft -= 100}>
+                <div className="cactus-dashboard-slider_arrow_image" onClick={() => document.getElementById("category-slider").scrollLeft -= props.isPhone ? 200 : 100}>
                     <img style={{ transform: 'rotate(180deg)' }} src={leftArrowSign} alt=''/>
                 </div>
                 <div id="category-slider" className="cactus-dashboard-slider_templete_top_view">
@@ -43,7 +43,7 @@ export default function TempleteSliderView(props) {
                         )
                     })}
                 </div>
-                <div className="cactus-dashboard-slider_arrow_image" onClick={() => document.getElementById("category-slider").scrollLeft += 100}>
+                <div className="cactus-dashboard-slider_arrow_image" onClick={() => document.getElementById("category-slider").scrollLeft += props.isPhone ? 200 : 100}>
                     <img src={rightArrowSign} alt=''/>
                 </div>
             </div>

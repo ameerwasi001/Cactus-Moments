@@ -179,6 +179,8 @@
 .cactus-product-category > img {
   height: 26px;
   cursor: pointer;
+
+  border-radius: 30px;
 }
 
 .cactus-prouct-to-container > button {
