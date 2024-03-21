@@ -72,9 +72,9 @@ export default function ContactUsView(props) {
             <textarea placeholder="Message" onChange={ev => props.setMessage(ev.target.value)} value={props.message} />
           </div>
           <div onClick={() => {
-            if(!props.message) setError('Messgae is required')
-            else if(!props.email) setError('Email is required')
-            else if(!props.fullName) setError('Name is required')
+            if(!props.message) setError('Messgae est nécessaire')
+            else if(!props.email) setError('Email est nécessaire')
+            else if(!props.fullName) setError('Name est nécessaire')
             else if(!validateEmail(props.email)) setError('Invalid Email')
             else setSubmitted(true)
           }} style={{ cursor: 'pointer' }} className="cactus-dashboard-contact_us_form_button_view">

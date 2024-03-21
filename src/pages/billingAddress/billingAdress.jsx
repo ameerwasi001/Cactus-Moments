@@ -280,11 +280,11 @@ const BillingAdress = () => {
                 const notEmptyForCode = {lastName, number, email}
                 if(!onlyEmail && !email.includes("@")) return 
                 if(!mostRequired) Object.entries(notEmpty).forEach(([f, x]) => {
-                  if(!x) error = `${f} is required`
+                  if(!x) error = `${f} est nécessaire`
                   window.scrollTo(0, 0)
                 }) 
                 else Object.entries(notEmptyForCode).forEach(([f, x]) => {
-                  if(!x) error = `${f} is required`
+                  if(!x) error = `${f} est nécessaire`
                   window.scrollTo(0, 0)
                 }) 
                 if(error) {
@@ -293,7 +293,7 @@ const BillingAdress = () => {
                 }
               } else {
                 if(!email || email.length < 1) {
-                  error = "Email is Required"
+                  error = "Email est nécessaire"
                   window.scrollTo(0, 0)
                   return setError(error)
                 }
