@@ -78,7 +78,7 @@ export default function DefaultModel(props) {
                     <div className='cactus-gender_model_side_top_view' style={{ width: '100%' }}>
                         <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: loading ? 'center' : undefined }}>
                             {loading ? <ScaleLoader color='#000' /> : options.map((option, n) => <div style={{ display: 'flex', width: '100%', marginBottom: '10px', flexDirection: isPhone() ? 'column' : 'row', marginBottom: '20px' }}>
-                                <div style={{ display: 'flex', width: '32rem', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <div style={{ display: 'flex', width: '28rem', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                             {/* <img
@@ -176,9 +176,9 @@ export default function DefaultModel(props) {
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                                     {option?.images?.[Math.max((scrollList[`cactus-current-list-${n}`] ?? 0) - 1, 0)]?.pricingOptions?.map((poption, k) => <div style={{ display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px' }}>
-                                        <div style={{ display: 'flex', width: '20rem', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <h2>{poption?.question}</h2>
-                                            <Select style={{ width: "15rem" }} value={poption.answer} onChange={text => {
+                                        <div style={{ display: 'flex', width: '23rem', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <h2 style={{ marginRight: '6px' }}>{poption?.question}</h2>
+                                            <Select style={{ width: "230px" }} value={poption.answer} onChange={text => {
                                                 const optArr = options.map((optx, nx) => n == nx ? { ...optx, images: optx.images.map(img => ({ ...img, pricingOptions: img?.pricingOptions?.map((popt, kx) => kx == k ? { ...popt, answer: text } : popt) })) } : optx)
                                                 setOptions(optArr)
 
