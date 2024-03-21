@@ -1850,7 +1850,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 {loading2 ? <ScaleLoader color={"#2b453e"} /> : <h5 style={{ color: '#2b453e', fontWeight: '700' }}>Ajouter au panier</h5>}
               </div>
             </div>}
-            <div style={{ marginTop: '50px', fontFamily: 'K2D', fontSize: '13px' }}>{product?.posterDesc}</div>
+            <div style={{ marginTop: '50px', fontFamily: 'K2D', fontSize: '14px', fontWeight: 800, lineHeight: '27px'  }}>{product?.posterDesc}</div>
           </div>
           <div>
             <div className="cactus-templete_detail-main_image_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '-112px' } : {}}>
