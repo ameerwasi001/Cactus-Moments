@@ -165,13 +165,13 @@ const BillingAdress = () => {
                       value={number}
                       onChange={ev => setNumber(ev.target.value)}
                     />
-                    <TextInputBilling
+                    {/* <TextInputBilling
                       inputStyle={{ width: "65%" }}
                       title={"Adresse line 2"}
                       type={"text"}
                       value={address2}
                       onChange={ev => setAddres2(ev.target.value)}
-                    />
+                    /> */}
                   </>}
                   
                   {/* {!onlyEmail && <div className="text-input-billing-main-container">
