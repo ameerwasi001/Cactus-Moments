@@ -125,7 +125,7 @@ const Navbar = (props) => {
             onClick={() => {
               // document?.getElementById("main-templates")?.scrollIntoView()
               // setOpenDropdown(openDropdown?.title == "poster" ? null : { title: "poster", data: templateArray })
-              navigate("?category=poster")
+              navigate("/?category=poster")
             }}
             style={{
               borderBottomStyle:
