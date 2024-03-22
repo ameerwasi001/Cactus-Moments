@@ -120,8 +120,10 @@ export default function Dashboard() {
             <p>Nombre de personnages</p>
             <div className="cactus-product-min-max-container">
               <input type="number" placeholder="0 - 12" max={12} min={0} value={max} onChange={ev => setMax(ev.target.value)} />
-              {/* <p>Recherche par thème</p> */}
-              {/* <input id='search-input' type="text" placeholder="Mots-clés" value={searchData} onChange={ev => setSearchData(ev.target.value)} /> */}
+              {!isPhone() && <>
+                <p>Recherche par thème</p>
+                <input id='search-input' type="text" placeholder="Mots-clés" value={searchData} onChange={ev => setSearchData(ev.target.value)} />
+              </>}
             </div>
             <div className="cactus-category-container">
               {categories.map(item => <div className="cactus-product-category">
