@@ -1592,10 +1592,10 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
       <div className="cactus-dashboard-container" style={{ background: 'white' }}>
         {printing && <h3 style={{ fontFamily: 'K2D', marginBottom: '2rem', cursor: 'pointer', marginTop: '2rem', marginLeft: '2rem', background: 'white' }} onClick={() => navigate('/orders')}>&lt; Commands</h3>}
         <div className="cactus-templet_detail_top_container" style={isPhone() && ratios.has(background?.url) ? { padding: '1rem' } : {}}>
-          <div className="cactus-templete_detail-detail_top_view">
+          <div className="cactus-templete_detail-detail_top_view" style={{ alignItems: isPhone() ? 'unset' : undefined }}>
 
             {!isPhone() && !printing && <PricingDataComponent />}
-            <div className="cactus-templete_detail-form_top_view">
+            <div className="cactus-templete_detail-form_top_view" style={{ width: isPhone() ? '33rem' : undefined }}>
               {printing ? <>
                 <div style={{ width: printing ? undefined : "50%", display: "flex", flexDirection: "column", }}>
 
@@ -1818,7 +1818,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 </div>
               </>}
             </div>
-            {!printing && <div className="order-buttons" style={{ display: "flex" }}>
+            {!printing && <div className="order-buttons" style={{ display: "flex", width: isPhone() ? '90vw' : undefined, alignItems: isPhone() ? 'center' : undefined }}>
               <div
                 onClick={async () => {
                   if (loading1) return
@@ -1828,7 +1828,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                   await setCartData(setLoading1)
                   setShowPaymentModel({ rects })
                 }}
-                style={{ marginRight: "1.5rem", cursor: loading1 ? "default" : undefined }}
+                style={{ marginRight: isPhone() ? undefined : "1.5rem", cursor: loading1 ? "default" : undefined }}
                 className="cactus-templete_detail-order_button"
               >
                 {loading1 ? <ScaleLoader color="#fff" /> : <h5>Commandez maintenant</h5>}
@@ -1850,7 +1850,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
                 {loading2 ? <ScaleLoader color={"#2b453e"} /> : <h5 style={{ color: '#2b453e', fontWeight: '700' }}>Ajouter au panier</h5>}
               </div>
             </div>}
-            <div style={{ marginTop: '50px', fontFamily: 'K2D', fontSize: '14px', fontWeight: 800, lineHeight: '27px'  }}>{product?.posterDesc}</div>
+            <div style={{ marginTop: '50px', fontFamily: 'K2D', fontSize: '14px', fontWeight: 800, lineHeight: '27px', width: isPhone() ? '90vw' : undefined }}>{product?.posterDesc}</div>
           </div>
           <div>
             <div className="cactus-templete_detail-main_image_view" style={isPhone() && !ratios.has(background?.url) ? { marginLeft: '-112px' } : {}}>
