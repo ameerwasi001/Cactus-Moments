@@ -220,7 +220,7 @@ export default function DefaultModel(props) {
                             style={{ color: "white", width: "100px", height: "40px", fontSize: "15px", marginBottom: "1rem" }}
                             onClick={() => props.payClciked()}
                         >
-                            Pay €{getPrice()}
+                            Pay {getPrice()}€
                         </div>
                     </div>
                 </>}
