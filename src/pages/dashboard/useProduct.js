@@ -71,6 +71,7 @@ const useProduct = (searchString='') => {
             return p?.keywords?.map(x => x.toLowerCase())?.find(x => x?.toLowerCase()?.includes(searchData?.toLowerCase())) || 
                 p.mainDesc?.toLowerCase()?.includes(searchData?.toLowerCase())
         })
+        .sort(p => p?.productPriority == undefined ? 1000000 : parseInt(p?.productPriority) > parseInt(p?.productPriority) ? 1 : -1)
         // .filter(p => p.maxPresentationalCharacters !== undefined)
 
     const redirect = state?.redirect
@@ -122,7 +123,7 @@ const useProduct = (searchString='') => {
     }, [search])
 
     useEffect(() => {
-        req('GET', `/user/product?select=${encodeURIComponent("_id name maxPresentationalCharacters keywords max category productCategories productCategry hidden mainDesc defaultIllustration price")}`)
+        req('GET', `/user/product?select=${encodeURIComponent("_id productPriority name maxPresentationalCharacters keywords max category productCategories productCategry hidden mainDesc defaultIllustration price")}`)
             .then(({ products }) => {
                 console.log(products)
                 console.log("setting")
