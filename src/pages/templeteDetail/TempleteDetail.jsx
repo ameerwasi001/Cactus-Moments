@@ -999,6 +999,14 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
     { label: 'A2', value: 12 },
   ])
 
+  useEffect(() => {
+    if(product?.staticQuality) setQualityOptions([
+      { label: 'A4', value: 10 },
+      { label: 'A3', value: 10 },
+      { label: 'A2', value: 10 },
+    ])
+  }, [product])
+
   const bill = props?.bill
   // End Printing States
 
