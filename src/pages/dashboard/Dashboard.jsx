@@ -25,6 +25,7 @@ import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
 import EventEmitter from 'events'
+import { Slide } from 'react-slideshow-image';
 import { getDistribution, getInitialCategoryCharacters } from "../templeteDetail/TempleteDetail";
 import useProduct from "./useProduct";
 
@@ -42,6 +43,21 @@ function paginate(array, page_size, page_number) {
   if (isPhone()) return array.slice((page_number - 1) * page_size, page_number * page_size);
   else return array
 }
+
+const SlideShow = (props) => <Slide duration={1000} nextArrow={<button style={{
+  _: console.log("prooops", props),
+  background: 'none',
+  border: '0px',
+  width: '30px'
+}}></button>} prevArrow={<button style={{
+  background: 'none',
+  border: '0px',
+  width: '30px'
+}}></button>}>
+    {props.images.map(url => <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', background: 'black' }}>
+      <img src={url} style={{ maxWidth: '50vw', minWidth: '30vw' }}/>
+    </div>)}
+</Slide>
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -70,12 +86,30 @@ export default function Dashboard() {
   } = useProduct(window.location.href.split('?search=')[1])
   const [currPage, setCurrPage] = useState(1)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [lastClick, setLastClick] = useState(Date.now())
+  const [slideShow, setSlideShow] = useState(false)
   const recordsPerPage = 20
 
   useEffect(() => {
     const vendor = JSON.parse(getKey('vendor') ?? null)
     if (vendor?.name) navigate(`/${vendor?.name}`)
   }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if(Date.now() > lastClick + 3 * 60 * 60 * 1000) setSlideShow(true)
+    }, 3000);
+    return () => clearInterval(interval)
+  }, [])
+
+  document.onclick = () => {
+    setLastClick(Date.now())
+    setSlideShow(false)
+  }
+
+  if(slideShow) return <div className="cactus-dashboard-main_container" style={{ background: 'black' }}>
+    <SlideShow images={filteredProducts?.map(x => x?.image?.url)}/>
+  </div>
 
   return (
     <div className="cactus-dashboard-main_container">
