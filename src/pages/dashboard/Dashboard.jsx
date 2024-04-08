@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   aboutUsImage,
@@ -90,20 +90,25 @@ export default function Dashboard() {
   const [slideShow, setSlideShow] = useState(false)
   const recordsPerPage = 20
 
+  const timeout = useRef(null)
+
   useEffect(() => {
     const vendor = JSON.parse(getKey('vendor') ?? null)
     if (vendor?.name) navigate(`/${vendor?.name}`)
   }, [])
 
+  const timoutFunction = () => {
+    setSlideShow(true)
+  }
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      if(Date.now() > lastClick + 3 * 60 * 60 * 1000) setSlideShow(true)
-    }, 3000);
-    return () => clearInterval(interval)
+    timeout.current = setTimeout(timoutFunction, 3*60*1000);
+    return () => clearInterval(timeout.current)
   }, [])
 
   document.onclick = () => {
-    setLastClick(Date.now())
+    clearTimeout(timeout.current)
+    setTimeout(timoutFunction, 3*60*1000);
     setSlideShow(false)
   }
 
