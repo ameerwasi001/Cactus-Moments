@@ -91,6 +91,15 @@ export default function Dashboard() {
   const recordsPerPage = 20
 
   const timeout = useRef(null)
+  const [slides, setSlides] = useState([])
+
+  useEffect(() => {
+    const f = async () => {
+      const { scrolls } = await req('GET', '/user/scroll')
+      setSlides(scrolls?.map(s => s?.image))
+    }
+    f()
+  }, [])
 
   useEffect(() => {
     const vendor = JSON.parse(getKey('vendor') ?? null)
@@ -113,7 +122,7 @@ export default function Dashboard() {
   }
 
   if(slideShow) return <div className="cactus-dashboard-main_container" style={{ background: 'black' }}>
-    <SlideShow images={filteredProducts?.map(x => x?.image?.url)}/>
+    <SlideShow images={slides}/>
   </div>
 
   return (
