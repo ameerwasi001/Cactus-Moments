@@ -25,7 +25,10 @@ import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
 import EventEmitter from 'events'
-import { Slide } from 'react-slideshow-image';
+// import { Slide } from 'react-slideshow-image';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+
 import { getDistribution, getInitialCategoryCharacters } from "../templeteDetail/TempleteDetail";
 import useProduct from "./useProduct";
 
@@ -44,8 +47,7 @@ function paginate(array, page_size, page_number) {
   else return array
 }
 
-const SlideShow = (props) => <Slide duration={1000} nextArrow={<button style={{
-  _: console.log("prooops", props),
+const SlideShow = (props) => <Carousel stopOnHover={false} infiniteLoop={true} autoPlay={true} interval={6*1000} nextArrow={<button style={{
   background: 'none',
   border: '0px',
   width: '30px'
@@ -55,9 +57,9 @@ const SlideShow = (props) => <Slide duration={1000} nextArrow={<button style={{
   width: '30px'
 }}></button>}>
     {props.images.map(url => <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', background: 'black' }}>
-      <img src={url} style={{ maxWidth: '50vw', minWidth: '30vw' }}/>
+      <img src={url} style={{ maxWidth: '30vw', minWidth: '10vw' }}/>
     </div>)}
-</Slide>
+</Carousel>
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -111,6 +113,9 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    const vendor = JSON.parse(getKey('vendor') ?? null)
+    if(!vendor?.name) return
+
     timeout.current = setTimeout(timoutFunction, 3*60*1000);
     return () => clearInterval(timeout.current)
   }, [])
