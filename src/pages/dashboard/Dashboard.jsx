@@ -57,7 +57,7 @@ const SlideShow = (props) => <Carousel stopOnHover={false} infiniteLoop={true} a
   width: '30px'
 }}></button>}>
     {props.images.map(url => <div style={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', background: 'black' }}>
-      <img src={url} style={{ maxWidth: '30vw', minWidth: '10vw' }}/>
+      <img src={url} style={{ maxWidth: '60vw', width: 'auto', height: '100vh' }}/>
     </div>)}
 </Carousel>
 
