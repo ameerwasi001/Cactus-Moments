@@ -1629,11 +1629,12 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
 
                   {product?.productCategry == 'poster' && <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
                     <div>Qualité d’impression</div>
-                    <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
+                    {/* <select style={{ marginRight: "1rem" }} type="number" value={quality?.value} onChange={ev => {
                       setQuality({ label: qualityOptions.find(q => q.value == ev.target.value)?.label, value: ev.target.value })
                     }}>
                       {qualityOptions.map(q => <option value={q.value}>{q.label}</option>)}
-                    </select>
+                    </select> */}
+                    <p style={{ fontFamily: 'K2D', fontSize: '14px', fontWeight: 500 }}>{currPricingObject?.Poster?.name?.split?.(' ')?.[1]}</p>
                   </div>}
 
                   <div className="input-container-main" style={{ marginBottom: "2rem", display: "flex", alignItems: "center" }}>
