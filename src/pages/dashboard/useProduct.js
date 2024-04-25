@@ -50,7 +50,7 @@ const useProduct = (searchString='') => {
     console.log("CATEOID", templeteArray.map(x => x.productCategories), produCategoryData, categories)
 
     const [selectedCategories, setSelectedCategories] = useState(new Set())
-    const filteredProducts = templeteArray
+    const filteredProducts_ = templeteArray
         .filter(p => {
             return p?.productCategry?.toLowerCase() == selectedCategory.toLowerCase()
         })
@@ -71,9 +71,13 @@ const useProduct = (searchString='') => {
             return p?.keywords?.map(x => x.toLowerCase())?.find(x => x?.toLowerCase()?.includes(searchData?.toLowerCase())) || 
                 p.mainDesc?.toLowerCase()?.includes(searchData?.toLowerCase())
         })
-        .sort(p => p?.productPriority == undefined ? -1000000 : parseInt(p?.productPriority) > parseInt(p?.productPriority) ? 1 : -1)
         // .filter(p => p.maxPresentationalCharacters !== undefined)
 
+        console.log("prio", filteredProducts_.filter(x => x?.productPriority))
+    const filteredProducts = [
+        ...filteredProducts_.filter(x => x?.productPriority).sort(p => parseInt(p?.productPriority) > parseInt(p?.productPriority) ? 1 : -1),
+        ...filteredProducts_.filter(x => !x?.productPriority),
+    ]
     const redirect = state?.redirect
 
     useEffect(() => {
