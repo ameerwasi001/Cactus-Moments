@@ -1503,7 +1503,7 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
           autoSelect={autoSelect}
           additionalData={showPaymentModel}
           closeModal={() => setShowPaymentModel(null)}
-          ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
+          ogProduct={JSON.parse(JSONProduct?.startsWith?.("%") ? decodeURIComponent(JSONProduct) : JSONProduct)}
           product={product}
           hasStaticPositions={hasStaticPositions(ogProduct)}
           onClick={(optionId, { rects }) => {
