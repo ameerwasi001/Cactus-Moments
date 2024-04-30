@@ -84,7 +84,7 @@ export default function DefaultModel(props) {
     return (
         <div onClick={() => props.closeModal()} style={{height:'100%', overflow:'hidden', ...(props.containerStyle ? props.containerStyle : {})}} className="cactus-gender-model_top_view">
             <div onClick={ev => ev.stopPropagation()} style={{ minHeight:'70%', minWidth: '50rem', width: 'unset', justifyContent: 'center', flexDirection: 'column' }} className='cactus-gender_model_view'>
-                <div className='cactus-gender_model_side_top_view' style={{ width: '100%', height: '83vh', overflowY: 'auto' }}>
+                <div className='cactus-gender_model_side_top_view' style={{ width: '100%', maxHeight: '83vh', overflowY: 'auto' }}>
                     <div style={{ display: 'flex', marginBottom: '3rem', flexDirection: 'column', width: '100%', justifyContent: 'center' }}>
                         {options.map(opt => <div style={{display: 'flex', width: '100%', justifyContent: 'center', marginBottom: '10px'}}>
                             <div style={{ display: 'flex', width: '30rem', alignItems: 'center', fontFamily: "K2D" }}>
