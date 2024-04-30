@@ -109,6 +109,9 @@ export default function Dashboard() {
   }, [])
 
   const timoutFunction = () => {
+    const vendor = JSON.parse(getKey('vendor') ?? null)
+    if(!vendor?.name) return
+
     setSlideShow(true)
   }
 
