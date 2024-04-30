@@ -109,14 +109,17 @@ export default function Dashboard() {
   }, [])
 
   const timoutFunction = () => {
+    console.log("vendor>vendor>>>>")
     const vendor = JSON.parse(getKey('vendor') ?? null)
     if(!vendor?.name) return
+    console.log("vendor>vendor>", vendor)
 
     setSlideShow(true)
   }
 
   useEffect(() => {
     const vendor = JSON.parse(getKey('vendor') ?? null)
+    console.log("vendor>->>>>", vendor)
     if(!vendor?.name) return
 
     timeout.current = setTimeout(timoutFunction, 3*60*1000);
