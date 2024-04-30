@@ -323,6 +323,11 @@
   justify-content: center;
 }
 
+.cactus-gender_model_side_top_view {
+  height: 83vh;
+  overflow-y: auto;
+}
+
 .cactus-gender_model_side_top_view > img {
   cursor: pointer;
 }
