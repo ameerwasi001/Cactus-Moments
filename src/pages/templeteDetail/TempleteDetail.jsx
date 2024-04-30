@@ -1545,9 +1545,9 @@ function TempleteDetail({ ogProduct, printing, setOgProduct, JSONProduct, orderI
       )}
       {defaultModel && (
         <DefaultModel
-          _={console.log("autoselect", props)}
+          _={console.log("autoselect", JSONProduct)}
           autoSelect={props ? false : autoSelect}
-          ogProduct={JSON.parse(decodeURIComponent(JSONProduct))}
+          ogProduct={JSON.parse(JSONProduct?.startsWith?.('%') ? decodeURIComponent(JSONProduct) : JSONProduct)}
           product={product}
           Illustration={IllustrationRender}
           isVertical={!ratios.has(background?.url)}
