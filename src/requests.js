@@ -8,10 +8,7 @@ export const req = async (method, endpoint, body=null, onError=()=>{}, onSuccess
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: body ? JSON.stringify(body) : null
         })
-        const data = replaceFromObject(
-            await res.json(),
-            str => str.includes('.s3') ? str?.split?.('drivebuddyz')?.join?.('cactus-s3') : str
-        )
+        const data = replaceS3(await res.json())
         if(!data.success) onError(data?.message)
         else onSuccess(data.data)
         return data.data
@@ -36,7 +33,7 @@ const refresh = async () => {
     return data.accessToken
 }
 
-const replaceFromObject = (ogObj, f) => {
+export const replaceFromObject = (ogObj, f) => {
     function replaceStringInObject(obj) {
       for (let key in obj) {
         if (typeof obj[key] === 'string') {
@@ -63,6 +60,12 @@ const replaceFromObject = (ogObj, f) => {
     replaceStringInObject(obj);
     return obj
 }
+
+
+export const replaceS3 = d => replaceFromObject(
+    d,
+    str => str.includes('.s3') ? str?.split?.('drivebuddyz')?.join?.('cactus-s3') : str
+)
 
 export const authReq = async (method, endpoint, body=null, count=0) => {
     try {

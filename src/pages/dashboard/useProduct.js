@@ -17,7 +17,7 @@ import {
   TempleteSliderView,
   TempleteView,
 } from "../../components";
-import { getKey, req } from '../../requests'
+import { getKey, replaceS3, req } from '../../requests'
 import { setParam } from '../../urlParams'
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
@@ -25,7 +25,14 @@ import EventEmitter from 'events'
 import { getDistribution, getInitialCategoryCharacters } from "../templeteDetail/TempleteDetail";
 
 const getS3Url = id => `https://cactus-s3.s3.us-east-2.amazonaws.com/${id}.json?${1000+Math.random()*1000}`
-const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(x => JSON.parse(decodeURIComponent(x)))
+const fetchObejct = id => fetch(getS3Url(id)).then(res => res.text()).then(
+    x => {
+        console.log("fetching", x, x.split('drivebuddyz').join('cactus-s3'))
+        return JSON.parse(
+            decodeURIComponent(x.split('drivebuddyz').join('cactus-s3'))
+        )
+    }
+)
 
 const emitter = new EventEmitter()
 const preloadImage = img => new Image().src = img
