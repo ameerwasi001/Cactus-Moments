@@ -8,7 +8,10 @@ export const req = async (method, endpoint, body=null, onError=()=>{}, onSuccess
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: body ? JSON.stringify(body) : null
         })
-        const data = await res.json()
+        const data = replaceFromObject(
+            await res.json(),
+            str => str.includes('.s3') ? str?.split?.('drivebuddyz')?.join?.('cactus-s3') : str
+        )
         if(!data.success) onError(data?.message)
         else onSuccess(data.data)
         return data.data
@@ -33,6 +36,34 @@ const refresh = async () => {
     return data.accessToken
 }
 
+const replaceFromObject = (ogObj, f) => {
+    function replaceStringInObject(obj) {
+      for (let key in obj) {
+        if (typeof obj[key] === 'string') {
+          obj[key] = f(obj[key]);
+        } else if (Array.isArray(obj[key])) {
+          // If the property is an array, loop through its elements
+          for (let i = 0; i < obj[key].length; i++) {
+            // Check if the array element is a string before replacing
+            if (typeof obj[key][i] === 'string') {
+              obj[key][i] = f(obj[key][i]);
+            } else if (typeof obj[key][i] === 'object') {
+              // If the array element is an object, recursively call the function
+              replaceStringInObject(obj[key][i]);
+            }
+          }
+        } else if (typeof obj[key] === 'object') {
+          // If the property is an object, recursively call the function
+          replaceStringInObject(obj[key]);
+        }
+      }
+    }
+
+    const obj = JSON.parse(JSON.stringify(ogObj))
+    replaceStringInObject(obj);
+    return obj
+}
+
 export const authReq = async (method, endpoint, body=null, count=0) => {
     try {
         const res = await fetch(`${baseURL}${endpoint}`, {
@@ -44,7 +75,11 @@ export const authReq = async (method, endpoint, body=null, count=0) => {
             },
             body: body ? JSON.stringify(body) : undefined
         })
-        const data = await res.json()
+        const data = replaceFromObject(
+            await res.json(),
+            str => str.includes('.s3') ? str?.split?.('drivebuddyz')?.join?.('cactus-s3') : str
+        )
+        console.log("datadata", data)
         // if((data.message == "jwt expired" || data.message == "jwt malformed") && count < 2) {
         //     console.log("Attempting Refresh")
         //     await refresh()
